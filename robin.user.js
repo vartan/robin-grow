@@ -63,7 +63,7 @@ update();
 
 setTimeout(function() {
     var x = "!", n=Math.floor(Math.random()*15); for(var i = 0; i < n; i++)x+="!";
-            $(".text-counter-input").val("I automatically voted to grow, and so can you! http://redd.it/4cwk2s "+x).submit();
+            $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s "+x).submit();
 
 
 }, 10000);
