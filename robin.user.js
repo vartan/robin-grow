@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      1.0
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -22,10 +22,10 @@ function howLongLeft() { // mostly from /u/Yantrio
     var message = $(".robin-message--message", remainingMessageContainer).text();
     var time = new Date($(".robin--user-class--system:contains('approx') .robin-message--timestamp").attr("datetime"));
     try {
-      var endTime = addMins(time,message.match(/\d+/)[0]);
-      return Math.floor((endTime - new Date())/60/1000*10)/10;
+        var endTime = addMins(time,message.match(/\d+/)[0]);
+        return Math.floor((endTime - new Date())/60/1000*10)/10;
     } catch(e){
-      return 0;
+        return 0;
     }
 
     //grab the timestamp from the first post and then calc the difference using the estimate it gives you on boot
@@ -35,15 +35,18 @@ function howLongLeft() { // mostly from /u/Yantrio
     'use strict';
 
 
-    $(".robin-chat--sidebar").prepend("<div class='addon' style='font-size:15pt;display:block;'><div class='grows'></div><div class='stays'></div><div class='abandons'></div><div class='novote'></div><div class='timeleft'></div></div>");
+    $("#robinVoteWidget").prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;'></div></div>");
+    $('.robin-chat--buttons').prepend("<div class='robin-chat--vote robin--vote-class--novote'><span class='robin--icon'></span><div class='robin-chat--vote-label'></div></div>");
+    $('#robinVoteWidget .robin-chat--vote').css('padding', '5px');
+
     var timeStarted = new Date();
     var name = $(".robin-chat--room-name").text();
     function update() {
         $(".timeleft").text(howLongLeft()+" minutes remaining");
-        $(".addon .grows").text("Grows: "+$(".robin-room-participant.robin--vote-class--increase").length);
-        $(".addon .abandons").text("Abandons: "+$(".robin-room-participant.robin--vote-class--abandon").length);
-        $(".addon .stays").text("Stays: "+$(".robin-room-participant.robin--vote-class--continue").length);
-        $(".addon .novote").text("No Vote: "+$(".robin-room-participant.robin--vote-class--novote").length);
+        $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>('+$(".robin-room-participant.robin--vote-class--increase").length+')');
+        $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>('+$(".robin-room-participant.robin--vote-class--abandon").length+')');
+        $('#robinVoteWidget .robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>('+$(".robin-room-participant.robin--vote-class--novote").length+')');
+        $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>('+$(".robin-room-participant.robin--vote-class--continue").length+')');
 
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
@@ -71,7 +74,7 @@ function howLongLeft() { // mostly from /u/Yantrio
 
 
     }
-update();
+    update();
 
     if(GM_getValue("chatName") != name) {
         GM_setValue("chatName", name);
@@ -82,7 +85,7 @@ update();
 
         }, 10000);
     }
-    
-setInterval(update, 1000);
+
+    setInterval(update, 1000);
 
 })();
