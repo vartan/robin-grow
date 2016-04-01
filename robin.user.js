@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
-// @grant        none
+// @grant   GM_getValue
+// @grant   GM_setValue
 // ==/UserScript==
 function addMins(date,mins) {
     var newDateObj = new Date(date.getTime() + mins*60000);
@@ -36,6 +37,7 @@ function howLongLeft() { // mostly from /u/Yantrio
 
     $(".robin-chat--sidebar").prepend("<div class='addon' style='font-size:15pt;display:block;'><div class='grows'></div><div class='stays'></div><div class='abandons'></div><div class='novote'></div><div class='timeleft'></div></div>");
     var timeStarted = new Date();
+<<<<<<< HEAD
 
     function addParticipants(){
         var buttons=document.getElementById("robinVoteWidget");
@@ -53,6 +55,9 @@ function howLongLeft() { // mostly from /u/Yantrio
         document.getElementById(str+"-count").innerText=count;
     }
 
+=======
+    var name = $(".robin-chat--room-name").text();
+>>>>>>> f45046f0f7bd6c2e96401fbb3a16ba047b878329
     function update() {
         $(".timeleft").text(howLongLeft()+" minutes remaining");
         writeToButton("abandon",$(".robin-room-participant.robin--vote-class--abandon").length);
@@ -84,13 +89,16 @@ function howLongLeft() { // mostly from /u/Yantrio
     }
 update();
 
-
-setTimeout(function() {
-    var x = "!", n=Math.floor(Math.random()*15); for(var i = 0; i < n; i++)x+="!";
+    if(GM_getValue("chatName") != name) {
+        GM_setValue("chatName", name);
+        setTimeout(function() {
+            var x = "!", n=Math.floor(Math.random()*15); for(var i = 0; i < n; i++)x+="!";
             $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s "+x).submit();
 
 
-}, 10000);
+        }, 10000);
+    }
+    
 setInterval(update, 1000);
 
 })();
