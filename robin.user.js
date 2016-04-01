@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.8
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -27,14 +27,6 @@ function howLongLeft() { // mostly from /u/Yantrio
 (function() {
     'use strict';
 
-    // Try to join if not currently in a chat
-    if ($("#joinRobinContainer").length) {
-        $("#joinRobinContainer").click();
-        setTimeout(function(){
-            $("#joinRobin").click();
-        }, 1000);
-        return;
-    }
 
     $(".robin-chat--sidebar").prepend("<div class='addon' style='font-size:15pt;display:block;'><div class='grows'></div><div class='stays'></div><div class='abandons'></div><div class='timeleft'></div></div>");
     var timeStarted = new Date();
@@ -53,6 +45,18 @@ function howLongLeft() { // mostly from /u/Yantrio
         if($(".robin-message--message:contains('that is already your vote')").length === 0) {
             $(".text-counter-input").val("/vote grow").submit();
         }
+
+        // Try to join if not currently in a chat
+        if ($("#joinRobinContainer").length) {
+            $("#joinRobinContainer").click();
+            setTimeout(function(){
+                $("#joinRobin").click();
+            }, 1000);
+            return;
+        }
+
+
+
     }
 update();
 
