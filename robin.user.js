@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -81,5 +81,12 @@ if(GM_getValue("chatName") != name) {
         }, 10000);
 }
 
-setInterval(update, 30000);
+function removeSpam() {
+    $(".robin-message").filter(function(num,message){
+        return $(message).find(".robin-message--message").text().indexOf("[") === 0; // starts with a [
+        }).hide();
+}
+
+setInterval(removeSpam, 1000);
+setInterval(update, 10000);
 update();
