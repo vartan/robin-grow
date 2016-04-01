@@ -2,8 +2,8 @@
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
 // @version      0.7
-// @description  try to take over the world!
-// @author       Michael Vartan
+// @description  Try to take over the world!
+// @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
 // @grant        none
 // ==/UserScript==
