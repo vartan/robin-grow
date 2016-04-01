@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.44
+// @version      1.5
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -144,24 +144,26 @@ function findAndHideSpam() {
     });
 }
 
-/* Detects unicode spam - Credit to travelton (https://gist.github.com/travelton)*/
-$(document).on('DOMNodeInserted', function(e) {
-    $('.robin-message--message', e.currentTarget).each(function() {
-        if (/[\u0080-\uFFFF]/.test($(this).text())) {
-            $(this).parent().remove();
-        }
-    });
-});
+
 
 
 function removeSpam() {
     $(".robin-message").filter(function(num,message){
-        return $(message).find(".robin-message--message").text().indexOf("[") === 0
-			|| $(message).find(".robin-message--message").text().indexOf("Autovoter") > -1; // starts with a [ or has "Autovoter"
+        var text = $(message).find(".robin-message--message").text();
+        return text.indexOf("[") === 0
+			|| text.indexOf("Autovoter") > -1
+            || (/[\u0080-\uFFFF]/.test(text));
+
+            ; // starts with a [ or has "Autovoter"
         }).remove();
 }
 
-setInterval(findAndHideSpam, 1000);
-setInterval(removeSpam, 1000);
+/* Detects unicode spam - Credit to travelton (https://gist.github.com/travelton)*/
+$(document).on('DOMNodeInserted', function(e) {
+    findAndHideSpam();
+    removeSpam();
+});
+
 setInterval(update, 10000);
 update();
+
