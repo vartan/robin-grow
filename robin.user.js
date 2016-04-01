@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         New Userscript
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  try to take over the world!
 // @author       You
-// @include      https://www.reddit.com/robin/
+// @include      https://www.reddit.com/robin*
 // @grant        none
 // ==/UserScript==
 
