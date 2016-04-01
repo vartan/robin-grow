@@ -101,13 +101,15 @@ function hashString(str) {
 // Searches through all messages to find and hide spam
 var spamCounts = {};
 
-function findAndHideSpam() {
-    $('.robin-message--message:not(.addon--hide)').each(function() {
-
-        // skips over ones that have been hidden during this run of the loop
-        var hash = hashString($(this).text());
-        var user = $('.robin-message--from', $(this).closest('.robin-message')).text();
-
+(new MutationObserver(function(mutations) {
+	
+    mutations.forEach(function(mutation) {
+	    
+	    var ele = $('.robin-message--message', mutation.addedNodes[0]);
+        var msg = ele.text();
+        var hash = hashString(msg);
+        var user = $('.robin-message--from', ele.closest('.robin-message')).text();
+        
         if (!(user in spamCounts)) {
             spamCounts[user] = {};
         }
@@ -118,35 +120,36 @@ function findAndHideSpam() {
         } else {
             spamCounts[user][hash] = {
                 count: 1,
-                text: $(this).text(),
-                elements: [this]
+                text: ele.text(),
+                elements: [ele]
             };
         }
+        
+        // starts with a [ or has "Autovoter"
+        if (msg.indexOf("[") === 0 ||
+            msg == "voted to GROW" ||
+            msg == "voted to STAY" ||
+            msg == "voted to ABANDON" ||
+            msg.indexOf("Autovoter") > -1) {
+	        ele.closest('.robin-message').hide();
+        }
+        
     });
 
     $.each(spamCounts, function(user, messages) {
         $.each(messages, function(hash, message) {
             if (message.count >= 3) {
                 $.each(message.elements, function(index, element) {
-                    $(element).closest('.robin-message').addClass('addon--hide').hide();
+                    $(element).closest('.robin-message').hide();
                 });
-            } else {
-                message.count = 0;
+                
+                message.elements = [];
             }
-
-            message.elements = [];
         });
     });
-}
 
-function removeSpam() {
-    $(".robin-message").filter(function(num,message){
-        return $(message).find(".robin-message--message").text().indexOf("[") === 0
-			|| $(message).find(".robin-message--message").text().indexOf("Autovoter") > -1; // starts with a [ or has "Autovoter"
-        }).hide();
-}
+})).observe($('#robinChatMessageList')[0], {childList: true});
 
-setInterval(findAndHideSpam, 1000);
-setInterval(removeSpam, 1000);
+
 setInterval(update, 10000);
 update();
