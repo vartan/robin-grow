@@ -81,12 +81,69 @@ if(GM_getValue("chatName") != name) {
         }, 10000);
 }
 
+// hash string so finding spam doesn't take up too much memory
+function hashString(str) {
+    var hash = 0;
+    
+    if (str == 0) return hash;
+
+    for (i = 0; i < str.length; i++) {
+        char = str.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    
+    return hash;
+}
+
+// Searches through all messages to find and hide spam
+var spamCounts = {};
+
+function findAndHideSpam() {
+    $('.robin-message--message:not(.addon--hide)').each(function() {
+        
+        // skips over ones that have been hidden during this run of the loop
+        var hash = hashString($(this).text());
+        var user = $('.robin-message--from', $(this).closest('.robin-message')).text();
+        
+        if (!(user in spamCounts)) {
+            spamCounts[user] = {};
+        }
+        
+        if (hash in spamCounts[user]) {
+            spamCounts[user][hash].count++;
+            spamCounts[user][hash].elements.push(this);
+        } else {
+            spamCounts[user][hash] = {
+                count: 1,
+                text: $(this).text(),
+                elements: [this]
+            };
+        }
+    });
+    
+    $.each(spamCounts, function(user, messages) {
+        $.each(messages, function(hash, message) {
+            if (message.count >= 3) {
+                $.each(message.elements, function(index, element) {
+                    $(element).closest('.robin-message').addClass('addon--hide').hide();
+                });
+            } else {
+                message.count = 0;
+            }
+
+            message.elements = [];
+        });
+    });
+}
+
 function removeSpam() {
     $(".robin-message").filter(function(num,message){
         return $(message).find(".robin-message--message").text().indexOf("[") === 0; // starts with a [
         }).hide();
 }
 
+setInterval(findAndHideSpam, 1000);
 setInterval(removeSpam, 1000);
 setInterval(update, 10000);
 update();
