@@ -34,15 +34,18 @@ function howLongLeft() { // mostly from /u/Yantrio
     'use strict';
 
 
-    $(".robin-chat--sidebar").prepend("<div class='addon' style='font-size:15pt;display:block;'><div class='grows'></div><div class='stays'></div><div class='abandons'></div><div class='novote'></div><div class='timeleft'></div></div>");
+    $("#robinVoteWidget").prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;'></div></div>");
+    $('.robin-chat--buttons').prepend("<div class='robin-chat--vote robin--vote-class--novote'><span class='robin--icon'></span><div class='robin-chat--vote-label'></div></div>");
+    $('#robinVoteWidget .robin-chat--vote').css('padding', '5px');
+    
     var timeStarted = new Date();
-
+    
     function update() {
         $(".timeleft").text(howLongLeft()+" minutes remaining");
-        $(".addon .grows").text("Grows: "+$(".robin-room-participant.robin--vote-class--increase").length);
-        $(".addon .abandons").text("Abandons: "+$(".robin-room-participant.robin--vote-class--abandon").length);
-        $(".addon .stays").text("Stays: "+$(".robin-room-participant.robin--vote-class--continue").length);
-        $(".addon .novote").text("No Vote: "+$(".robin-room-participant.robin--vote-class--novote").length);
+        $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>('+$(".robin-room-participant.robin--vote-class--increase").length+')');
+        $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>('+$(".robin-room-participant.robin--vote-class--abandon").length+')');
+        $('#robinVoteWidget .robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>('+$(".robin-room-participant.robin--vote-class--novote").length+')');
+        $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>('+$(".robin-room-participant.robin--vote-class--continue").length+')');
 
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
