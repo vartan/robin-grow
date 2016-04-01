@@ -26,6 +26,16 @@ function howLongLeft() { // mostly from /u/Yantrio
 
 (function() {
     'use strict';
+
+    // Try to join if not currently in a chat
+    if ($("#joinRobinContainer").length) {
+        $("#joinRobinContainer").click();
+        setTimeout(function(){
+            $("#joinRobin").click();
+        }, 1000);
+        return;
+    }
+
     $(".robin-chat--sidebar").prepend("<div class='addon' style='font-size:15pt;display:block;'><div class='grows'></div><div class='stays'></div><div class='abandons'></div><div class='timeleft'></div></div>");
     var timeStarted = new Date();
     function update() {
@@ -45,7 +55,7 @@ function howLongLeft() { // mostly from /u/Yantrio
         }
     }
 update();
-    
+
 
 setTimeout(function() {
     var x = "!", n=Math.floor(Math.random()*15); for(var i = 0; i < n; i++)x+="!";
