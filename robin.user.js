@@ -31,6 +31,7 @@ function howLongLeft() { // mostly from /u/Yantrio
     //grab the timestamp from the first post and then calc the difference using the estimate it gives you on boot
 }
 
+$("#robinDesktopNotifier").after('<div class="robin-chat--sidebar-widget" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>')
 $("#robinVoteWidget").prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;'></div></div>");
 $('.robin-chat--buttons').prepend("<div class='robin-chat--vote robin--vote-class--novote'><span class='robin--icon'></span><div class='robin-chat--vote-label'></div></div>");
 $('#robinVoteWidget .robin-chat--vote').css('padding', '5px');
