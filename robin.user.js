@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Userscript
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  try to take over the world!
 // @author       You
 // @include      https://www.reddit.com/robin/
@@ -10,7 +10,14 @@
 
 (function() {
     'use strict';
+    var timeStarted = new Date();
     function grow() {
+        var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
+        var timeSinceLastChat = new Date() - (new Date(lastChatString));
+        var now = new Date();
+        if(timeSinceLastChat !== undefined && (timeSinceLastChat > 60000 && now-timeStarted > 60000)) {
+            window.location.reload(); // reload if we haven't seen any activity in a minute.
+        }
         if($(".robin-message--message:contains('that is already your vote')").length === 0) {
             $(".text-counter-input").val("/vote grow").submit();
         }
