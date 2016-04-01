@@ -14,6 +14,10 @@ function addMins(date,mins) {
 
 function howLongLeft() { // mostly from /u/Yantrio
     var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
+    if(remainingMessageContainer.length == 0) {
+        // for cases where it says "soon" instead of a time on page load
+        return 0;
+    }
     var message = $(".robin-message--message", remainingMessageContainer).text();
     var time = new Date($(".robin--user-class--system:contains('approx') .robin-message--timestamp").attr("datetime"));
     try {
