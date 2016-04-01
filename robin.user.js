@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         New Userscript
+// @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  try to take over the world!
-// @author       You
+// @author       Michael Vartan
 // @include      https://www.reddit.com/robin*
 // @grant        none
 // ==/UserScript==
@@ -24,7 +24,7 @@
     }
 grow();
 setTimeout(function() {
-            $(".text-counter-input").val("I voted automatically to grow and so can you! http://redd.it/4cwk2s").submit();
+            $(".text-counter-input").val("I automatically voted to grow, and so can you! http://redd.it/4cwk2s").submit();
 
 
 }, 10000);
