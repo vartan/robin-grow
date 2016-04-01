@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -43,11 +43,28 @@ function howLongLeft() { // mostly from /u/Yantrio
     var name = $(".robin-chat--room-name").text();
     function update() {
         $(".timeleft").text(howLongLeft()+" minutes remaining");
-        $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>('+$(".robin-room-participant.robin--vote-class--increase").length+')');
-        $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>('+$(".robin-room-participant.robin--vote-class--abandon").length+')');
-        $('#robinVoteWidget .robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>('+$(".robin-room-participant.robin--vote-class--novote").length+')');
-        $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>('+$(".robin-room-participant.robin--vote-class--continue").length+')');
 
+
+
+
+
+        var list = {}
+        $.get("/robin/",function(a){
+            var start = "{"+a.substring(a.indexOf("\"robin_user_list\": ["));
+            var end = start.substring(0,start.indexOf("}]")+2)+"}";
+            console.log(end);
+            console.log();
+            list = JSON.parse(end).robin_user_list;
+            var increaseCount = list.filter(function(voter){return voter.vote === "INCREASE"}).length;
+            var abandonCount = list.filter(function(voter){return voter.vote === "ABANDON"}).length;
+            var novoteCount = list.filter(function(voter){return voter.vote === "NOVOTE"}).length;
+            var continueCount = list.filter(function(voter){return voter.vote === "CONTINUE"}).length;
+            $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>('+increaseCount+')');
+            $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>('+abandonCount+')');
+            $('#robinVoteWidget .robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>('+novoteCount+')');
+            $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>('+continueCount+')');
+
+        });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
         var now = new Date();
@@ -64,7 +81,6 @@ function howLongLeft() { // mostly from /u/Yantrio
             setTimeout(function(){
                 $("#joinRobin").click();
             }, 1000);
-            return;
         }
 
 
@@ -82,6 +98,6 @@ function howLongLeft() { // mostly from /u/Yantrio
         }, 10000);
     }
 
-    setInterval(update, 1000);
+    setInterval(update, 30000);
 
 })();
