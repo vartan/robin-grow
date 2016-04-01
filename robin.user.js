@@ -83,7 +83,8 @@ if(GM_getValue("chatName") != name) {
 
 function removeSpam() {
     $(".robin-message").filter(function(num,message){
-        return $(message).find(".robin-message--message").text().indexOf("[") === 0; // starts with a [
+        return $(message).find(".robin-message--message").text().indexOf("[") === 0
+			|| $(message).find(".robin-message--message").text().indexOf("Autovoter") > -1; // starts with a [ or has "Autovoter"
         }).hide();
 }
 
