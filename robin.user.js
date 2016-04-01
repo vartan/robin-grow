@@ -58,7 +58,6 @@ function update() {
         setTimeout(function(){
             $("#joinRobin").click();
             }, 1000);
-        return;
     }
 };
 
