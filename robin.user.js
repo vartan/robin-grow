@@ -37,11 +37,27 @@ function howLongLeft() { // mostly from /u/Yantrio
     $(".robin-chat--sidebar").prepend("<div class='addon' style='font-size:15pt;display:block;'><div class='grows'></div><div class='stays'></div><div class='abandons'></div><div class='novote'></div><div class='timeleft'></div></div>");
     var timeStarted = new Date();
 
+    function addParticipants(){
+        var buttons=document.getElementById("robinVoteWidget");
+        if (!document.getElementById("participants")){
+            buttons.innerHTML+="<div id='participants' class 'addon user-count'></div>";
+        }
+        document.getElementById("participants").innerText="Users in Chat: "+document.getElementsByClassName("robin-room-participant").length;
+    }
+
+    function writeToButton(str,count){
+        var button= document.getElementsByClassName("robin-chat--vote-"+str)[0];
+        if (!document.getElementById(str+"-count")){
+            button.innerHTML+="<br><span id='"+str+"-count' class='addon vote-count'></span>";
+        }
+        document.getElementById(str+"-count").innerText=count;
+    }
+
     function update() {
         $(".timeleft").text(howLongLeft()+" minutes remaining");
-        $(".addon .grows").text("Grows: "+$(".robin-room-participant.robin--vote-class--increase").length);
-        $(".addon .abandons").text("Abandons: "+$(".robin-room-participant.robin--vote-class--abandon").length);
-        $(".addon .stays").text("Stays: "+$(".robin-room-participant.robin--vote-class--continue").length);
+        writeToButton("abandon",$(".robin-room-participant.robin--vote-class--abandon").length);
+        writeToButton("continue",$(".robin-room-participant.robin--vote-class--continue").length);
+        writeToButton("increase",$(".robin-room-participant.robin--vote-class--increase").length);
         $(".addon .novote").text("No Vote: "+$(".robin-room-participant.robin--vote-class--novote").length);
 
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
