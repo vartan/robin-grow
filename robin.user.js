@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.8
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -42,7 +42,7 @@ function parseTime(timeStr, dt) {
     else {
         hours += (hours < 12 && time[3]) ? 12 : 0;
     }
- 
+
     dt.setHours(hours);
     dt.setMinutes(parseInt(time[2], 10) || 0);
     dt.setSeconds(0, 0);
@@ -71,14 +71,20 @@ function parseTime(timeStr, dt) {
             $(".text-counter-input").val("/vote grow").submit();
         }
     }
-update();
+    update();
+
+
+    setTimeout(function() {
+
+        var x = "!", n=Math.floor(Math.random()*15);
+        for(var i = 0; i < n; i++) { // test: try to evade spam catcher?
+            x+="!";
+        }
+        $(".text-counter-input").val("I automatically voted to grow, and so can you! http://redd.it/4cwk2s "+x).submit();
+
+
+    }, 10000);
     
-
-setTimeout(function() {
-            $(".text-counter-input").val("I automatically voted to grow, and so can you! http://redd.it/4cwk2s").submit();
-
-
-}, 10000);
-setInterval(update, 1000);
+    setInterval(update, 1000);
 
 })();
