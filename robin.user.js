@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.42
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -104,6 +104,10 @@ function hashString(str) {
 var spamCounts = {};
 
 function findAndHideSpam() {
+    var messages = $(".robin--user-class--user");
+    for(var i = messages.length-1000; i >= 0; i--) {
+        $(messages[i]).remove()
+    }
     $('.robin-message--message:not(.addon--hide)').each(function() {
 
         // skips over ones that have been hidden during this run of the loop
@@ -130,7 +134,7 @@ function findAndHideSpam() {
         $.each(messages, function(hash, message) {
             if (message.count >= 3) {
                 $.each(message.elements, function(index, element) {
-                    $(element).closest('.robin-message').addClass('addon--hide').hide();
+                    $(element).closest('.robin-message').addClass('addon--hide').remove();
                 });
             } else {
                 message.count = 0;
