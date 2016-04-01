@@ -52,8 +52,8 @@ function howLongLeft() { // mostly from /u/Yantrio
         $.get("/robin/",function(a){
             var start = "{"+a.substring(a.indexOf("\"robin_user_list\": ["));
             var end = start.substring(0,start.indexOf("}]")+2)+"}";
-            console.log(end);
-            console.log();
+            // console.log(end);
+            // console.log();
             list = JSON.parse(end).robin_user_list;
             var increaseCount = list.filter(function(voter){return voter.vote === "INCREASE"}).length;
             var abandonCount = list.filter(function(voter){return voter.vote === "ABANDON"}).length;
