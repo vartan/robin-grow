@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.42
+// @version      1.43
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -109,7 +109,6 @@ function findAndHideSpam() {
         $(messages[i]).remove()
     }
     $('.robin-message--message:not(.addon--hide)').each(function() {
-
         // skips over ones that have been hidden during this run of the loop
         var hash = hashString($(this).text());
         var user = $('.robin-message--from', $(this).closest('.robin-message')).text();
