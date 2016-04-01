@@ -153,6 +153,9 @@ function removeSpam() {
     $(".robin-message").filter(function(num,message){
         var text = $(message).find(".robin-message--message").text();
         return text.indexOf("[") === 0
+			|| text == "voted to STAY"
+			|| text == "voted to GROW"
+			|| text == "voted to ABANDON"
 			|| text.indexOf("Autovoter") > -1
             || (/[\u0080-\uFFFF]/.test(text));
 
