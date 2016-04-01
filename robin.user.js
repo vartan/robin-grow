@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      0.11
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -37,7 +37,6 @@ function howLongLeft() { // mostly from /u/Yantrio
 
     $(".robin-chat--sidebar").prepend("<div class='addon' style='font-size:15pt;display:block;'><div class='grows'></div><div class='stays'></div><div class='abandons'></div><div class='novote'></div><div class='timeleft'></div></div>");
     var timeStarted = new Date();
-<<<<<<< HEAD
 
     function addParticipants(){
         var buttons=document.getElementById("robinVoteWidget");
@@ -55,9 +54,7 @@ function howLongLeft() { // mostly from /u/Yantrio
         document.getElementById(str+"-count").innerText=count;
     }
 
-=======
     var name = $(".robin-chat--room-name").text();
->>>>>>> f45046f0f7bd6c2e96401fbb3a16ba047b878329
     function update() {
         $(".timeleft").text(howLongLeft()+" minutes remaining");
         writeToButton("abandon",$(".robin-room-participant.robin--vote-class--abandon").length);
@@ -98,7 +95,7 @@ update();
 
         }, 10000);
     }
-    
+
 setInterval(update, 1000);
 
 })();
