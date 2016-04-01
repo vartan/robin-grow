@@ -141,14 +141,21 @@ function findAndHideSpam() {
     });
 }
 
-function removeSpam() {
-    $(".robin-message").filter(function(num,message){
-        return $(message).find(".robin-message--message").text().indexOf("[") === 0
-			|| $(message).find(".robin-message--message").text().indexOf("Autovoter") > -1; // starts with a [ or has "Autovoter"
-        }).hide();
+function isBotSpam(txt) {
+    return txt.indexOf("[") === 0
+        || txt.indexOf("Autovoter") > -1; // starts with a [ or has "Autovoter"
 }
 
+var mo = new MutationObserver(function(ms) {
+    ms.forEach(function(m) {
+        var msg = m.addedNodes[0]
+        if (isBotSpam(msg.children[2].textContent)) $(msg).hide()
+    })
+})
+
+var rcml = document.getElementById("robinChatMessageList")
+mo.observe(rcml, { childList: true })
+
 setInterval(findAndHideSpam, 1000);
-setInterval(removeSpam, 1000);
 setInterval(update, 10000);
 update();
