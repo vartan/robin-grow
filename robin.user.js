@@ -17,9 +17,11 @@ function howLongLeft() { // mostly from /u/Yantrio
     var message = $(".robin-message--message", remainingMessageContainer).text();
     var time = new Date($(".robin--user-class--system:contains('approx') .robin-message--timestamp").attr("datetime"));
     try {
-        endTime = addMins(time,message.match(/\d+/)[0]);
-    } catch(e){}
-    return Math.floor((endTime - new Date())/60/1000*10)/10;
+      var endTime = addMins(time,message.match(/\d+/)[0]);
+      return Math.floor((endTime - new Date())/60/1000*10)/10;
+    } catch(e){
+      return 0;
+    }
 
     //grab the timestamp from the first post and then calc the difference using the estimate it gives you on boot
 }
