@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      1.0
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -22,10 +22,10 @@ function howLongLeft() { // mostly from /u/Yantrio
     var message = $(".robin-message--message", remainingMessageContainer).text();
     var time = new Date($(".robin--user-class--system:contains('approx') .robin-message--timestamp").attr("datetime"));
     try {
-      var endTime = addMins(time,message.match(/\d+/)[0]);
-      return Math.floor((endTime - new Date())/60/1000*10)/10;
+        var endTime = addMins(time,message.match(/\d+/)[0]);
+        return Math.floor((endTime - new Date())/60/1000*10)/10;
     } catch(e){
-      return 0;
+        return 0;
     }
 
     //grab the timestamp from the first post and then calc the difference using the estimate it gives you on boot
@@ -70,7 +70,7 @@ function howLongLeft() { // mostly from /u/Yantrio
 
 
     }
-update();
+    update();
 
     if(GM_getValue("chatName") != name) {
         GM_setValue("chatName", name);
@@ -82,6 +82,6 @@ update();
         }, 10000);
     }
 
-setInterval(update, 1000);
+    setInterval(update, 1000);
 
 })();
