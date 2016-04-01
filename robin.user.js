@@ -51,9 +51,13 @@ function howLongLeft() { // mostly from /u/Yantrio
         if(timeSinceLastChat !== undefined && (timeSinceLastChat > 60000 && now-timeStarted > 60000)) {
             window.location.reload(); // reload if we haven't seen any activity in a minute.
         }
-        if($(".robin-message--message:contains('that is already your vote')").length === 0) {
+        if($(".robin-message--message:contains('that is already your vote')").length === 0
+		&& $(".robin-message--message:contains('Voting will end in approximately 31 minutes')").length === 0) {
             $(".text-counter-input").val("/vote grow").submit();
         }
+		else if ($(".robin-message--message:contains('Voting will end in approximately 31 minutes')").length > 0) {
+			$(".text-counter-input").val("/vote stay").submit();
+		}
 
         // Try to join if not currently in a chat
         if ($("#joinRobinContainer").length) {
