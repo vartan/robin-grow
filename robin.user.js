@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.43
+// @version      1.44
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -143,6 +143,16 @@ function findAndHideSpam() {
         });
     });
 }
+
+/* Detects unicode spam - Credit to travelton (https://gist.github.com/travelton)*/
+$(document).on('DOMNodeInserted', function(e) {
+    $('.robin-message--message', e.currentTarget).each(function() {
+        if (/[\u0080-\uFFFF]/.test($(this).text())) {
+            $(this).parent().remove();
+        }
+    });
+});
+
 
 function removeSpam() {
     $(".robin-message").filter(function(num,message){
