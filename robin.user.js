@@ -71,9 +71,13 @@ function howLongLeft() { // mostly from /u/Yantrio
         if(timeSinceLastChat !== undefined && (timeSinceLastChat > 60000 && now-timeStarted > 60000)) {
             window.location.reload(); // reload if we haven't seen any activity in a minute.
         }
-        if($(".robin-message--message:contains('that is already your vote')").length === 0) {
+        if($(".robin-message--message:contains('that is already your vote')").length === 0
+		&& $(".robin-message--message:contains('Voting will end in approximately 31 minutes')").length === 0) {
             $(".text-counter-input").val("/vote grow").submit();
         }
+		else if ($(".robin-message--message:contains('Voting will end in approximately 31 minutes')").length > 0) {
+			$(".text-counter-input").val("/vote stay").submit();
+		}
 
         // Try to join if not currently in a chat
         if ($("#joinRobinContainer").length) {
@@ -92,7 +96,7 @@ function howLongLeft() { // mostly from /u/Yantrio
         GM_setValue("chatName", name);
         setTimeout(function() {
             var x = "!", n=Math.floor(Math.random()*15); for(var i = 0; i < n; i++)x+="!";
-            $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s "+x).submit();
+            $(".text-counter-input").val("[Robin-Settle] I automatically voted to grow, then settle, and so can you! http://tiny.cc/e3khay "+x).submit();
 
 
         }, 10000);
