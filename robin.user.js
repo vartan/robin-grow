@@ -14,12 +14,18 @@ function addMins(date,mins) {
 
 function howLongLeft() { // mostly from /u/Yantrio
     var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
+    if(remainingMessageContainer.length == 0) {
+        // for cases where it says "soon" instead of a time on page load
+        return 0;
+    }
     var message = $(".robin-message--message", remainingMessageContainer).text();
     var time = new Date($(".robin--user-class--system:contains('approx') .robin-message--timestamp").attr("datetime"));
     try {
-        endTime = addMins(time,message.match(/\d+/)[0]);
-    } catch(e){}
-    return Math.floor((endTime - new Date())/60/1000*10)/10;
+      var endTime = addMins(time,message.match(/\d+/)[0]);
+      return Math.floor((endTime - new Date())/60/1000*10)/10;
+    } catch(e){
+      return 0;
+    }
 
     //grab the timestamp from the first post and then calc the difference using the estimate it gives you on boot
 }
@@ -65,7 +71,7 @@ update();
 
 setTimeout(function() {
     var x = "!", n=Math.floor(Math.random()*15); for(var i = 0; i < n; i++)x+="!";
-            $(".text-counter-input").val("I automatically voted to grow, and so can you! http://redd.it/4cwk2s "+x).submit();
+            $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s "+x).submit();
 
 
 }, 10000);
