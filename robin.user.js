@@ -16,6 +16,11 @@
     $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>'); // Open Settings
     $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
 
+    function hasChannel(source, channel) {
+        channel = String(channel).toLowerCase();
+        return String(source).toLowerCase().startsWith(channel);
+    }
+
     function openSettings() {
         $(".robin-chat--sidebar").hide();
         $("#settingContainer").show();
@@ -46,6 +51,9 @@
     var settings = loadSetting();
 
     function addBoolSetting(name, description, defaultSetting) {
+
+        defaultSetting = settings[name] || defaultSetting;
+
         $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
         $("input[name='setting-" + name + "']").on("click", function() {
             settings[name] = !settings[name];
@@ -58,9 +66,24 @@
         }
     }
 
+    function addInputSetting(name, description, defaultSetting) {
+
+        defaultSetting = settings[name] || defaultSetting;
+
+        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '">' + description + '</label></div>');
+        $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
+            .on("change", function() {
+                settings[name] = $(this).val();
+                saveSetting(settings);
+            });
+        settings[name] = defaultSetting;
+    }
+
     // Options begin
     addBoolSetting("removeSpam", "Remove bot spam", true);
     addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
+    addInputSetting("channel", "Channel filter", "");
+    addBoolSetting("filterChannel", "Filter by channel", false);
     // Options end
     $("#robinDesktopNotifier").detach().appendTo("#settingContent");
     // Add version at the end
@@ -276,17 +299,39 @@
         }
     }
 
+<<<<<<< HEAD
     function removeSpam() {
         if (settings["removeSpam"]) {
             $(".robin--user-class--user").filter(function(num, message) {
                 var text = $(message).find(".robin-message--message").text();
                 var filter = isBotSpam(text);
+=======
+    function filterMessages() {
 
-                ; // starts with a [ or has "Autovoter"
-                // if(filter)console.log("removing "+text);
-                return filter;
-            }).remove();
-        }
+        $(".robin--user-class--user").filter(function(num, message) {
+            var text = $(message).find(".robin-message--message").text();
+
+            if (settings["removeSpam"] && (text.indexOf("[") === 0 ||
+                    text == "voted to STAY" ||
+                    text == "voted to GROW" ||
+                    text == "voted to ABANDON" ||
+                    text.indexOf("Autovoter") > -1 ||
+                    (/[\u0080-\uFFFF]/.test(text)))) {
+
+                return true;
+            }
+
+            if(settings['filterChannel'] &&
+                String(settings['channel']).length > 0 &&
+                !hasChannel($(message).find(".robin-message--message").text(), settings['channel'])) {
+                return true;
+            }
+
+            return false;
+
+        }).remove();
+>>>>>>> 5f13997597fdf1280d675a5b9de3713bd1a7ae5b
+
     }
 
     function isBotSpam(text) {
@@ -350,27 +395,59 @@
                 // Check if the user is muted.
                 if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(message)) {
                     // He is, hide the message.
-                    $(jq[0]).hide();
-                } else {
-                    // He isn't register an EH to mute the user on name-click.
-                    $messageText.click(function() {
-                        // Check the user actually wants to mute this person.
-                        if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
-                            // Mute our user.
-                            mutedList.push($(this).text());
-                            $(this).css("text-decoration", "line-through");
-                            $(this).hide();
-                        }
-
-                        // Output currently muted people in the console for debuggery.
-                        // console.log(mutedList);
-                    });
+                    $(this).remove();
                 }
+
+                // He isn't register an EH to mute the user on name-click.
+                $messageUser.click(function() {
+                    // Check the user actually wants to mute this person.
+                    if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
+                        // Mute our user.
+                        mutedList.push($(this).text());
+                        $(this).css("text-decoration", "line-through");
+                        $(this).remove();
+                    }
+
+                    // Output currently muted people in the console for debuggery.
+                    // console.log(mutedList);
+                });
+
+                filterMessages();
             }
         });
     }
 
 
+<<<<<<< HEAD
+=======
+    function openSettings() {
+        $(".robin-chat--sidebar").hide();
+        $("#settingContainer").show();
+    }
+    $("#openBtn").on("click", openSettings);
+
+    function closeSettings() {
+        $(".robin-chat--sidebar").show();
+        $("#settingContainer").hide();
+    }
+
+    function saveSetting(settings) {
+        localStorage["robin-grow-settings"] = JSON.stringify(settings);
+    }
+
+    function loadSetting() {
+        var setting = localStorage["robin-grow-settings"];
+        if(setting) {
+            setting = JSON.parse(setting);
+        } else {
+            setting = {};
+        }
+        return setting;
+    }
+
+    var settings = loadSetting();
+
+>>>>>>> 5f13997597fdf1280d675a5b9de3713bd1a7ae5b
 
     setInterval(update, 10000);
     update();
