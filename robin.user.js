@@ -404,7 +404,7 @@
                     if(urlRegex.test(messageText)) {
                         urlRegex.lastIndex = 0;
                         var url = encodeURI(urlRegex.exec(messageText)[0]);
-                        var parsedUrl = url.replace(/^/, "<a href=\"").replace(/$/, "\">"+url+"</a>");
+                        var parsedUrl = url.replace(/^/, "<a target=\"_blank\" href=\"").replace(/$/, "\">"+url+"</a>");
                         var oldHTML = $(jq[0]).find('.robin-message--message').html();
                         var newHTML = oldHTML.replace(url, parsedUrl);
                         $(jq[0]).find('.robin-message--message').html(newHTML);
