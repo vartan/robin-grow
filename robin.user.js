@@ -162,6 +162,7 @@ function isBotSpam(text) {
         || text == "voted to GROW"
         || text == "voted to ABANDON"
         || text.indexOf("Autovoter") > -1
+        /* Detects unicode spam - Credit to travelton (https://gist.github.com/travelton)*/
         || (/[\u0080-\uFFFF]/.test(text));
 
         ; // starts with a [ or has "Autovoter"
@@ -169,20 +170,56 @@ function isBotSpam(text) {
     return filter;
 }
 
-var mo = new MutationObserver(function(ms) {
-    ms.forEach(function(m) {
-        var msg = m.addedNodes[0];
-        if (isBotSpam(msg.children[2].textContent)) $(msg).hide();
-        removeOldMsgs();
-        findAndHideSpam();
-    });
+// Individual mute button /u/verox-
+var targetNodes         = $("#robinChatMessageList");
+var myObserver          = new MutationObserver (mutationHandler);
+// XXX Shou: we should only need to watch childList, more can slow it down.
+var obsConfig           = { childList: true };
+var mutedList = [];
+
+$(".robin--username").click(function() {
+    var clickedUser = mutedList.indexOf($(this).text());
+    
+    if (clickedUser == -1) {
+        // Mute our user.
+        mutedList.push($(this).text());
+        $( this ).css( "text-decoration", "line-through" );
+    } else {
+        // Unmute our user.
+        $( this ).css( "text-decoration", "none" );
+        mutedList.splice(clickedUser, 1);
+    }
+    
+    //console.log(mutedList);
 });
 
-var rcml = document.getElementById("robinChatMessageList");
-mo.observe(rcml, { childList: true });
+//--- Add a target node to the observer. Can only add one node at a time.
+targetNodes.each ( function () {
+    myObserver.observe (this, obsConfig);
+} );
+
+function mutationHandler (mutationRecords) {
+    mutationRecords.forEach ( function (mutation) {
+        var jq = $(mutation.addedNodes);
+
+        // Mute user
+        var thisUser = $(jq[0].children[1]).text();
+        if (mutedList.indexOf(thisUser) >= 0) {
+            $(jq[0]).hide();
+
+        // Remove spam
+        } else {
+            var msg = jq[0];
+            var msgText = msg.children[2].textContent;
+            if (isBotSpam(msgText)) $(msg).hide();
+
+            removeOldMsgs();
+            findAndHideSpam();
+        }
+    } );
+}
 
 setInterval(update, 10000);
 update();
 
 })();
-
