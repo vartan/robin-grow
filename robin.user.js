@@ -249,7 +249,7 @@
 
     // Settings
     // DOM Setup begin
-    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="openBtn">Open Settings</div></div>'); // Open Settings
+    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>'); // Open Settings
     $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
 
     function openSettings() {
@@ -262,7 +262,7 @@
         $(".robin-chat--sidebar").show();
         $("#settingContainer").hide();
     }
-    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="closeBtn">Close Settings</div>');
+    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>');
     $("#closeBtn").on("click", closeSettings);
     // Dom Setup end
     function saveSetting(settings) {
@@ -282,20 +282,23 @@
     var settings = loadSetting();
 
     function addBoolSetting(name, description, defaultSetting) {
-        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
-        $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
-            .on("click", function() {
+        $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>')
+        $("input[name='setting-" + name + "']").on("click", function() {
                 settings[name] = !settings[name];
                 saveSetting(settings);
             });
-        settings[name] = defaultSetting;
+        if(settings[name] !== undefined) {
+           $("input[name='setting-" + name + "']").prop("checked", settings[name]);
+        } else {
+            settings[name] = defaultSetting;
+        }
     }
 
     // Options begin
     addBoolSetting("removeSpam", "Remove bot spam", true);
     addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
     // Options end
-
+    $("#robinDesktopNotifier").detach().appendTo("#settingContent");
     // Add version at the end
     $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>');
 
