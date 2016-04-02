@@ -401,17 +401,13 @@
 
         mutationRecords.forEach(function(mutation) {
             var jq = $(mutation.addedNodes);
-            var $messageUser = $(jq[0] && jq[0].children && jq[0].children[1]);
-            var $messageText = $(jq[0] && jq[0].children && jq[0].children[2]);
-            console.log("Mutation.");
             // There are nodes added
             if (jq.length > 0) {
-                // Mute user
-                console.log("Have message");
                 // cool we have a message.
-                var thisUser = $messageUser.text();
-                var message = $messageText.text();
-                console.log(thisUser);
+                var thisUser = $(jq[0] && jq[0].children && jq[0].children[1]).text();
+                var message = $(jq[0] && jq[0].children && jq[0].children[2]).text();
+
+                console.log("Have message from " + thisUser);
                 // Check if the user is muted.
                 if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(message)) {
                     // He is, hide the message.
@@ -443,16 +439,13 @@
     }
 
     // Color names in user list
-    $('#robinUserList .robin--username').each(function(){
+    $('#robinUserList').find('.robin--username').each(function(){
         this.style.color = colorFromName(this.textContent);
     });
 
-    // Bold current user's name in user list
-    $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
-
     // Color current user's name in chat and darken post backgrounds
-    var currentUserColor = colorFromName($('#robinUserList .robin--user-class--self .robin--username').text());
-    $('<style>.robin--user-class--self { background: #F5F5F5; } .robin--user-class--self .robin--username { color: ' + currentUserColor + ' !important; font-weight: bold;}</style>').appendTo('body');
+    var currentUserColor = colorFromName(currentUsersName);
+    $('<style>.robin--user-class--self { background: #F5F5F5; font-weight: bold; } .robin--user-class--self .robin--username { color: ' + currentUserColor + ' !important; font-weight: bold;}</style>').appendTo('body');
 
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
