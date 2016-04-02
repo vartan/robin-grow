@@ -137,6 +137,7 @@
     };
 
 
+    var currentUsersName = $('div#header span.user a').html();
 
     // Settings
     var $robinVoteWidget = $("#robinVoteWidget");
@@ -235,24 +236,6 @@
             }, 1000);
         }
     }
-
-    // credit to wwwroth for idea
-    // i think this method is better
-
-    var notif = new Audio("https://slack.global.ssl.fastly.net/dfc0/sounds/push/knock_brush.mp3");
-
-    var currentUsersName = $('div#header span.user a').html();
-
-    $('#robinChatMessageList').on('DOMNodeInserted', function (e) {
-        if ($(e.target).is('.robin--message-class--message.robin--user-class--user')) {
-            console.log("got new message");
-            if ($(".robin--message-class--message.robin--user-class--user").last().is(':contains("'+currentUsersName+'")')) {
-                $(".robin--message-class--message.robin--user-class--user").last().css("background","orangered").css("color","white");
-                notif.play();
-                console.log("got new mention");
-            }
-        }
-    });
 
     // if (GM_getValue("chatName") != name) {
     //     GM_setValue("chatName", name);
@@ -389,6 +372,11 @@
         }
     });
 
+
+    // credit to wwwroth for idea (notification audio)
+    // i think this method is better
+    var notifAudio = new Audio("https://slack.global.ssl.fastly.net/dfc0/sounds/push/knock_brush.mp3");
+
     var myObserver = new MutationObserver(mutationHandler);
     //--- Add a target node to the observer. Can only add one node at a time.
     // XXX Shou: we should only need to watch childList, more can slow it down.
@@ -405,13 +393,20 @@
             if (jq.length > 0) {
                 // cool we have a message.
                 var thisUser = $(jq[0] && jq[0].children && jq[0].children[1]).text();
-                var message = $(jq[0] && jq[0].children && jq[0].children[2]).text();
+                var $message = $(jq[0] && jq[0].children && jq[0].children[2]);
+                var messageText = $message.text();
 
                 console.log("Have message from " + thisUser);
                 // Check if the user is muted.
-                if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(message)) {
+                if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(messageText)) {
                     // He is, hide the message.
                     $(jq[0]).remove();
+                } else {
+                    if (messageText.indexOf(currentUsersName) !== -1) {
+                        $message.parent().css("background","orangered").css("color","white")
+                        notifAudio.play();
+                        console.log("got new mention");
+                    }
                 }
 
                 filterMessages();
