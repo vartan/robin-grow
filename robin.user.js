@@ -222,22 +222,15 @@
         return hash;
     }
 
-    var messageCount = 0;
-
-    function removeOldMsgs() {
-        if (messageCount >= 1000) {
-            var msg = document.getElementById("robinChatMessageList").children[0];
-            $(msg).remove();
-
-            messageCount--;
-        }
-    }
-
     // Searches through all messages to find and hide spam
     var spamCounts = {};
 
     function findAndHideSpam() {
         if (settings["findAndHideSpam"]) {
+            var messages = $(".robin--user-class--user");
+            for (var i = messages.length - 1000; i >= 0; i--) {
+                $(messages[i]).remove();
+            }
             $('.robin--user-class--user .robin-message--message:not(.addon--hide)').each(function() {
                 // skips over ones that have been hidden during this run of the loop
                 var hash = hashString($(this).text());
@@ -265,9 +258,6 @@
                         $.each(message.elements, function(index, element) {
                             //console.log("SPAM REMOVE: "+$(element).closest('.robin-message').text())
                             $(element).closest('.robin-message').addClass('addon--hide').remove();
-
-                            // Decrease global messageCount.
-                            messageCount--;
                         });
                     } else {
                         message.count = 0;
@@ -283,12 +273,7 @@
         if (settings["removeSpam"]) {
             $(".robin--user-class--user").filter(function(num, message) {
                 var text = $(message).find(".robin-message--message").text();
-                var filter = text.indexOf("[") === 0 ||
-                    text == "voted to STAY" ||
-                    text == "voted to GROW" ||
-                    text == "voted to ABANDON" ||
-                    text.indexOf("Autovoter") > -1 ||
-                    (/[\u0080-\uFFFF]/.test(text));
+                var filter = isBotSpam(text);
 
                 ; // starts with a [ or has "Autovoter"
                 // if(filter)console.log("removing "+text);
@@ -373,46 +358,11 @@
             }
         });
     }
-
-
-    function openSettings() {
-        $(".robin-chat--sidebar").hide();
-        $("#settingContainer").show();
-    }
-    $("#openBtn").on("click", openSettings);
-
-    function closeSettings() {
-        $(".robin-chat--sidebar").show();
-        $("#settingContainer").hide();
-    }
     
-    function saveSetting(settings) {
-        localStorage["robin-grow-settings"] = JSON.stringify(settings);
-    }
-
-    function loadSetting() {
-        var setting = localStorage["robin-grow-settings"];
-        if(setting) {
-            setting = JSON.parse(setting);
-        } else {
-            setting = {};
-        }
-        return setting;
-    }
-
-    var settings = loadSetting();
-
-    function addBoolSetting(name, description, defaultSetting) {
-        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
-        $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
-            .on("click", function() {
-                settings[name] = !settings[name];
-                saveSetting(settings);
-            });
-        settings[name] = defaultSetting;
-    }
-
-
+    $(document).on("DOMNodeInserted", function(e) {
+        findAndHideSpam();
+        removeSpam();
+    })
 
     setInterval(update, 10000);
     update();
