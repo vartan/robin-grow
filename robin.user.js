@@ -141,6 +141,15 @@
 
     // Settings
     var $robinVoteWidget = $("#robinVoteWidget");
+    
+    // IF the widget isn't there, we're probably on a reddit error page.
+    if (!$robinVoteWidget.length) {
+        // Don't overload reddit, wait a bit before reloading.
+        setTimeout(function() {
+            window.location.reload();
+        }, 15000);
+        return;
+    }
 
     Settings.setupUI($robinVoteWidget);
     var settings = Settings.load();
