@@ -251,6 +251,7 @@
                     // console.log(mutedList);
                 });
             }
+            }
         });
     }
 
