@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.700
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -141,7 +141,7 @@
 
     // Settings
     var $robinVoteWidget = $("#robinVoteWidget");
-    
+
     // IF the widget isn't there, we're probably on a reddit error page.
     if (!$robinVoteWidget.length) {
         // Don't overload reddit, wait a bit before reloading.
@@ -250,10 +250,10 @@
     //     GM_setValue("chatName", name);
     //     setTimeout(function() {
     //         var oldVal = $(".text-counter-input").val();
-
-    //         $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s !").submit();
+    //         $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s !");
+    //         $("#sendBtn").click();
     //         $(".text-counter-input").val(oldVal);
-
+    //
     //     }, 10000);
     // }
 
