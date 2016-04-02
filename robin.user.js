@@ -396,7 +396,7 @@
                 var $message = $(jq[0] && jq[0].children && jq[0].children[2]);
                 var messageText = $message.text();
 
-                console.log("Have message from " + thisUser);
+                //console.log("Have message from " + thisUser);
                 // Check if the user is muted.
                 if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(messageText)) {
                     // He is, hide the message.
