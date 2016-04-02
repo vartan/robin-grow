@@ -141,10 +141,7 @@
                 break;
         }      
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
-        var messages = $(".robin--user-class--user");
-        for (var i = messages.length - 1000; i >= 0; i--) {
-            $(messages[i]).remove();
-        }
+
         var list = {};
         var users = 0;
         $.get("/robin/", function(a) {
