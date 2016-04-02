@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.59
+// @version      1.60
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -379,4 +379,7 @@
     // Bold current user's name in user list
     $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
 
+    // Color current user's name in chat and darken post backgrounds
+    var currentUserColor = colorFromName($('#robinUserList .robin--user-class--self .robin--username').text());
+    $('<style>.robin--user-class--self { background: #F5F5F5; } .robin--user-class--self .robin--username { color: ' + currentUserColor + ' !important; font-weight: bold;}</style>').appendTo('body');
 })();
