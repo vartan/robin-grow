@@ -1,14 +1,16 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.43
+// @version      1.51
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
 // @updateURL    https://github.com/vartan/robin-grow/raw/master/robin.user.js
+// @require       http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant   GM_getValue
 // @grant   GM_setValue
 // ==/UserScript==
+(function() {
 function addMins(date,mins) {
     var newDateObj = new Date(date.getTime() + mins*60000);
     return newDateObj;
@@ -100,14 +102,17 @@ function hashString(str) {
     return hash;
 }
 
-// Searches through all messages to find and hide spam
-var spamCounts = {};
-
-function findAndHideSpam() {
+function removeOldMsgs() {
     var messages = $(".robin--user-class--user");
     for(var i = messages.length-1000; i >= 0; i--) {
         $(messages[i]).remove()
     }
+}
+
+// Searches through all messages to find and hide spam
+var spamCounts = {};
+
+function findAndHideSpam() {
     $('.robin-message--message:not(.addon--hide)').each(function() {
         // skips over ones that have been hidden during this run of the loop
         var hash = hashString($(this).text());
@@ -144,21 +149,27 @@ function findAndHideSpam() {
     });
 }
 
-function isBotSpam(txt) {
-    return txt.indexOf("[") === 0
-        || txt.indexOf("Autovoter") > -1; // starts with a [ or has "Autovoter"
+function isBotSpam(text) {
+    // starts with a [ or has "Autovoter"
+    return text.indexOf("[") === 0
+        || text.indexOf("Autovoter") > -1
+        /* Detects unicode spam - Credit to travelton (https://gist.github.com/travelton)*/
+        || (/[\u0080-\uFFFF]/.test(text));
 }
 
 var mo = new MutationObserver(function(ms) {
     ms.forEach(function(m) {
         var msg = m.addedNodes[0]
-        if (isBotSpam(msg.children[2].textContent)) $(msg).hide()
-    })
-})
+        if (isBotSpam(msg.children[2].textContent)) $(msg).hide();
+        removeOldMsgs();
+        findAndHideSpam();
+    });
+});
 
-var rcml = document.getElementById("robinChatMessageList")
-mo.observe(rcml, { childList: true })
+var rcml = document.getElementById("robinChatMessageList");
+mo.observe(rcml, { childList: true });
 
-setInterval(findAndHideSpam, 1000);
 setInterval(update, 10000);
 update();
+
+})();
