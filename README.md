@@ -34,4 +34,4 @@ Updates (times Pacific time)
 
 Screenshot of information above "Grow" button
 
-http://imgur.com/Ibo6dv6
+![1](http://i.imgur.com/WVIjpb6.png) ![2](http://i.imgur.com/t13VChw.png)
