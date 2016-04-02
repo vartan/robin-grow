@@ -139,7 +139,7 @@
             default:
                 $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click();
                 break;
-        }      
+        }
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
 
         var list = {};
@@ -316,22 +316,26 @@
 
     function mutationHandler(mutationRecords) {
         mutationRecords.forEach(function(mutation) {
+            findAndHideSpam();
             var jq = $(mutation.addedNodes);
-
+            var $messageUser = $(jq[0] && jq[0].children && jq[0].children[1]);
+            var $messageText = $(jq[0] && jq[0].children && jq[0].children[2]);
+            console.log("Mutation.")
             // There are nodes added
             if (jq.length > 0) {
                 // Mute user
-
+                console.log("Have message");
                 // cool we have a message.
-                var thisUser = $(jq[0] && jq[0].children[1]).text();
-
+                var thisUser = $messageUser.text();
+                var message = $messageText.text();
+                console.log(thisUser);
                 // Check if the user is muted.
-                if (mutedList.indexOf(thisUser) >= 0) {
+                if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(message)) {
                     // He is, hide the message.
                     $(jq[0]).hide();
                 } else {
                     // He isn't register an EH to mute the user on name-click.
-                    $(jq[0].children[1]).click(function() {
+                    $messageText.click(function() {
                         // Check the user actually wants to mute this person.
                         if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
                             // Mute our user.
@@ -347,11 +351,8 @@
             }
         });
     }
-    
-    $(document).on("DOMNodeInserted", function(e) {
-        findAndHideSpam();
-        removeSpam();
-    })
+
+
 
     setInterval(update, 10000);
     update();
