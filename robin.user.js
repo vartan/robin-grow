@@ -244,7 +244,7 @@
     
     // Settings
     // DOM Setup begin
-    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="openBtn">Open Settings</div></div>'); // Open Settings
+    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>'); // Open Settings
     $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
 
     function openSettings() {
@@ -257,7 +257,7 @@
         $(".robin-chat--sidebar").show();
         $("#settingContainer").hide();
     }
-    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="closeBtn">Close Settings</div>');
+    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>');
     $("#closeBtn").on("click", closeSettings);
     // Dom Setup end
     function saveSetting(settings) {
