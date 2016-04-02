@@ -16,6 +16,11 @@
     $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>'); // Open Settings
     $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
 
+    function hasChannel(source, channel) {
+        channel = String(channel).toLowerCase();
+        return String(source).toLowerCase().startsWith(channel);
+    }
+
     function openSettings() {
         $(".robin-chat--sidebar").hide();
         $("#settingContainer").show();
@@ -58,9 +63,21 @@
         }
     }
 
+    function addInputSetting(name, description, defaultSetting) {
+        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '">' + description + '</label></div>');
+        $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
+            .on("change", function() {
+                settings[name] = $(this).val();
+                saveSetting(settings);
+            });
+        settings[name] = defaultSetting;
+    }
+
     // Options begin
     addBoolSetting("removeSpam", "Remove bot spam", true);
     addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
+    addInputSetting("channel", "Channel filter", "");
+    addBoolSetting("filterChannel", "Filter by channel", false);
     // Options end
     $("#robinDesktopNotifier").detach().appendTo("#settingContent");
     // Add version at the end
@@ -279,22 +296,31 @@
         }
     }
 
-    function removeSpam() {
-        if (settings["removeSpam"]) {
-            $(".robin--user-class--user").filter(function(num, message) {
-                var text = $(message).find(".robin-message--message").text();
-                var filter = text.indexOf("[") === 0 ||
+    function filterMessages() {
+
+        $(".robin--user-class--user").filter(function(num, message) {
+            var text = $(message).find(".robin-message--message").text();
+
+            if (settings["removeSpam"] && (text.indexOf("[") === 0 ||
                     text == "voted to STAY" ||
                     text == "voted to GROW" ||
                     text == "voted to ABANDON" ||
                     text.indexOf("Autovoter") > -1 ||
-                    (/[\u0080-\uFFFF]/.test(text));
+                    (/[\u0080-\uFFFF]/.test(text)))) {
 
-                ; // starts with a [ or has "Autovoter"
-                // if(filter)console.log("removing "+text);
-                return filter;
-            }).remove();
-        }
+                return true;
+            }
+
+            if(settings['filterChannel'] &&
+                String(settings['channel']).length > 0 &&
+                !hasChannel($(message).find(".robin-message--message").text(), settings['channel'])) {
+                return true;
+            }
+
+            return false;
+
+        }).remove();
+
     }
 
     function isBotSpam(text) {
@@ -354,22 +380,26 @@
                 // Check if the user is muted.
                 if (mutedList.indexOf(thisUser) >= 0) {
                     // He is, hide the message.
-                    $(jq[0]).hide();
-                } else {
-                    // He isn't register an EH to mute the user on name-click.
-                    $(jq[0].children[1]).click(function() {
-                        // Check the user actually wants to mute this person.
-                        if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
-                            // Mute our user.
-                            mutedList.push($(this).text());
-                            $(this).css("text-decoration", "line-through");
-                            $(this).hide();
-                        }
+                    $(jq[0]).remove();
 
-                        // Output currently muted people in the console for debuggery.
-                        // console.log(mutedList);
-                    });
+                    return;
                 }
+
+                // He isn't register an EH to mute the user on name-click.
+                $(jq[0].children[1]).click(function() {
+                    // Check the user actually wants to mute this person.
+                    if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
+                        // Mute our user.
+                        mutedList.push($(this).text());
+                        $(this).css("text-decoration", "line-through");
+                        $(this).remove();
+                    }
+
+                    // Output currently muted people in the console for debuggery.
+                    // console.log(mutedList);
+                });
+
+                filterMessages();
             }
         });
     }
@@ -385,7 +415,7 @@
         $(".robin-chat--sidebar").show();
         $("#settingContainer").hide();
     }
-    
+
     function saveSetting(settings) {
         localStorage["robin-grow-settings"] = JSON.stringify(settings);
     }
