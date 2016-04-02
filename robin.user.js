@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.59
+// @version      1.57
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -11,6 +11,86 @@
 // @grant   GM_setValue
 // ==/UserScript==
 (function() {
+    // Settings
+    // DOM Setup begin
+    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>'); // Open Settings
+    $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
+
+    function openSettings() {
+        $(".robin-chat--sidebar").hide();
+        $("#settingContainer").show();
+    }
+    $("#openBtn").on("click", openSettings);
+
+    function closeSettings() {
+        $(".robin-chat--sidebar").show();
+        $("#settingContainer").hide();
+    }
+    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>');
+    $("#closeBtn").on("click", closeSettings);
+    // Dom Setup end
+    function saveSetting(settings) {
+        localStorage["robin-grow-settings"] = JSON.stringify(settings)
+    }
+
+    function loadSetting() {
+        var setting = localStorage["robin-grow-settings"];
+        if(setting) {
+            setting = JSON.parse(setting);
+        } else {
+            setting = {};
+        }
+        return setting;
+    }
+
+    var settings = loadSetting();
+
+    function addBoolSetting(name, description, defaultSetting) {
+        $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>')
+        $("input[name='setting-" + name + "']").on("click", function() {
+                settings[name] = !settings[name];
+                saveSetting(settings);
+            });
+        if(settings[name] !== undefined) {
+           $("input[name='setting-" + name + "']").prop("checked", settings[name]);
+        } else {
+            settings[name] = defaultSetting;
+        }
+    }
+
+    // Options begin
+    addBoolSetting("removeSpam", "Remove bot spam", true);
+    addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
+    // Options end
+    $("#robinDesktopNotifier").detach().appendTo("#settingContent");
+    // Add version at the end
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>');
+    // Settings end
+    
+    if(!settings["vote"]) {
+        settings["vote"] = "grow";
+        saveSetting(settings);
+    }
+    
+    var needToVote = true;
+    function setVote(vote) {
+        settings["vote"] = vote;
+        saveSetting(settings);
+        needToVote = true;
+    }
+    
+    $(".robin--vote-class--abandon").on("click", function() {
+        setVote("abandon")
+    })
+    
+    $(".robin--vote-class--continue").on("click", function() {
+        setVote("stay")
+    })
+    
+    $(".robin--vote-class--increase").on("click", function() {
+        setVote("grow")
+    })
+    
     function addMins(date, mins) {
         var newDateObj = new Date(date.getTime() + mins * 60000);
         return newDateObj;
@@ -44,7 +124,6 @@
     var name = $(".robin-chat--room-name").text();
 
     function update() {
-        $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click(); // fallback to click
         $(".timeleft").text(howLongLeft() + " minutes remaining");
 
         var list = {}
@@ -78,12 +157,23 @@
         if (timeSinceLastChat !== undefined && (timeSinceLastChat > 60000 && now - timeStarted > 60000)) {
             window.location.reload(); // reload if we haven't seen any activity in a minute.
         }
+        /*
         if ($(".robin-message--message:contains('that is already your vote')").length === 0) {
             var oldVal = $(".text-counter-input").val();
             $(".text-counter-input").val("/vote grow").submit();
             $(".text-counter-input").val(oldVal);
+        }*/
+        
+        if ($(".robin-message--message:contains('that is already your vote')").length) {
+            needToVote = false;
         }
-
+        
+        if (needToVote && $(".robin-message--message:contains('that is already your vote')").length === 0) {
+            var oldVal = $(".text-counter-input").val();
+            $(".text-counter-input").val("/vote " + settings["vote"]).submit();
+            $(".text-counter-input").val(oldVal);
+        }
+        
         // Try to join if not currently in a chat
         if ($("#joinRobinContainer").length) {
             $("#joinRobinContainer").click();
@@ -165,11 +255,8 @@
                     message.elements = [];
                 });
             });
-        }
+        }  
     }
-
-
-
 
     function removeSpam() {
         if(settings["removeSpam"]) {
@@ -241,60 +328,7 @@
                 $(jq[0]).hide();
             }
         });
-    }
-
-    // Settings
-    // DOM Setup begin
-    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="openBtn">Open Settings</div></div>'); // Open Settings
-    $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
-
-    function openSettings() {
-        $(".robin-chat--sidebar").hide();
-        $("#settingContainer").show();
-    }
-    $("#openBtn").on("click", openSettings);
-
-    function closeSettings() {
-        $(".robin-chat--sidebar").show();
-        $("#settingContainer").hide();
-    }
-    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="closeBtn">Close Settings</div>');
-    $("#closeBtn").on("click", closeSettings);
-    // Dom Setup end
-    function saveSetting(settings) {
-        localStorage["robin-grow-settings"] = JSON.stringify(settings)
-    }
-
-    function loadSetting() {
-        var setting = localStorage["robin-grow-settings"];
-        if(setting) {
-            setting = JSON.parse(setting);
-        } else {
-            setting = {};
-        }
-        return setting;
-    }
-
-    var settings = loadSetting();
-
-    function addBoolSetting(name, description, defaultSetting) {
-        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
-        $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
-            .on("click", function() {
-                settings[name] = !settings[name];
-                saveSetting(settings);
-            });
-        settings[name] = defaultSetting;
-    }
-
-    // Options begin
-    addBoolSetting("removeSpam", "Remove bot spam", true);
-    addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
-    // Options end
-
-    // Add version at the end
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>');
-
+    }  
 
     setInterval(update, 10000);
     update();
