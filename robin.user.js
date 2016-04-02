@@ -51,6 +51,9 @@
     var settings = loadSetting();
 
     function addBoolSetting(name, description, defaultSetting) {
+
+        defaultSetting = settings[name] || defaultSetting;
+
         $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
         $("input[name='setting-" + name + "']").on("click", function() {
             settings[name] = !settings[name];
@@ -64,6 +67,9 @@
     }
 
     function addInputSetting(name, description, defaultSetting) {
+
+        defaultSetting = settings[name] || defaultSetting;
+
         $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '">' + description + '</label></div>');
         $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
             .on("change", function() {
@@ -431,17 +437,6 @@
     }
 
     var settings = loadSetting();
-
-    function addBoolSetting(name, description, defaultSetting) {
-        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
-        $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
-            .on("click", function() {
-                settings[name] = !settings[name];
-                saveSetting(settings);
-            });
-        settings[name] = defaultSetting;
-    }
-
 
 
     setInterval(update, 10000);
