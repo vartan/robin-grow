@@ -11,6 +11,12 @@
 // @grant   GM_setValue
 // ==/UserScript==
 (function() {
+
+    function hasChannel(source, channel) {
+        channel = String(channel).toLowerCase();
+        return String(source).toLowerCase().startsWith(channel);
+    }
+
     function addMins(date, mins) {
         var newDateObj = new Date(date.getTime() + mins * 60000);
         return newDateObj;
@@ -238,6 +244,12 @@
                     var msgText = msg.children[2].textContent;
                     if (isBotSpam(msgText)) $(msg).hide();
 
+                    if (String(settings['channel']).length > 0 && !hasChannel(msgText, settings['channel'])) {
+                        $(msg).css("font-size", "0.7rem");
+                        $(msg).css("opacity", "0.75");
+                        $(msg).css("line-height", "5px");
+                    }
+
                     messageCount++;
 
                     removeOldMsgs();
@@ -291,9 +303,21 @@
         settings[name] = defaultSetting;
     }
 
+    function addInputSetting(name, description, defaultSetting) {
+        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '">' + description + '</label></div>');
+        $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
+            .on("change", function() {
+                settings[name] = $(this).val();
+                saveSetting(settings);
+            });
+        settings[name] = defaultSetting;
+    }
+
     // Options begin
     addBoolSetting("removeSpam", "Remove bot spam", true);
     addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
+    addInputSetting("channel", "Channel filter", "");
+
     // Options end
 
     // Add version at the end
