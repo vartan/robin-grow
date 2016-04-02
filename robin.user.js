@@ -442,6 +442,6 @@
     $('input.c-form-control.text-counter-input').css('width', '90%');
     
     function messageSend() {
-        $(".text-counter-input").submit();
+        $(userEnteredMessage).submit();
     }
 })();
