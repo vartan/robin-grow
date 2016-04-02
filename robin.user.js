@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.702
+// @version      1.701
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -338,6 +338,8 @@
             text == "voted to ABANDON" ||
             text.indexOf("Autovoter") > -1 ||
             (UNICODE_SPAM_RE.test(text));
+
+        // if(filter)console.log("removing "+text);
         return filter;
     }
 
@@ -390,11 +392,11 @@
                         !hasChannel(messageText, settings.channel));
 
                 if (remove_message) {
-                    $(jq[0]).remove();
                     $message = null;
+                    $(jq[0]).remove();
                 } else {
-                    if (messageText.indexOf(currentUsersName) !== -1) {
-                        $message.parent().css("background","orangered").css("color","white");
+                    if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
+                        $message.parent().css("background","#FFA27F").css("color","white");
                         notifAudio.play();
                         console.log("got new mention");
                     }
