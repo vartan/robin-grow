@@ -413,7 +413,8 @@
                     // He isn't register an EH to mute the user on name-click.
                     $messageUser.click(function() {
                         // Check the user actually wants to mute this person.
-                        if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
+                        var shouldMute = confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.");
+                        if (shouldMute) {
                             // Mute our user.
                             mutedList.push($(this).text());
                             $(this).css("text-decoration", "line-through");
@@ -425,20 +426,6 @@
                     });
 
                 }
-
-                // He isn't register an EH to mute the user on name-click.
-                $(jq[0].children[1]).click(function() {
-                    // Check the user actually wants to mute this person.
-                    if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
-                        // Mute our user.
-                        mutedList.push($(this).text());
-                        $(this).css("text-decoration", "line-through");
-                        $(this).remove();
-                    }
-
-                    // Output currently muted people in the console for debuggery.
-                    // console.log(mutedList);
-                });
 
                 filterMessages();
             }
