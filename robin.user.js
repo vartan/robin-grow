@@ -277,13 +277,16 @@
     var settings = loadSetting();
 
     function addBoolSetting(name, description, defaultSetting) {
-        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
-        $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
-            .on("click", function() {
+        $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>')
+        $("input[name='setting-" + name + "']").on("click", function() {
                 settings[name] = !settings[name];
                 saveSetting(settings);
             });
-        settings[name] = defaultSetting;
+        if(settings[name] !== undefined) {
+           $("input[name='setting-" + name + "']").prop("checked", settings[name]);
+        } else {
+            settings[name] = defaultSetting;
+        }
     }
 
     // Options begin
