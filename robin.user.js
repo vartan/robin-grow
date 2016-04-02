@@ -139,7 +139,7 @@
             default:
                 $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click();
                 break;
-        }
+        }      
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
 
         var list = {};
@@ -316,26 +316,22 @@
 
     function mutationHandler(mutationRecords) {
         mutationRecords.forEach(function(mutation) {
-            findAndHideSpam();
             var jq = $(mutation.addedNodes);
-            var $messageUser = $(jq[0] && jq[0].children && jq[0].children[1]);
-            var $messageText = $(jq[0] && jq[0].children && jq[0].children[2]);
-            console.log("Mutation.")
+
             // There are nodes added
             if (jq.length > 0) {
                 // Mute user
-                console.log("Have message");
+
                 // cool we have a message.
-                var thisUser = $messageUser.text();
-                var message = $messageText.text();
-                console.log(thisUser);
+                var thisUser = $(jq[0] && jq[0].children[1]).text();
+
                 // Check if the user is muted.
-                if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(message)) {
+                if (mutedList.indexOf(thisUser) >= 0) {
                     // He is, hide the message.
                     $(jq[0]).hide();
                 } else {
                     // He isn't register an EH to mute the user on name-click.
-                    $messageText.click(function() {
+                    $(jq[0].children[1]).click(function() {
                         // Check the user actually wants to mute this person.
                         if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
                             // Mute our user.
@@ -351,8 +347,11 @@
             }
         });
     }
-
-
+    
+    $(document).on("DOMNodeInserted", function(e) {
+        findAndHideSpam();
+        removeSpam();
+    })
 
     setInterval(update, 10000);
     update();
@@ -383,4 +382,9 @@
     // Color current user's name in chat and darken post backgrounds
     var currentUserColor = colorFromName($('#robinUserList .robin--user-class--self .robin--username').text());
     $('<style>.robin--user-class--self { background: #F5F5F5; } .robin--user-class--self .robin--username { color: ' + currentUserColor + ' !important; font-weight: bold;}</style>').appendTo('body');
+    
+    // Send message button
+    $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
+    $('#robinChatInput').css('background', '#EFEFED');
+
 })();
