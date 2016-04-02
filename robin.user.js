@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.66
+// @version      1.661
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -472,7 +472,6 @@
 
     var settings = loadSetting();
 
-<<<<<<< HEAD
     function addBoolSetting(name, description, defaultSetting) {
         $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
         $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
@@ -482,8 +481,6 @@
             });
         settings[name] = defaultSetting;
     }
-=======
->>>>>>> a54a9f96a9cb041335a54e19c034627d345dcc6c
 
     setInterval(update, 10000);
     update();
