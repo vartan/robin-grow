@@ -236,7 +236,9 @@
             var jq = $(mutation.addedNodes);
 
             // cool we have a message.
-            var thisUser = $(jq[0].children[1]).text();
+            if (jq[0].children) {
+                var thisUser = $(jq[0].children[1]).text();
+            }
             if (mutedList.indexOf(thisUser) >= 0) {
                 $(jq[0]).hide();
             }
