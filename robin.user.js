@@ -302,8 +302,6 @@
 
     setInterval(update, 10000);
     update();
-
-    // Identify user's color
     
     var flairColor = [
         '#e50000', // red
@@ -320,8 +318,12 @@
         return flairColor[flairNum];
     }
     
+    // Color names in user list
     $('#robinUserList .robin--username').each(function(){
         $(this).css('color', colorFromName($(this).text()));
     });
+    
+    // Bold current user's name in user list
+    $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
         
 })();
