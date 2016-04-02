@@ -207,8 +207,6 @@
             $(this).css("text-decoration", "none");
             mutedList.splice(clickedUser, 1);
         }
-
-        console.log(mutedList);
     });
 
     //--- Add a target node to the observer. Can only add one node at a time.
@@ -220,19 +218,22 @@
         mutationRecords.forEach(function(mutation) {
             var jq = $(mutation.addedNodes);
 
-            // cool we have a message.
-            var thisUser = $(jq[0].children[1]).text();
-            if (mutedList.indexOf(thisUser) >= 0) {
-                $(jq[0]).hide();
+            // There are nodes added
+            if (jq.length > 0) {
+                // Mute user
+                var thisUser = $(jq[0].children[1]).text();
+                if (mutedList.indexOf(thisUser) >= 0) {
+                    $(jq[0]).hide();
 
-            // Remove spam
-            } else {
-                var msg = jq[0];
-                var msgText = msg.children[2].textContent;
-                if (isBotSpam(msgText)) $(msg).hide();
+                // Remove spam
+                } else {
+                    var msg = jq[0];
+                    var msgText = msg.children[2].textContent;
+                    if (isBotSpam(msgText)) $(msg).hide();
 
-                removeOldMsgs();
-                findAndHideSpam();
+                    removeOldMsgs();
+                    findAndHideSpam();
+                }
             }
         });
     }
