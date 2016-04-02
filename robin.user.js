@@ -281,8 +281,8 @@
         if (settings.findAndHideSpam) {
             var $messages = $(".robin--user-class--user");
 
-            if ($messages.length > 1000) {
-                $messages.slice(0, messages.length - 1000).remove();
+            if ($messages.length > 250) {
+                $messages.slice(0, messages.length - 250).remove();
             }
 
             // skips over ones that have been hidden during this run of the loop
