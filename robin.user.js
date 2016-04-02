@@ -445,7 +445,6 @@
         });
     }
 
-
     function openSettings() {
         $(".robin-chat--sidebar").hide();
         $("#settingContainer").show();
@@ -473,6 +472,18 @@
 
     var settings = loadSetting();
 
+<<<<<<< HEAD
+    function addBoolSetting(name, description, defaultSetting) {
+        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
+        $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
+            .on("click", function() {
+                settings[name] = !settings[name];
+                saveSetting(settings);
+            });
+        settings[name] = defaultSetting;
+    }
+=======
+>>>>>>> a54a9f96a9cb041335a54e19c034627d345dcc6c
 
     setInterval(update, 10000);
     update();
