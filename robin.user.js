@@ -352,7 +352,7 @@
                     $(jq[0]).hide();
                 } else {
                     // He isn't register an EH to mute the user on name-click.
-                    $messageText.click(function() {
+                    $messageUser.click(function() {
                         // Check the user actually wants to mute this person.
                         if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
                             // Mute our user.
