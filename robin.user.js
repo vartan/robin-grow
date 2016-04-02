@@ -363,53 +363,6 @@
         });
     }
 
-    // Settings
-    // DOM Setup begin
-    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>'); // Open Settings
-    $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
-
-    function openSettings() {
-        $(".robin-chat--sidebar").hide();
-        $("#settingContainer").show();
-    }
-    $("#openBtn").on("click", openSettings);
-
-    function closeSettings() {
-        $(".robin-chat--sidebar").show();
-        $("#settingContainer").hide();
-    }
-    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>');
-    $("#closeBtn").on("click", closeSettings);
-    // Dom Setup end
-    function saveSetting(settings) {
-        localStorage["robin-grow-settings"] = JSON.stringify(settings)
-    }
-
-    function loadSetting() {
-        var setting = localStorage["robin-grow-settings"];
-        if(setting) {
-            setting = JSON.parse(setting);
-        } else {
-            setting = {};
-        }
-        return setting;
-    }
-
-    var settings = loadSetting();
-
-    function addBoolSetting(name, description, defaultSetting) {
-        $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>')
-        $("input[name='setting-" + name + "']").on("click", function() {
-                settings[name] = !settings[name];
-                saveSetting(settings);
-            });
-        if(settings[name] !== undefined) {
-           $("input[name='setting-" + name + "']").prop("checked", settings[name]);
-        } else {
-            settings[name] = defaultSetting;
-        }
-    }
-
     setInterval(update, 10000);
     update();
 
