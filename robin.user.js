@@ -121,15 +121,22 @@
         return hash;
     }
 
+    var messageCount = 0;
+
+    function removeOldMsgs() {
+        if (messageCount >= 1000) {
+            var msg = document.getElementById("robinChatMessageList").children[0];
+            $(msg).remove();
+
+            messageCount--;
+        }
+    }
+
     // Searches through all messages to find and hide spam
     var spamCounts = {};
 
     function findAndHideSpam() {
         if(settings["findAndHideSpam"]) {
-            var messages = $(".robin--user-class--user");
-            for (var i = messages.length - 1000; i >= 0; i--) {
-                $(messages[i]).remove()
-            }
             $('.robin--user-class--user .robin-message--message:not(.addon--hide)').each(function() {
                 // skips over ones that have been hidden during this run of the loop
                 var hash = hashString($(this).text());
@@ -157,6 +164,9 @@
                         $.each(message.elements, function(index, element) {
                             //console.log("SPAM REMOVE: "+$(element).closest('.robin-message').text())
                             $(element).closest('.robin-message').addClass('addon--hide').remove();
+
+                            // Decrease global messageCount.
+                            messageCount--;
                         });
                     } else {
                         message.count = 0;
@@ -168,42 +178,27 @@
         }
     }
 
+    function isBotSpam(text) {
+        // starts with a [, has "Autovoter", or is a vote
+        var filter = text.indexOf("[") === 0 ||
+            text == "voted to STAY" ||
+            text == "voted to GROW" ||
+            text == "voted to ABANDON" ||
+            text.indexOf("Autovoter") > -1 ||
+            /* Detects unicode spam - Credit to travelton
+             * https://gist.github.com/travelton */
+            (/[\u0080-\uFFFF]/.test(text));
 
-
-
-    function removeSpam() {
-        if(settings["removeSpam"]) {
-            $(".robin--user-class--user").filter(function(num, message) {
-                var text = $(message).find(".robin-message--message").text();
-                var filter = text.indexOf("[") === 0 ||
-                    text == "voted to STAY" ||
-                    text == "voted to GROW" ||
-                    text == "voted to ABANDON" ||
-                    text.indexOf("Autovoter") > -1 ||
-                    (/[\u0080-\uFFFF]/.test(text));
-
-                ; // starts with a [ or has "Autovoter"
-                // if(filter)console.log("removing "+text);
-                return filter;
-            }).remove();
-        }
+        // if(filter)console.log("removing "+text);
+        return filter;
     }
-
-    /* Detects unicode spam - Credit to travelton (https://gist.github.com/travelton)*/
-    // NB this event is depreciated. - /u/verox-
-    $(document).on('DOMNodeInserted', function(e) {
-        findAndHideSpam();
-        removeSpam();
-    });
 
     // Individual mute button /u/verox-
     var targetNodes = $("#robinChatMessageList");
     var myObserver = new MutationObserver(mutationHandler);
+    // XXX Shou: we should only need to watch childList, more can slow it down.
     var obsConfig = {
-        childList: true,
-        characterData: true,
-        attributes: true,
-        subtree: true
+        childList: true
     };
     var mutedList = [];
 
@@ -219,8 +214,6 @@
             $(this).css("text-decoration", "none");
             mutedList.splice(clickedUser, 1);
         }
-
-        console.log(mutedList);
     });
 
     //--- Add a target node to the observer. Can only add one node at a time.
@@ -230,15 +223,26 @@
 
     function mutationHandler(mutationRecords) {
         mutationRecords.forEach(function(mutation) {
-            if (mutation.type != "childList")
-                return;
-
             var jq = $(mutation.addedNodes);
 
-            // cool we have a message.
-            var thisUser = $(jq[0].children[1]).text();
-            if (mutedList.indexOf(thisUser) >= 0) {
-                $(jq[0]).hide();
+            // There are nodes added
+            if (jq.length > 0) {
+                // Mute user
+                var thisUser = $(jq[0].children[1]).text();
+                if (mutedList.indexOf(thisUser) >= 0) {
+                    $(jq[0]).hide();
+
+                // Remove spam
+                } else {
+                    var msg = jq[0];
+                    var msgText = msg.children[2].textContent;
+                    if (isBotSpam(msgText)) $(msg).hide();
+
+                    messageCount++;
+
+                    removeOldMsgs();
+                    findAndHideSpam();
+                }
             }
         });
     }
