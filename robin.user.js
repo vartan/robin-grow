@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.51
+// @version      1.52
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -66,7 +66,9 @@ function update() {
         window.location.reload(); // reload if we haven't seen any activity in a minute.
     }
     if($(".robin-message--message:contains('that is already your vote')").length === 0) {
+        var oldVal = $(".text-counter-input");
         $(".text-counter-input").val("/vote grow").submit();
+        $(".text-counter-input").val(oldVal);
     }
 
     // Try to join if not currently in a chat
