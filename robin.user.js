@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.61
+// @version      1.65
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -149,7 +149,29 @@
         part[0] = part[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         return part.join(".");
     }
-
+    var list = {};
+    $(".text-counter-input").keydown(function(e) {
+        console.log('keyup called');
+        var text = $(".text-counter-input").val();
+        var code = e.keyCode || e.which;
+        if (code == '9') {
+            var nameParts = text.split(" ");
+            var namePart = nameParts[nameParts.length-1].toLowerCase();
+            var allNames = list.map(function(a){return a.name;});
+            console.log(allNames);
+            for(var i = 0; i < allNames.length; i++) {
+                if(allNames[i].toLowerCase().indexOf(namePart) == 0) {
+                    var goodText = "";
+                    for(var j = 0; j < nameParts.length-1; j++) {
+                        goodText = goodText+nameParts[j]+" ";
+                    }
+                    goodText = goodText+allNames[i];
+                    $(".text-counter-input").val(goodText);
+                    break;
+                }
+            }
+        }
+    });
     function update() {
         switch(settings["vote"]) {
             case "abandon":
@@ -165,7 +187,6 @@
         }
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
 
-        var list = {};
         var users = 0;
         $.get("/robin/", function(a) {
             var start = "{" + a.substring(a.indexOf("\"robin_user_list\": ["));
