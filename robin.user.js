@@ -171,6 +171,7 @@
 
     var timeStarted = new Date();
     var name = $(".robin-chat--room-name").text();
+    var urlRegex = new RegExp(/(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?/ig);
 
     var list = {};
     $(".text-counter-input").keydown(function(e) {
@@ -403,6 +404,14 @@
                         $message.parent().css("background","#FFA27F").css("color","white");
                         notifAudio.play();
                         console.log("got new mention");
+                    }
+                    if(urlRegex.test(messageText)) {
+                        urlRegex.lastIndex = 0;
+                        var url = encodeURI(urlRegex.exec(messageText)[0]);
+                        var parsedUrl = url.replace(/^/, "<a target=\"_blank\" href=\"").replace(/$/, "\">"+url+"</a>");
+                        var oldHTML = $(jq[0]).find('.robin-message--message').html();
+                        var newHTML = oldHTML.replace(url, parsedUrl);
+                        $(jq[0]).find('.robin-message--message').html(newHTML);
                     }
                 }
             }
