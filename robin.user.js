@@ -228,7 +228,7 @@
             // There are nodes added
             if (jq.length > 0) {
                 // Mute user
-                var thisUser = $(jq[0].children[1]).text();
+                var thisUser = $(jq[0] && jq[0].children[1]).text();
                 if (mutedList.indexOf(thisUser) >= 0) {
                     $(jq[0]).hide();
 
