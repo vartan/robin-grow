@@ -299,13 +299,6 @@
         }
     }
 
-<<<<<<< HEAD
-    function removeSpam() {
-        if (settings["removeSpam"]) {
-            $(".robin--user-class--user").filter(function(num, message) {
-                var text = $(message).find(".robin-message--message").text();
-                var filter = isBotSpam(text);
-=======
     function filterMessages() {
 
         $(".robin--user-class--user").filter(function(num, message) {
@@ -330,7 +323,6 @@
             return false;
 
         }).remove();
->>>>>>> 5f13997597fdf1280d675a5b9de3713bd1a7ae5b
 
     }
 
@@ -395,11 +387,26 @@
                 // Check if the user is muted.
                 if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(message)) {
                     // He is, hide the message.
-                    $(this).remove();
+                    $(jq[0]).remove();
+                } else {
+                    // He isn't register an EH to mute the user on name-click.
+                    $messageText.click(function() {
+                        // Check the user actually wants to mute this person.
+                        if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
+                            // Mute our user.
+                            mutedList.push($(this).text());
+                            $(this).css("text-decoration", "line-through");
+                            $(this).hide();
+                        }
+
+                        // Output currently muted people in the console for debuggery.
+                        // console.log(mutedList);
+                    });
+
                 }
 
                 // He isn't register an EH to mute the user on name-click.
-                $messageUser.click(function() {
+                $(jq[0].children[1]).click(function() {
                     // Check the user actually wants to mute this person.
                     if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
                         // Mute our user.
@@ -418,8 +425,6 @@
     }
 
 
-<<<<<<< HEAD
-=======
     function openSettings() {
         $(".robin-chat--sidebar").hide();
         $("#settingContainer").show();
@@ -447,7 +452,6 @@
 
     var settings = loadSetting();
 
->>>>>>> 5f13997597fdf1280d675a5b9de3713bd1a7ae5b
 
     setInterval(update, 10000);
     update();
