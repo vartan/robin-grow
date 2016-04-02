@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.801
+// @version      1.810
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -194,6 +194,14 @@
                     break;
                 }
             }
+        } else if(code == '13') {
+            if(settings.filterChannel &&
+                String(settings.channel).length > 0) {
+
+                    setTimeout(function() {
+                        $(".text-counter-input").val(settings.channel+" ");
+                    }, 10);
+                }
         }
     });
 
