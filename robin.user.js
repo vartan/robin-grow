@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.702
+// @version      1.705
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -9,8 +9,12 @@
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant   GM_getValue
 // @grant   GM_setValue
+// @grant   GM_addStyle
 // ==/UserScript==
 (function() {
+    // Styles
+    GM_addStyle('.robin--username {cursor: pointer}');
+
     // Utils
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase();
@@ -283,7 +287,7 @@
             var $messages = $(".robin--user-class--user");
 
             if ($messages.length > 250) {
-                $messages.slice(0, messages.length - 250).remove();
+                $messages.slice(0, $messages.length - 250).remove();
             }
 
             // skips over ones that have been hidden during this run of the loop
