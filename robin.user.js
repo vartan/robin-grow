@@ -283,12 +283,7 @@
         if (settings["removeSpam"]) {
             $(".robin--user-class--user").filter(function(num, message) {
                 var text = $(message).find(".robin-message--message").text();
-                var filter = text.indexOf("[") === 0 ||
-                    text == "voted to STAY" ||
-                    text == "voted to GROW" ||
-                    text == "voted to ABANDON" ||
-                    text.indexOf("Autovoter") > -1 ||
-                    (/[\u0080-\uFFFF]/.test(text));
+                var filter = isBotSpam(text);
 
                 ; // starts with a [ or has "Autovoter"
                 // if(filter)console.log("removing "+text);
