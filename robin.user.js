@@ -164,10 +164,54 @@ function removeSpam() {
 }
 
 /* Detects unicode spam - Credit to travelton (https://gist.github.com/travelton)*/
+// NB this event is depreciated. - /u/verox-
 $(document).on('DOMNodeInserted', function(e) {
     findAndHideSpam();
     removeSpam();
 });
+
+// Individual mute button /u/verox-
+var targetNodes         = $("#robinChatMessageList");
+var myObserver          = new MutationObserver (mutationHandler);
+var obsConfig           = { childList: true, characterData: true, attributes: true, subtree: true };
+var mutedList = [];
+
+$(".robin--username").click(function() {
+    var clickedUser = mutedList.indexOf($(this).text());
+    
+    if (clickedUser == -1) {
+        // Mute our user.
+        mutedList.push($(this).text());
+        $( this ).css( "text-decoration", "line-through" );
+    } else {
+        // Unmute our user.
+        $( this ).css( "text-decoration", "none" );
+        mutedList.splice(clickedUser, 1);
+    }
+    
+    console.log(mutedList);
+});
+
+//--- Add a target node to the observer. Can only add one node at a time.
+targetNodes.each ( function () {
+    myObserver.observe (this, obsConfig);
+} );
+
+function mutationHandler (mutationRecords) {
+    mutationRecords.forEach ( function (mutation) {
+        if(mutation.type != "childList")
+            return;
+            
+        var jq = $(mutation.addedNodes);
+
+        // cool we have a message.
+            var thisUser = $(jq[0].children[1]).text();
+            if (mutedList.indexOf(thisUser) >= 0) {
+                $(jq[0]).hide();
+            }
+    } );
+}
+
 
 setInterval(update, 10000);
 update();
