@@ -84,6 +84,7 @@
     addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
     addInputSetting("channel", "Channel filter", "");
     addBoolSetting("filterChannel", "Filter by channel", false);
+    addBoolSetting("saveDeadChannel", "Try to save a dead channel as a subreddit", true);
     // Options end
     $("#robinDesktopNotifier").detach().appendTo("#settingContent");
     // Add version at the end
@@ -210,6 +211,19 @@
             $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + formatNumber(continueCount) + ')');
             users = list.length;
             $(".usercount").text(formatNumber(users) + " users in chat");
+            
+            // Check whether or not this chat is dead to save in the last minute
+            if(howLongLeft() < 2 && users / 2 > increaseCount) {
+                console.log("He's dead, Jim!");
+                // Switch to stay
+                if(settings['saveDeadChannel'] && settings["vote"] != "stay") {
+                    // Save original vote
+                    var originalVote = settings["vote"];
+                    $(".robin-chat--vote.robin--vote-class--continue:not('.robin--active')").click();
+                    // Reset vote
+                    setVote(originalVote);
+                }
+            }
         });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
