@@ -305,18 +305,23 @@
 
     // Identify user's color
     
+    var flairColor = [
+        '#e50000', // red
+        '#db8e00', // orange
+        '#ccc100', // yellow
+        '#02be01', // green
+        '#0083c7', // blue
+        '#820080'  // purple
+    ];
+    
     function colorFromName(name) {
         sanitizedName = name.toLowerCase().replace(/[^a-z0-9]/g, "");
         flairNum = parseInt(sanitizedName, 36) % 6;
-        return "flair-" + flairNum;
+        return flairColor[flairNum];
     }
     
-    /*
-    flair-0 = red    (#e50000)
-    flair-1 = orange (#db8e00)
-    flair-2 = yellow (#ccc100)
-    flair-3 = green  (#02be01)
-    flair-4 = blue   (#0083c7)
-    flair-5 = purple (#820080)
-    */
+    $('#robinUserList .robin--username').each(function(){
+        $(this).css('color', colorFromName($(this).text()));
+    });
+        
 })();
