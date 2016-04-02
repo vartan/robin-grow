@@ -3,12 +3,12 @@
 
 Step 1: Install a userscript extension such as greasemonkey or tampermonkey:
 
-Click here: http://tampermonkey.net
+http://tampermonkey.net
 
 
 Then, click this link to install the script:
 
-https://github.com/vartan/robin-grow/raw/master/robin.user.js
+[robin.user.js](/raw/master/robin.user.js)
 
 If you get a bunch of code instead of it installing, you can copy and paste the code as a new script in greasemonkey/tampermonkey.
 
