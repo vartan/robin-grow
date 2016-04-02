@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.60
+// @version      1.61
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -194,6 +194,7 @@
         if ($(e.target).is('.robin--message-class--message.robin--user-class--user')) {
             console.log("got new message");
             if ($(".robin--message-class--message.robin--user-class--user").last().is(':contains("'+currentUsersName+'")')) {
+                $(".robin--message-class--message.robin--user-class--user").last().css("background","orangered").css("color","white");
                 notif.play();
                 console.log("got new mention");
             }
