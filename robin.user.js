@@ -228,21 +228,28 @@
             // There are nodes added
             if (jq.length > 0) {
                 // Mute user
-                var thisUser = $(jq[0] && jq[0].children[1]).text();
-                if (mutedList.indexOf(thisUser) >= 0) {
-                    $(jq[0]).hide();
 
-                // Remove spam
-                } else {
-                    var msg = jq[0];
-                    var msgText = msg.children[2].textContent;
-                    if (isBotSpam(msgText)) $(msg).hide();
+            // cool we have a message.
+            var thisUser = $(jq[0] && jq[0].children[1]).text();
 
-                    messageCount++;
+            // Check if the user is muted.
+            if (mutedList.indexOf(thisUser) >= 0) {
+                // He is, hide the message.
+                $(jq[0]).hide();
+            } else {
+                // He isn't register an EH to mute the user on name-click.
+                $(jq[0].children[1]).click(function() {
+                    // Check the user actually wants to mute this person.
+                    if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
+                        // Mute our user.
+                        mutedList.push($(this).text());
+                        $(this).css("text-decoration", "line-through");
+                        $(this).hide();
+                    }
 
-                    removeOldMsgs();
-                    findAndHideSpam();
-                }
+                    // Output currently muted people in the console for debuggery.
+                    // console.log(mutedList);
+                });
             }
         });
     }
