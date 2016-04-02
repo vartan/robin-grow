@@ -237,8 +237,25 @@
 
             // cool we have a message.
             var thisUser = $(jq[0].children[1]).text();
+
+            // Check if the user is muted.
             if (mutedList.indexOf(thisUser) >= 0) {
+                // He is, hide the message.
                 $(jq[0]).hide();
+            } else {
+                // He isn't register an EH to mute the user on name-click.
+                $(jq[0].children[1]).click(function() {
+                    // Check the user actually wants to mute this person.
+                    if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
+                        // Mute our user.
+                        mutedList.push($(this).text());
+                        $(this).css("text-decoration", "line-through");
+                        $(this).hide();
+                    }
+
+                    // Output currently muted people in the console for debuggery.
+                    console.log(mutedList);
+                });
             }
         });
     }
