@@ -441,9 +441,5 @@
     $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
     
     // Send message button
-     $("#robinSendMessage").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="sendBtn">Send Message</div>'); // Send message
-    function messageSend() {
-        $(".text-counter-input").submit();
-    }
-     $("#sendBtn").on("click", messageSend);
+     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="sendBtn">Send Message</div>'); // Send message
 })();
