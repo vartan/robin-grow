@@ -397,8 +397,9 @@
     });
 
     function mutationHandler(mutationRecords) {
+        if (mutationRecords.length !== 0) findAndHideSpam();
+
         mutationRecords.forEach(function(mutation) {
-            findAndHideSpam();
             var jq = $(mutation.addedNodes);
             var $messageUser = $(jq[0] && jq[0].children && jq[0].children[1]);
             var $messageText = $(jq[0] && jq[0].children && jq[0].children[2]);
@@ -415,36 +416,7 @@
                 if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(message)) {
                     // He is, hide the message.
                     $(jq[0]).remove();
-                } else {
-                    // He isn't register an EH to mute the user on name-click.
-                    $messageUser.click(function() {
-                        // Check the user actually wants to mute this person.
-                        if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
-                            // Mute our user.
-                            mutedList.push($(this).text());
-                            $(this).css("text-decoration", "line-through");
-                            $(this).hide();
-                        }
-
-                        // Output currently muted people in the console for debuggery.
-                        // console.log(mutedList);
-                    });
-
                 }
-
-                // He isn't register an EH to mute the user on name-click.
-                $(jq[0].children[1]).click(function() {
-                    // Check the user actually wants to mute this person.
-                    if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
-                        // Mute our user.
-                        mutedList.push($(this).text());
-                        $(this).css("text-decoration", "line-through");
-                        $(this).remove();
-                    }
-
-                    // Output currently muted people in the console for debuggery.
-                    // console.log(mutedList);
-                });
 
                 filterMessages();
             }
