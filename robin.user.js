@@ -131,7 +131,18 @@
     }
 
     function update() {
-        $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click(); // fallback to click
+        switch (settings["vote"]) {
+          case "stay":
+            $(".robin-chat--vote.robin--vote-class--continue:not('.robin--active')").click();
+            break;
+          case "abandon":
+            $(".robin-chat--vote.robin--vote-class--abandon:not('.robin--active')").click();
+            break;
+          case "grow":
+          default:
+            $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click(); // fallback to click
+        }
+
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
         var messages = $(".robin--user-class--user");
         for (var i = messages.length - 1000; i >= 0; i--) {
