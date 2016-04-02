@@ -437,11 +437,13 @@
         $(this).css('color', colorFromName($(this).text()));
     });
 
-    // Bold current user's name in user list and the chat
+    // Bold current user's name in user list
     $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
-    $('input.c-form-control.text-counter-input').css('width', '90%');
     
+    // Send message button
     function messageSend() {
         $(".text-counter-input").submit();
     }
+     $("#sendBtn").on("click", messageSend);
+     $('input.c-form-control.text-counter-input').css('width', '90%');
 })();
