@@ -43,9 +43,15 @@
     var timeStarted = new Date();
     var name = $(".robin-chat--room-name").text();
 
+    function formatNumber(n) {
+        var parts = n.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+
     function update() {
         $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click(); // fallback to click
-        $(".timeleft").text(howLongLeft() + " minutes remaining");
+        $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
 
         var list = {}
         var users = 0
@@ -65,12 +71,12 @@
             var continueCount = list.filter(function(voter) {
                 return voter.vote === "CONTINUE"
             }).length;
-            $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>(' + increaseCount + ')');
-            $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>(' + abandonCount + ')');
-            $('#robinVoteWidget .robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>(' + novoteCount + ')');
-            $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + continueCount + ')');
+            $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>(' + formatNumber(increaseCount) + ')');
+            $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>(' + formatNumber(abandonCount) + ')');
+            $('#robinVoteWidget .robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>(' + formatNumber(novoteCount) + ')');
+            $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + formatNumber(continueCount) + ')');
             users = list.length;
-            $(".usercount").text(users + " users in chat");
+            $(".usercount").text(formatNumber(users) + " users in chat");
         });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
@@ -91,17 +97,6 @@
                 $("#joinRobin").click();
             }, 1000);
         }
-    }
-
-    if (GM_getValue("chatName") != name) {
-        GM_setValue("chatName", name);
-        setTimeout(function() {
-            var oldVal = $(".text-counter-input").val();
-
-            $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s !").submit();
-            $(".text-counter-input").val(oldVal);
-
-        }, 10000);
     }
 
     // hash string so finding spam doesn't take up too much memory
@@ -125,7 +120,7 @@
     var spamCounts = {};
 
     function findAndHideSpam() {
-        if(settings["findAndHideSpam"]) {
+        if (settings["findAndHideSpam"]) {
             var messages = $(".robin--user-class--user");
             for (var i = messages.length - 1000; i >= 0; i--) {
                 $(messages[i]).remove()
@@ -172,7 +167,7 @@
 
 
     function removeSpam() {
-        if(settings["removeSpam"]) {
+        if (settings["removeSpam"]) {
             $(".robin--user-class--user").filter(function(num, message) {
                 var text = $(message).find(".robin-message--message").text();
                 var filter = text.indexOf("[") === 0 ||
@@ -267,7 +262,7 @@
 
     function loadSetting() {
         var setting = localStorage["robin-grow-settings"];
-        if(setting) {
+        if (setting) {
             setting = JSON.parse(setting);
         } else {
             setting = {};
