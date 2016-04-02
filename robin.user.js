@@ -182,4 +182,3 @@ setInterval(update, 10000);
 update();
 
 })();
-
