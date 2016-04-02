@@ -441,7 +441,7 @@
     $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
     
     // Send message button
-     $("#robinChatInput").append('<div class="sendAddon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="sendBtn">Send Message</div></div>'); // Send message
+     $("#robinSendMessage").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="sendBtn">Send Message</div>'); // Send message
     function messageSend() {
         $(".text-counter-input").submit();
     }
