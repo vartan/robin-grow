@@ -45,6 +45,7 @@
     var name = $(".robin-chat--room-name").text();
 
     function update() {
+        $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click(); // fallback to click
         $(".timeleft").text(howLongLeft() + " minutes remaining");
 
         var list = {}
