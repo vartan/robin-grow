@@ -441,7 +441,7 @@
     $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
     $('input.c-form-control.text-counter-input').css('width', '90%');
     
-    function messageSend(userEnteredMessage) {
-        $(userEnteredMessage).submit();
+    function messageSend() {
+        $(".text-counter-input").submit();
     }
 })();
