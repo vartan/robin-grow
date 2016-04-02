@@ -30,7 +30,7 @@
     $("#closeBtn").on("click", closeSettings);
     // Dom Setup end
     function saveSetting(settings) {
-        localStorage["robin-grow-settings"] = JSON.stringify(settings)
+        localStorage["robin-grow-settings"] = JSON.stringify(settings);
     }
 
     function loadSetting() {
@@ -46,7 +46,7 @@
     var settings = loadSetting();
 
     function addBoolSetting(name, description, defaultSetting) {
-        $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>')
+        $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
         $("input[name='setting-" + name + "']").on("click", function() {
             settings[name] = !settings[name];
             saveSetting(settings);
@@ -81,16 +81,16 @@
     }
 
     $(".robin--vote-class--abandon").on("click", function() {
-        setVote("abandon")
-    })
+        setVote("abandon");
+    });
 
     $(".robin--vote-class--continue").on("click", function() {
-        setVote("stay")
-    })
+        setVote("stay");
+    });
 
     $(".robin--vote-class--increase").on("click", function() {
-        setVote("grow")
-    })
+        setVote("grow");
+    });
 
     function addMins(date, mins) {
         var newDateObj = new Date(date.getTime() + mins * 60000);
@@ -146,25 +146,25 @@
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
         var messages = $(".robin--user-class--user");
         for (var i = messages.length - 1000; i >= 0; i--) {
-            $(messages[i]).remove()
+            $(messages[i]).remove();
         }
-        var list = {}
-        var users = 0
+        var list = {};
+        var users = 0;
         $.get("/robin/", function(a) {
             var start = "{" + a.substring(a.indexOf("\"robin_user_list\": ["));
             var end = start.substring(0, start.indexOf("}]") + 2) + "}";
             list = JSON.parse(end).robin_user_list;
             var increaseCount = list.filter(function(voter) {
-                return voter.vote === "INCREASE"
+                return voter.vote === "INCREASE";
             }).length;
             var abandonCount = list.filter(function(voter) {
-                return voter.vote === "ABANDON"
+                return voter.vote === "ABANDON";
             }).length;
             var novoteCount = list.filter(function(voter) {
-                return voter.vote === "NOVOTE"
+                return voter.vote === "NOVOTE";
             }).length;
             var continueCount = list.filter(function(voter) {
-                return voter.vote === "CONTINUE"
+                return voter.vote === "CONTINUE";
             }).length;
             $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>(' + formatNumber(increaseCount) + ')');
             $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>(' + formatNumber(abandonCount) + ')');
@@ -294,7 +294,12 @@
         if (settings["removeSpam"]) {
             $(".robin--user-class--user").filter(function(num, message) {
                 var text = $(message).find(".robin-message--message").text();
-                var filter = isBotSpam(text);
+                var filter = text.indexOf("[") === 0 ||
+                    text == "voted to STAY" ||
+                    text == "voted to GROW" ||
+                    text == "voted to ABANDON" ||
+                    text.indexOf("Autovoter") > -1 ||
+                    (/[\u0080-\uFFFF]/.test(text));
 
                 ; // starts with a [ or has "Autovoter"
                 // if(filter)console.log("removing "+text);
@@ -378,6 +383,43 @@
                 }
             }
         });
+    }
+
+    function openSettings() {
+        $(".robin-chat--sidebar").hide();
+        $("#settingContainer").show();
+    }
+    $("#openBtn").on("click", openSettings);
+
+    function closeSettings() {
+        $(".robin-chat--sidebar").show();
+        $("#settingContainer").hide();
+    }
+
+    function saveSetting(settings) {
+        localStorage["robin-grow-settings"] = JSON.stringify(settings);
+    }
+
+    function loadSetting() {
+        var setting = localStorage["robin-grow-settings"];
+        if(setting) {
+            setting = JSON.parse(setting);
+        } else {
+            setting = {};
+        }
+        return setting;
+    }
+
+    var settings = loadSetting();
+
+    function addBoolSetting(name, description, defaultSetting) {
+        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
+        $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
+            .on("click", function() {
+                settings[name] = !settings[name];
+                saveSetting(settings);
+            });
+        settings[name] = defaultSetting;
     }
 
     setInterval(update, 10000);
