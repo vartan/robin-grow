@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.8
+// @version      1.801
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -286,8 +286,8 @@
         if (settings.findAndHideSpam) {
             var $messages = $(".robin--user-class--user");
 
-            if ($messages.length > 250) {
-                $messages.slice(0, $messages.length - 250).remove();
+            if ($messages.length > 1000) {
+                $messages.slice(0, $messages.length - 1000).remove();
             }
 
             // skips over ones that have been hidden during this run of the loop
