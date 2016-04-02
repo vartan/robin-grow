@@ -347,11 +347,15 @@
             // There are nodes added
             if (jq.length > 0) {
                 // Mute user
+<<<<<<< HEAD
 
                 // cool we have a message.
                 var thisUser = $(jq[0] && jq[0].children[1]).text();
 
                 // Check if the user is muted.
+=======
+                var thisUser = $(jq[0].children[1]).text();
+>>>>>>> 3ffdb7eceba9d6dbe31a54f4f5b6fbbf2413d75b
                 if (mutedList.indexOf(thisUser) >= 0) {
                     // He is, hide the message.
                     $(jq[0]).hide();
@@ -374,7 +378,86 @@
         });
     }
 
+<<<<<<< HEAD
+=======
+    // Settings
+    // DOM Setup begin
+    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="openBtn">Open Settings</div></div>'); // Open Settings
+    $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
+
+    function openSettings() {
+        $(".robin-chat--sidebar").hide();
+        $("#settingContainer").show();
+    }
+    $("#openBtn").on("click", openSettings);
+
+    function closeSettings() {
+        $(".robin-chat--sidebar").show();
+        $("#settingContainer").hide();
+    }
+    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="closeBtn">Close Settings</div>');
+    $("#closeBtn").on("click", closeSettings);
+    // Dom Setup end
+    function saveSetting(settings) {
+        localStorage["robin-grow-settings"] = JSON.stringify(settings)
+    }
+
+    function loadSetting() {
+        var setting = localStorage["robin-grow-settings"];
+        if(setting) {
+            setting = JSON.parse(setting);
+        } else {
+            setting = {};
+        }
+        return setting;
+    }
+
+    var settings = loadSetting();
+
+    function addBoolSetting(name, description, defaultSetting) {
+        $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
+        $("input[name='setting-" + name + "']").prop("checked", defaultSetting)
+            .on("click", function() {
+                settings[name] = !settings[name];
+                saveSetting(settings);
+            });
+        settings[name] = defaultSetting;
+    }
+
+    // Options begin
+    addBoolSetting("removeSpam", "Remove bot spam", true);
+    addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
+    // Options end
+
+    // Add version at the end
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>');
+
+
+>>>>>>> 3ffdb7eceba9d6dbe31a54f4f5b6fbbf2413d75b
     setInterval(update, 10000);
     update();
-
+    
+    var flairColor = [
+        '#e50000', // red
+        '#db8e00', // orange
+        '#ccc100', // yellow
+        '#02be01', // green
+        '#0083c7', // blue
+        '#820080'  // purple
+    ];
+    
+    function colorFromName(name) {
+        sanitizedName = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+        flairNum = parseInt(sanitizedName, 36) % 6;
+        return flairColor[flairNum];
+    }
+    
+    // Color names in user list
+    $('#robinUserList .robin--username').each(function(){
+        $(this).css('color', colorFromName($(this).text()));
+    });
+    
+    // Bold current user's name in user list
+    $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
+        
 })();
