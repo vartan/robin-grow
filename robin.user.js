@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.52
+// @version      1.55
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -116,7 +116,7 @@ function findAndHideSpam() {
     for(var i = messages.length-1000; i >= 0; i--) {
         $(messages[i]).remove()
     }
-    $('.robin-message--message:not(.addon--hide)').each(function() {
+    $('.robin--user-class--user .robin-message--message:not(.addon--hide)').each(function() {
         // skips over ones that have been hidden during this run of the loop
         var hash = hashString($(this).text());
         var user = $('.robin-message--from', $(this).closest('.robin-message')).text();
@@ -141,6 +141,7 @@ function findAndHideSpam() {
         $.each(messages, function(hash, message) {
             if (message.count >= 3) {
                 $.each(message.elements, function(index, element) {
+                    //console.log("SPAM REMOVE: "+$(element).closest('.robin-message').text())
                     $(element).closest('.robin-message').addClass('addon--hide').remove();
                 });
             } else {
@@ -156,9 +157,9 @@ function findAndHideSpam() {
 
 
 function removeSpam() {
-    $(".robin-message").filter(function(num,message){
+    $(".robin--user-class--user").filter(function(num,message){
         var text = $(message).find(".robin-message--message").text();
-        return text.indexOf("[") === 0
+        var filter = text.indexOf("[") === 0
 			|| text == "voted to STAY"
 			|| text == "voted to GROW"
 			|| text == "voted to ABANDON"
@@ -166,6 +167,8 @@ function removeSpam() {
             || (/[\u0080-\uFFFF]/.test(text));
 
             ; // starts with a [ or has "Autovoter"
+       // if(filter)console.log("removing "+text);
+        return filter;
         }).remove();
 }
 
@@ -179,3 +182,4 @@ setInterval(update, 10000);
 update();
 
 })();
+
