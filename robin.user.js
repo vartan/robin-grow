@@ -440,4 +440,8 @@
     // Bold current user's name in user list and the chat
     $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
     $('input.c-form-control.text-counter-input').css('width', '90%');
+    
+    function messageSend() {
+        $(".text-counter-input").submit();
+    }
 })();
