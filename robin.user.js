@@ -380,14 +380,14 @@
                     (settings.removeSpam && isBotSpam(messageText)) ||
                     (settings.filterChannel &&
                         String(settings.channel).length > 0 &&
-                        !hasChannel($(message).find(".robin-message--message").text(), settings.channel));
+                        !hasChannel(messageText, settings.channel));
 
                 if (remove_message) {
                     $message = null;
                     $(jq[0]).remove();
                 } else {
                     if (messageText.indexOf(currentUsersName) !== -1) {
-                        $message.parent().css("background","orangered").css("color","white")
+                        $message.parent().css("background","orangered").css("color","white");
                         notifAudio.play();
                         console.log("got new mention");
                     }
