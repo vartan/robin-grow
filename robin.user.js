@@ -72,12 +72,9 @@
         saveSetting(settings);
     }
 
-    var needToVote = true;
-
     function setVote(vote) {
         settings["vote"] = vote;
         saveSetting(settings);
-        needToVote = true;
     }
 
     $(".robin--vote-class--abandon").on("click", function() {
@@ -131,7 +128,18 @@
     }
 
     function update() {
-        $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click(); // fallback to click
+        switch(settings["vote"]) {
+            case "abandon":
+                $(".robin-chat--vote.robin--vote-class--abandon:not('.robin--active')").click();
+                break;
+            case "stay":
+                $(".robin-chat--vote.robin--vote-class--continue:not('.robin--active')").click();
+                break;
+            case "grow":
+            default:
+                $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click();
+                break;
+        }      
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
         var messages = $(".robin--user-class--user");
         for (var i = messages.length - 1000; i >= 0; i--) {
@@ -167,22 +175,6 @@
         var now = new Date();
         if (timeSinceLastChat !== undefined && (timeSinceLastChat > 60000 && now - timeStarted > 60000)) {
             window.location.reload(); // reload if we haven't seen any activity in a minute.
-        }
-        /*
-        if ($(".robin-message--message:contains('that is already your vote')").length === 0) {
-            var oldVal = $(".text-counter-input").val();
-            $(".text-counter-input").val("/vote grow").submit();
-            $(".text-counter-input").val(oldVal);
-        }*/
-
-        if ($(".robin-message--message:contains('that is already your vote')").length) {
-            needToVote = false;
-        }
-
-        if (needToVote && $(".robin-message--message:contains('that is already your vote')").length === 0) {
-            var oldVal = $(".text-counter-input").val();
-            $(".text-counter-input").val("/vote " + settings["vote"]).submit();
-            $(".text-counter-input").val(oldVal);
         }
 
         // Try to join if not currently in a chat
