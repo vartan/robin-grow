@@ -133,7 +133,7 @@
         return part.join(".");
     }
 
-    function update() {
+    function update(allMentionsCount) {
         $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click(); // fallback to click
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
         var messages = $(".robin--user-class--user");
