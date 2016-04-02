@@ -139,7 +139,7 @@
             default:
                 $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click();
                 break;
-        }      
+        }
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
 
         var list = {};
@@ -182,6 +182,23 @@
             }, 1000);
         }
     }
+    
+    //credit to wwwroth for the idea
+    // i think doing it this way is better
+
+    var notif = new Audio("https://slack.global.ssl.fastly.net/dfc0/sounds/push/knock_brush.mp3");
+
+    var currentUsersName = $('div#header span.user a').html();
+
+    $('#robinChatMessageList').on('DOMNodeInserted', function (e) {
+        if ($(e.target).is('.robin--message-class--message.robin--user-class--user')) {
+            console.log("got new message");
+            if ($(".robin--message-class--message.robin--user-class--user").last().is(':contains("'+currentUsersName+'")')) {
+                notif.play();
+                console.log("got new mention");
+            }
+        }
+    });
 
     if (GM_getValue("chatName") != name) {
         GM_setValue("chatName", name);
@@ -347,11 +364,11 @@
             }
         });
     }
-    
+
     $(document).on("DOMNodeInserted", function(e) {
         findAndHideSpam();
         removeSpam();
-    })
+    });
 
     setInterval(update, 10000);
     update();
