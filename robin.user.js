@@ -35,7 +35,7 @@
 
     function loadSetting() {
         var setting = localStorage["robin-grow-settings"];
-        if(setting) {
+        if (setting) {
             setting = JSON.parse(setting);
         } else {
             setting = {};
@@ -48,11 +48,11 @@
     function addBoolSetting(name, description, defaultSetting) {
         $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>')
         $("input[name='setting-" + name + "']").on("click", function() {
-                settings[name] = !settings[name];
-                saveSetting(settings);
-            });
-        if(settings[name] !== undefined) {
-           $("input[name='setting-" + name + "']").prop("checked", settings[name]);
+            settings[name] = !settings[name];
+            saveSetting(settings);
+        });
+        if (settings[name] !== undefined) {
+            $("input[name='setting-" + name + "']").prop("checked", settings[name]);
         } else {
             settings[name] = defaultSetting;
         }
@@ -66,31 +66,32 @@
     // Add version at the end
     $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>');
     // Settings end
-    
-    if(!settings["vote"]) {
+
+    if (!settings["vote"]) {
         settings["vote"] = "grow";
         saveSetting(settings);
     }
-    
+
     var needToVote = true;
+
     function setVote(vote) {
         settings["vote"] = vote;
         saveSetting(settings);
         needToVote = true;
     }
-    
+
     $(".robin--vote-class--abandon").on("click", function() {
         setVote("abandon")
     })
-    
+
     $(".robin--vote-class--continue").on("click", function() {
         setVote("stay")
     })
-    
+
     $(".robin--vote-class--increase").on("click", function() {
         setVote("grow")
     })
-    
+
     function addMins(date, mins) {
         var newDateObj = new Date(date.getTime() + mins * 60000);
         return newDateObj;
@@ -123,8 +124,15 @@
     var timeStarted = new Date();
     var name = $(".robin-chat--room-name").text();
 
+    function formatNumber(n) {
+        var part = n.toString().split(".");
+        part[0] = part[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return part.join(".");
+    }
+
     function update() {
-        $(".timeleft").text(howLongLeft() + " minutes remaining");
+        $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click(); // fallback to click
+        $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
 
         var list = {}
         var users = 0
@@ -144,12 +152,12 @@
             var continueCount = list.filter(function(voter) {
                 return voter.vote === "CONTINUE"
             }).length;
-            $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>(' + increaseCount + ')');
-            $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>(' + abandonCount + ')');
-            $('#robinVoteWidget .robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>(' + novoteCount + ')');
-            $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + continueCount + ')');
+            $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>(' + formatNumber(increaseCount) + ')');
+            $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>(' + formatNumber(abandonCount) + ')');
+            $('#robinVoteWidget .robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>(' + formatNumber(novoteCount) + ')');
+            $('#robinVoteWidget .robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + formatNumber(continueCount) + ')');
             users = list.length;
-            $(".usercount").text(users + " users in chat");
+            $(".usercount").text(formatNumber(users) + " users in chat");
         });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
@@ -163,17 +171,17 @@
             $(".text-counter-input").val("/vote grow").submit();
             $(".text-counter-input").val(oldVal);
         }*/
-        
+
         if ($(".robin-message--message:contains('that is already your vote')").length) {
             needToVote = false;
         }
-        
+
         if (needToVote && $(".robin-message--message:contains('that is already your vote')").length === 0) {
             var oldVal = $(".text-counter-input").val();
             $(".text-counter-input").val("/vote " + settings["vote"]).submit();
             $(".text-counter-input").val(oldVal);
         }
-        
+
         // Try to join if not currently in a chat
         if ($("#joinRobinContainer").length) {
             $("#joinRobinContainer").click();
@@ -226,7 +234,7 @@
     var spamCounts = {};
 
     function findAndHideSpam() {
-        if(settings["findAndHideSpam"]) {
+        if (settings["findAndHideSpam"]) {
             $('.robin--user-class--user .robin-message--message:not(.addon--hide)').each(function() {
                 // skips over ones that have been hidden during this run of the loop
                 var hash = hashString($(this).text());
@@ -265,11 +273,11 @@
                     message.elements = [];
                 });
             });
-        }  
+        }
     }
 
     function removeSpam() {
-        if(settings["removeSpam"]) {
+        if (settings["removeSpam"]) {
             $(".robin--user-class--user").filter(function(num, message) {
                 var text = $(message).find(".robin-message--message").text();
                 var filter = text.indexOf("[") === 0 ||
@@ -285,7 +293,7 @@
             }).remove();
         }
     }
-    
+
     function isBotSpam(text) {
         // starts with a [, has "Autovoter", or is a vote
         var filter = text.indexOf("[") === 0 ||
@@ -337,28 +345,28 @@
             if (jq.length > 0) {
                 // Mute user
 
-            // cool we have a message.
-            var thisUser = $(jq[0] && jq[0].children[1]).text();
+                // cool we have a message.
+                var thisUser = $(jq[0] && jq[0].children[1]).text();
 
-            // Check if the user is muted.
-            if (mutedList.indexOf(thisUser) >= 0) {
-                // He is, hide the message.
-                $(jq[0]).hide();
-            } else {
-                // He isn't register an EH to mute the user on name-click.
-                $(jq[0].children[1]).click(function() {
-                    // Check the user actually wants to mute this person.
-                    if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
-                        // Mute our user.
-                        mutedList.push($(this).text());
-                        $(this).css("text-decoration", "line-through");
-                        $(this).hide();
-                    }
+                // Check if the user is muted.
+                if (mutedList.indexOf(thisUser) >= 0) {
+                    // He is, hide the message.
+                    $(jq[0]).hide();
+                } else {
+                    // He isn't register an EH to mute the user on name-click.
+                    $(jq[0].children[1]).click(function() {
+                        // Check the user actually wants to mute this person.
+                        if (confirm('You are about to mute ' + $(this).text() + ". Press OK to confirm.")) {
+                            // Mute our user.
+                            mutedList.push($(this).text());
+                            $(this).css("text-decoration", "line-through");
+                            $(this).hide();
+                        }
 
-                    // Output currently muted people in the console for debuggery.
-                    // console.log(mutedList);
-                });
-            }
+                        // Output currently muted people in the console for debuggery.
+                        // console.log(mutedList);
+                    });
+                }
             }
         });
     }
