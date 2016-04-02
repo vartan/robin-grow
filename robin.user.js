@@ -66,7 +66,7 @@ function update() {
         window.location.reload(); // reload if we haven't seen any activity in a minute.
     }
     if($(".robin-message--message:contains('that is already your vote')").length === 0) {
-        var oldVal = $(".text-counter-input").text();
+        var oldVal = $(".text-counter-input").val();
         $(".text-counter-input").val("/vote grow").submit();
         $(".text-counter-input").val(oldVal);
     }
@@ -83,7 +83,7 @@ function update() {
 if(GM_getValue("chatName") != name) {
     GM_setValue("chatName", name);
     setTimeout(function() {
-            var oldVal = $(".text-counter-input").text();
+            var oldVal = $(".text-counter-input").val();
 
             $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s !").submit();
             $(".text-counter-input").val(oldVal);
