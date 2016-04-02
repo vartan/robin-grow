@@ -317,27 +317,6 @@
         }
     }
 
-    function filterMessages() {
-
-        $(".robin--user-class--user").filter(function(num, message) {
-            var text = $(message).find(".robin-message--message").text();
-
-            if (settings.removeSpam && isBotSpam(text)) {
-                return true;
-            }
-
-            if(settings.filterChannel &&
-                String(settings.channel).length > 0 &&
-                !hasChannel($(message).find(".robin-message--message").text(), settings.channel)) {
-                return true;
-            }
-
-            return false;
-
-        }).remove();
-
-    }
-
     // faster to save this in memory
     /* Detects unicode spam - Credit to travelton
      * https://gist.github.com/travelton */
@@ -392,14 +371,19 @@
             // There are nodes added
             if (jq.length > 0) {
                 // cool we have a message.
-                var thisUser = $(jq[0] && jq[0].children && jq[0].children[1]).text();
-                var $message = $(jq[0] && jq[0].children && jq[0].children[2]);
+                var thisUser = $(jq[0].children && jq[0].children[1]).text();
+                var $message = $(jq[0].children && jq[0].children[2]);
                 var messageText = $message.text();
 
-                //console.log("Have message from " + thisUser);
-                // Check if the user is muted.
-                if (mutedList.indexOf(thisUser) >= 0 || isBotSpam(messageText)) {
-                    // He is, hide the message.
+                var remove_message =
+                    (mutedList.indexOf(thisUser) >= 0) ||
+                    (settings.removeSpam && isBotSpam(messageText)) ||
+                    (settings.filterChannel &&
+                        String(settings.channel).length > 0 &&
+                        !hasChannel($(message).find(".robin-message--message").text(), settings.channel));
+
+                if (remove_message) {
+                    $message = null;
                     $(jq[0]).remove();
                 } else {
                     if (messageText.indexOf(currentUsersName) !== -1) {
@@ -408,8 +392,6 @@
                         console.log("got new mention");
                     }
                 }
-
-                filterMessages();
             }
         });
     }
