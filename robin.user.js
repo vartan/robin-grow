@@ -9,8 +9,12 @@
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant   GM_getValue
 // @grant   GM_setValue
+// @grant   GM_addStyle
 // ==/UserScript==
 (function() {
+    // Styles
+    GM_addStyle('.robin--username {cursor: pointer}');
+
     // Settings
     // DOM Setup begin
     $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>'); // Open Settings
