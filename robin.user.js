@@ -30,7 +30,7 @@
     $("#closeBtn").on("click", closeSettings);
     // Dom Setup end
     function saveSetting(settings) {
-        localStorage["robin-grow-settings"] = JSON.stringify(settings)
+        localStorage["robin-grow-settings"] = JSON.stringify(settings);
     }
 
     function loadSetting() {
@@ -46,7 +46,7 @@
     var settings = loadSetting();
 
     function addBoolSetting(name, description, defaultSetting) {
-        $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>')
+        $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
         $("input[name='setting-" + name + "']").on("click", function() {
             settings[name] = !settings[name];
             saveSetting(settings);
@@ -81,16 +81,16 @@
     }
 
     $(".robin--vote-class--abandon").on("click", function() {
-        setVote("abandon")
-    })
+        setVote("abandon");
+    });
 
     $(".robin--vote-class--continue").on("click", function() {
-        setVote("stay")
-    })
+        setVote("stay");
+    });
 
     $(".robin--vote-class--increase").on("click", function() {
-        setVote("grow")
-    })
+        setVote("grow");
+    });
 
     function addMins(date, mins) {
         var newDateObj = new Date(date.getTime() + mins * 60000);
@@ -135,25 +135,25 @@
         $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
         var messages = $(".robin--user-class--user");
         for (var i = messages.length - 1000; i >= 0; i--) {
-            $(messages[i]).remove()
+            $(messages[i]).remove();
         }
-        var list = {}
-        var users = 0
+        var list = {};
+        var users = 0;
         $.get("/robin/", function(a) {
             var start = "{" + a.substring(a.indexOf("\"robin_user_list\": ["));
             var end = start.substring(0, start.indexOf("}]") + 2) + "}";
             list = JSON.parse(end).robin_user_list;
             var increaseCount = list.filter(function(voter) {
-                return voter.vote === "INCREASE"
+                return voter.vote === "INCREASE";
             }).length;
             var abandonCount = list.filter(function(voter) {
-                return voter.vote === "ABANDON"
+                return voter.vote === "ABANDON";
             }).length;
             var novoteCount = list.filter(function(voter) {
-                return voter.vote === "NOVOTE"
+                return voter.vote === "NOVOTE";
             }).length;
             var continueCount = list.filter(function(voter) {
-                return voter.vote === "CONTINUE"
+                return voter.vote === "CONTINUE";
             }).length;
             $('#robinVoteWidget .robin--vote-class--increase .robin-chat--vote-label').html('grow<br>(' + formatNumber(increaseCount) + ')');
             $('#robinVoteWidget .robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>(' + formatNumber(abandonCount) + ')');
@@ -375,11 +375,6 @@
     }
 
 
-    // Settings
-    // DOM Setup begin
-    $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="openBtn">Open Settings</div></div>'); // Open Settings
-    $(".robin-chat--sidebar").before('<div class="robin-chat--sidebar" style="display:none;" id="settingContainer"><div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent"></div></div>'); // Setting container
-
     function openSettings() {
         $(".robin-chat--sidebar").hide();
         $("#settingContainer").show();
@@ -390,11 +385,9 @@
         $(".robin-chat--sidebar").show();
         $("#settingContainer").hide();
     }
-    $("#settingContent").append('<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="closeBtn">Close Settings</div>');
-    $("#closeBtn").on("click", closeSettings);
-    // Dom Setup end
+    
     function saveSetting(settings) {
-        localStorage["robin-grow-settings"] = JSON.stringify(settings)
+        localStorage["robin-grow-settings"] = JSON.stringify(settings);
     }
 
     function loadSetting() {
@@ -419,13 +412,6 @@
         settings[name] = defaultSetting;
     }
 
-    // Options begin
-    addBoolSetting("removeSpam", "Remove bot spam", true);
-    addBoolSetting("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
-    // Options end
-
-    // Add version at the end
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>');
 
 
     setInterval(update, 10000);
