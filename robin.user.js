@@ -121,10 +121,14 @@
         return hash;
     }
 
+    var messageCount = 0;
+
     function removeOldMsgs() {
-        var messages = $(".robin--user-class--user");
-        for(var i = messages.length-1000; i >= 0; i--) {
-            $(messages[i]).remove()
+        if (messageCount >= 1000) {
+            var msg = document.getElementById("robinChatMessageList").children[0];
+            $(msg).remove();
+
+            messageCount--;
         }
     }
 
@@ -160,6 +164,9 @@
                         $.each(message.elements, function(index, element) {
                             //console.log("SPAM REMOVE: "+$(element).closest('.robin-message').text())
                             $(element).closest('.robin-message').addClass('addon--hide').remove();
+
+                            // Decrease global messageCount.
+                            messageCount--;
                         });
                     } else {
                         message.count = 0;
@@ -230,6 +237,8 @@
                     var msg = jq[0];
                     var msgText = msg.children[2].textContent;
                     if (isBotSpam(msgText)) $(msg).hide();
+
+                    messageCount++;
 
                     removeOldMsgs();
                     findAndHideSpam();
