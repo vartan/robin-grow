@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.57
+// @version      1.59
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -166,7 +166,7 @@
                     message.elements = [];
                 });
             });
-        }  
+        }
     }
 
 
@@ -243,7 +243,7 @@
             }
         });
     }
-    
+
     // Settings
     // DOM Setup begin
     $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="openBtn">Open Settings</div></div>'); // Open Settings
@@ -295,7 +295,7 @@
 
     // Add version at the end
     $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>');
-        
+
 
     setInterval(update, 10000);
     update();
