@@ -283,7 +283,12 @@
         if (settings["removeSpam"]) {
             $(".robin--user-class--user").filter(function(num, message) {
                 var text = $(message).find(".robin-message--message").text();
-                var filter = isBotSpam(text);
+                var filter = text.indexOf("[") === 0 ||
+                    text == "voted to STAY" ||
+                    text == "voted to GROW" ||
+                    text == "voted to ABANDON" ||
+                    text.indexOf("Autovoter") > -1 ||
+                    (/[\u0080-\uFFFF]/.test(text));
 
                 ; // starts with a [ or has "Autovoter"
                 // if(filter)console.log("removing "+text);
@@ -342,15 +347,11 @@
             // There are nodes added
             if (jq.length > 0) {
                 // Mute user
-<<<<<<< HEAD
 
                 // cool we have a message.
                 var thisUser = $(jq[0] && jq[0].children[1]).text();
 
                 // Check if the user is muted.
-=======
-                var thisUser = $(jq[0].children[1]).text();
->>>>>>> 3ffdb7eceba9d6dbe31a54f4f5b6fbbf2413d75b
                 if (mutedList.indexOf(thisUser) >= 0) {
                     // He is, hide the message.
                     $(jq[0]).hide();
@@ -373,8 +374,7 @@
         });
     }
 
-<<<<<<< HEAD
-=======
+
     // Settings
     // DOM Setup begin
     $("#robinVoteWidget").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;" id="openBtn">Open Settings</div></div>'); // Open Settings
@@ -428,10 +428,9 @@
     $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow - Version ' + GM_info.script.version + '</a></div>');
 
 
->>>>>>> 3ffdb7eceba9d6dbe31a54f4f5b6fbbf2413d75b
     setInterval(update, 10000);
     update();
-    
+
     var flairColor = [
         '#e50000', // red
         '#db8e00', // orange
@@ -440,19 +439,19 @@
         '#0083c7', // blue
         '#820080'  // purple
     ];
-    
+
     function colorFromName(name) {
         sanitizedName = name.toLowerCase().replace(/[^a-z0-9]/g, "");
         flairNum = parseInt(sanitizedName, 36) % 6;
         return flairColor[flairNum];
     }
-    
+
     // Color names in user list
     $('#robinUserList .robin--username').each(function(){
         $(this).css('color', colorFromName($(this).text()));
     });
-    
+
     // Bold current user's name in user list
     $('#robinUserList .robin--user-class--self .robin--username').css('font-weight', 'bold');
-        
+
 })();
