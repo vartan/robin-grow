@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.51
+// @version      1.55
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -66,7 +66,9 @@ function update() {
         window.location.reload(); // reload if we haven't seen any activity in a minute.
     }
     if($(".robin-message--message:contains('that is already your vote')").length === 0) {
+        var oldVal = $(".text-counter-input").val();
         $(".text-counter-input").val("/vote grow").submit();
+        $(".text-counter-input").val(oldVal);
     }
 
     // Try to join if not currently in a chat
@@ -81,7 +83,11 @@ function update() {
 if(GM_getValue("chatName") != name) {
     GM_setValue("chatName", name);
     setTimeout(function() {
+            var oldVal = $(".text-counter-input").val();
+
             $(".text-counter-input").val("[Robin-Grow] I automatically voted to grow, and so can you! http://redd.it/4cwk2s !").submit();
+            $(".text-counter-input").val(oldVal);
+
         }, 10000);
 }
 
@@ -113,7 +119,7 @@ function removeOldMsgs() {
 var spamCounts = {};
 
 function findAndHideSpam() {
-    $('.robin-message--message:not(.addon--hide)').each(function() {
+    $('.robin--user-class--user > .robin-message--message:not(.addon--hide)').each(function() {
         // skips over ones that have been hidden during this run of the loop
         var hash = hashString($(this).text());
         var user = $('.robin-message--from', $(this).closest('.robin-message')).text();
@@ -138,6 +144,7 @@ function findAndHideSpam() {
         $.each(messages, function(hash, message) {
             if (message.count >= 3) {
                 $.each(message.elements, function(index, element) {
+                    //console.log("SPAM REMOVE: "+$(element).closest('.robin-message').text())
                     $(element).closest('.robin-message').addClass('addon--hide').remove();
                 });
             } else {
@@ -150,16 +157,21 @@ function findAndHideSpam() {
 }
 
 function isBotSpam(text) {
-    // starts with a [ or has "Autovoter"
-    return text.indexOf("[") === 0
+    var filter = text.indexOf("[") === 0
+        || text == "voted to STAY"
+        || text == "voted to GROW"
+        || text == "voted to ABANDON"
         || text.indexOf("Autovoter") > -1
-        /* Detects unicode spam - Credit to travelton (https://gist.github.com/travelton)*/
         || (/[\u0080-\uFFFF]/.test(text));
+
+        ; // starts with a [ or has "Autovoter"
+    // if(filter)console.log("removing "+text);
+    return filter;
 }
 
 var mo = new MutationObserver(function(ms) {
     ms.forEach(function(m) {
-        var msg = m.addedNodes[0]
+        var msg = m.addedNodes[0];
         if (isBotSpam(msg.children[2].textContent)) $(msg).hide();
         removeOldMsgs();
         findAndHideSpam();
@@ -173,3 +185,4 @@ setInterval(update, 10000);
 update();
 
 })();
+
