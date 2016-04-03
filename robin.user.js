@@ -57,9 +57,16 @@
 			url: 'https://www.reddit.com/r/robintracking/comments/4czzo2/robin_chatter_leader_board_official/.rss?limit=1',
 			data: {},
 			success: function( data ) {
+				var currentRoomName = $('.robin-chat--room-name').text();
 				var standingsPost = $(data).find("entry > content").first();
 				var decoded = $($('<div/>').html(standingsPost).text()).find('table').first();
-				decoded.find('tr').each(function(i) { $(this).find('td,th').slice(3).remove();});
+				decoded.find('tr').each(function(i) { var row = $(this).find('td,th');
+													var nameColumn = $(row.get(2));
+													nameColumn.find('a').prop('target','_blank');
+													if (currentRoomName.startsWith(nameColumn.text().substring(0,6))) {
+														row.css('background-color', '#22bb45');
+													}
+													row.slice(3).remove();});
 				$("#standingsTable").html(decoded);
 			},
 			dataType: 'xml'
