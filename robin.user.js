@@ -498,6 +498,6 @@
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
     $('#robinChatInput').css('background', '#EFEFED');
     
-    // Full screen-height chat - subtracts #header and header.robin-chat--header heights from viewport height and hides footers
-    $('<style>@media (min-width: 769px) { body > .content + .footer-parent, body > .content + .footer-parent ~ .debuginfo { display: none; } .robin-chat .robin-chat--body { height: calc(100vh - 118px); } }</style>').appendTo('body');
+    // Full-screen-height chat
+    $('<style>@media(min-width:769px){.content {border:none}.footer-parent{margin-top:0;font-size:inherit}.debuginfo{display:none}.bottommenu{padding:0 3px;display:inline-block}#robinChatInput{padding:2px}#sendBtn{margin-bottom:0}.robin-chat .robin-chat--body{height:calc(100vh - 130px)}}</style>').appendTo('body');
 })();
