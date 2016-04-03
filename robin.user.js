@@ -292,18 +292,18 @@
     var spamCounts = {};
 
     function findAndHideSpam() {
+        var $messages = $(".robin-message");
+
+        var maxprune = parseInt(settings.maxprune || "1000", 10);
+        if (maxprune < 10 || isNaN(maxprune)) {
+            maxprune = 1000;
+        }
+
+        if ($messages.length > maxprune) {
+            $messages.slice(0, $messages.length - maxprune).remove();
+        }
+
         if (settings.findAndHideSpam) {
-            var $messages = $(".robin-message");
-
-            var maxprune = parseInt(settings.maxprune || "1000", 10);
-            if (maxprune < 10 || isNaN(maxprune)) {
-                maxprune = 1000;
-            }
-
-            if ($messages.length > maxprune) {
-                $messages.slice(0, $messages.length - maxprune).remove();
-            }
-
             // skips over ones that have been hidden during this run of the loop
             $('.robin--user-class--user .robin-message--message:not(.addon--hide)').each(function() {
                 var $this = $(this);
