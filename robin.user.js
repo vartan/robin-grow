@@ -511,14 +511,22 @@
         return flairColor[flairNum];
     }
 
-    // Color names in user list, unless they've already been colored
-    function colorUserListNames() {
-        $('#robinUserList').find('.robin--username:not([style])').each(function(){
-            this.style.color = colorFromName(this.textContent);
+    // Initial pass to color names in user list
+    $('#robinUserList').find('.robin--username').each(function(){
+        this.style.color = colorFromName(this.textContent);
+    });
+
+    // When a user's status changes, they are removed from the user list and re-added with new status classes,
+    // so here we watch for names being added to the user list to re-color
+    var myUserListObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length > 0) {
+                var usernameSpan = mutation.addedNodes[0].children[1];
+                usernameSpan.style.color = colorFromName(usernameSpan.innerHTML);
+            }
         });
-    }
-    setInterval(colorUserListNames, 11000);
-    colorUserListNames();
+    });
+    myUserListObserver.observe(document.getElementById("robinUserList"), { childList: true });
 
     // Color current user's name in chat and darken post backgrounds
     var currentUserColor = colorFromName(currentUsersName);
