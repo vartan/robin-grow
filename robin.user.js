@@ -511,7 +511,7 @@
                         console.log("got new mention");
                     }
 	
-                    else if (messageText.toLowerCase()[0] in colors) {
+                    if (messageText.toLowerCase()[0] in colors) {
                         $message.parent().css("background",colors[messageText.toLowerCase()[0]]);
                     }
                     if(urlRegex.test(messageText)) {
