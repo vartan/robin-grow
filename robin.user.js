@@ -176,36 +176,6 @@
 
     var list = {};
     $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
-    $(".text-counter-input").keydown(function(e) {
-        console.log('keyup called');
-        var text = $(".text-counter-input").val();
-        var code = e.keyCode || e.which;
-        if (code == '9') {
-            var nameParts = text.split(" ");
-            var namePart = nameParts[nameParts.length-1].toLowerCase();
-            var allNames = list.map(function(a){return a.name;});
-            console.log(allNames);
-            for(var i = 0; i < allNames.length; i++) {
-                if(allNames[i].toLowerCase().indexOf(namePart) == 0) {
-                    var goodText = "";
-                    for(var j = 0; j < nameParts.length-1; j++) {
-                        goodText = goodText+nameParts[j]+" ";
-                    }
-                    goodText = goodText+allNames[i];
-                    $(".text-counter-input").val(goodText);
-                    break;
-                }
-            }
-        } else if(code == '13') {
-            if(settings.filterChannel &&
-                String(settings.channel).length > 0) {
-
-                    setTimeout(function() {
-                        $(".text-counter-input").val(settings.channel+" ");
-                    }, 10);
-                }
-        }
-    });
 
     function update() {
         switch(settings.vote) {
