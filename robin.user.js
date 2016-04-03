@@ -73,19 +73,18 @@
 		});
 	}
 	
-	function startStandings(standingsInterval) {
-		stopStandings(standingsInterval);
+	var standingsInterval = 0;
+	function startStandings() {
+		stopStandings();
 		standingsInterval = setInterval(grabStandings, 120000);
 		grabStandings();
-		return standingsInterval;
 	}
 	
-	function stopStandings(standingsInterval) {
+	function stopStandings() {
 		if (standingsInterval){
 			clearInterval(standingsInterval);
 			standingsInterval = 0;
 		}
-		return standingsInterval;
 	}
 
     function howLongLeft(endTime) {
@@ -191,16 +190,15 @@
                 $("#settingContainer").show();
             });
 			
-			var standingsInterval;
 			$("#standingsBtn").on("click", function openStandings() {
 				$(".robin-chat--sidebar").hide();
-				standingsInterval = startStandings(standingsInterval);
+				startStandings();
 				$("#standingsContainer").show();
 			});
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
-				standingsInterval = stopStandings(standingsInterval);
+				stopStandings();
                 $("#settingContainer").hide();
 				$("#standingsContainer").hide();
             });
