@@ -165,7 +165,8 @@
     Settings.addBool("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "");
-    Settings.addBool("filterChannel", "Filter by channel", false);
+    Settings.addBool("channelPrepend", "Prepend chat input with primary channel + listening channels", false);
+    Settings.addBool("filterChannel", "Filter by channel", true);
     // Options end
 
     // Add version at the end (if available from script engine)
@@ -181,9 +182,12 @@
     var urlRegex = new RegExp(/(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?/ig);
 
     var list = {};
-    $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
+
+    if(settings.channelPrepend){
+ 	   $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"");
+	}
     $(".text-counter-input").keyup(function(e) {
-        if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0) {
+        if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0 && settings.channelPrepend) {
             $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val())
         }
     });
@@ -195,9 +199,12 @@
             if(settings.filterChannel &&
                 String(settings.channel).length > 0) {
 
-                    setTimeout(function() {
-                        $(".text-counter-input").val(settings.channel+" ");
-                    }, 10);
+		    if(settings.channelPrepend){
+
+			    setTimeout(function() {
+				$(".text-counter-input").val(settings.channel+" ");
+			    }, 10);
+			}
                 }
         }
     });
