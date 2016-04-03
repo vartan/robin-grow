@@ -405,6 +405,7 @@
                     (mutedList.indexOf(thisUser) >= 0) ||
                     (settings.removeSpam && isBotSpam(messageText)) ||
                     (settings.filterChannel &&
+                        !jq.hasClass('robin--user-class--system') &&
                         String(settings.channel).length > 0 &&
                         !hasChannel(messageText, settings.channel));
 
