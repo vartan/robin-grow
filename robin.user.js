@@ -167,6 +167,7 @@
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "");
     Settings.addBool("channelPrepend", "Prepend chat input with primary channel + listening channels", false);
     Settings.addBool("filterChannel", "Filter by channel", true);
+    Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
 
     // Add version at the end (if available from script engine)
@@ -208,10 +209,10 @@
                 }
         }
     });
-    
+
     var isEndingSoon = false;
     var endTime = null;
-    
+
     // Grab the timestamp from the time remaining message and then calc the ending time using the estimate it gives you
     function getEndTime() { // mostly from /u/Yantrio, modified by /u/voltaek
         var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
@@ -231,7 +232,7 @@
             return null;
         }
     }
-    
+
     endTime = getEndTime();
 
     function update() {
@@ -390,7 +391,10 @@
             text == "voted to ABANDON" ||
             text.indexOf("Autovoter") > -1 ||
             (UNICODE_SPAM_RE.test(text));
-
+        var spamFilters = settings.spamFilters.split(",").map(function(filter) { return filter.trim().toLowerCase() });
+        spamFilters.forEach(function(filterVal) {
+            filter = filter || filterVal.length > 0 && text.toLowerCase().indexOf(filterVal) >= 0
+        })
         // if(filter)console.log("removing "+text);
         return filter;
     }
@@ -568,7 +572,7 @@
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
     $('#robinChatInput').css('background', '#EFEFED');
-    
+
     // RES Night Mode support
     if ($("body").hasClass("res")) {
         $('<style>.res-nightmode .robin-message, .res-nightmode .robin--user-class--self .robin--username, .res-nightmode .robin-room-participant .robin--username, .res-nightmode :not([class*=flair]) > .robin--username, .res-nightmode .robin-chat .robin-chat--vote, .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { color: #DDD; } .res-nightmode .robin-chat .robin-chat--sidebar, .res-nightmode .robin-chat .robin-chat--vote { background-color: #262626; } .res-nightmode #robinChatInput { background-color: #262626 !important; } .res-nightmode .robin-chat .robin-chat--vote { box-shadow: 0px 0px 2px 1px #888; } .res-nightmode .robin-chat .robin-chat--vote.robin--active { background-color: #444444; box-shadow: 1px 1px 5px 1px black inset; } .res-nightmode .robin-chat .robin-chat--vote:focus { background-color: #848484; outline: 1px solid #9A9A9A; } .res-nightmode .robin--user-class--self { background-color: #424242; } .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { background-color: #520000 !important; } .res-nightmode .robin-chat .robin-chat--user-list-widget { overflow-x: hidden; } .res-nightmode .robin-chat .robin-chat--sidebar-widget { border-bottom: none; }</style>').appendTo('body');
