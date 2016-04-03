@@ -454,8 +454,11 @@
     var colors = {
         '$': 'rgba(255,0,0,0.2)',
         '%': 'rgba(0,255,0,0.2)',
+        '%chat': 'rgba(0,200,0,0.2)',
+        '%MH': 'rgba(200,200,0,0.2)',
         'penis/': 'rgba(255,255,0,0.2)',
         '#': 'rgba(0,0,255,0.2)',
+        '#rpg': 'rgba(0,200,200,0.2)',
         '@': 'rgba(0,255,255,0.2)',
         '&': 'rgba(255,0,255,0.2)',
         '+': $("body").hasClass('res-nightmode') ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'
@@ -507,12 +510,12 @@
                         }
                     }
                     if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
-                        $message.parent().css("background","#FFA27F").css("color","white");
+                        $message.parent().css("background","#FFA27F");
                         notifAudio.play();
                         console.log("got new mention");
                     }
-	
-                    if (messageText.toLowerCase()[0] in colors) {
+		    //still show mentions in highlight color.	
+                    else if (messageText.toLowerCase()[0] in colors) {
                         $message.parent().css("background",colors[messageText.toLowerCase()[0]]);
                     }
                     if(urlRegex.test(messageText)) {
