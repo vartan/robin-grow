@@ -231,7 +231,7 @@
                 $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click();
                 break;
         }
-        if (endTime === null) {
+        if (endTime === null && !isEndingSoon) {
             $(".timeleft").hide();
         }
         else {
