@@ -177,25 +177,25 @@
     var list = {};
 
     // Instead of forcing the channel filter into the box all the time, lets hook this more intuitively
-    if( settings.filterChannel && String(settings.channel).length > 0 ) // Since this requires a reload anyway, only hook sending if we are filtering (for performance)
+    var targetTextBox = $("#robinSendMessage").find("input[type='text']");
+    targetTextBox.next().on('click', function ()
     {
-        var targetTextBox = $("#robinSendMessage").find("input[type='text']");
-        targetTextBox.next().on('click', function ()
-        {
-            var sendingMessage = targetTextBox.val();
-            if( sendingMessage.length <= 0 ) return false;
+	    if( settings.filterChannel && String(settings.channel).length > 0 )
+	    {
+	        var sendingMessage = targetTextBox.val();
+	        if( sendingMessage.length <= 0 ) return false;
 
-            if( sendingMessage.startsWith("/") ) return true; // this is a command, we dont need to do anything
-            if( sendingMessage.startsWith("-") )
-            {
-                targetTextBox.val(sendingMessage.substring(1)); // Remove the - character from the beginning of the string
-                return true; // this prefix means we should not touch output (raw)
-            }
+	        if( sendingMessage.startsWith("/") ) return true; // this is a command, we dont need to do anything
+	        if( sendingMessage.startsWith("-") )
+	        {
+	            targetTextBox.val(sendingMessage.substring(1)); // Remove the - character from the beginning of the string
+	            return true; // this prefix means we should not touch output (raw)
+	        }
 
-            // Append our chat prefix to the outgoing message
-            if( !sendingMessage.startsWith(settings.channel) ) targetTextBox.val(settings.channel + sendingMessage);
-        });
-    }
+	        // Append our chat prefix to the outgoing message
+	        if( !sendingMessage.startsWith(settings.channel) ) targetTextBox.val(settings.channel + sendingMessage);
+	    }
+    });
 
     /*
     $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
