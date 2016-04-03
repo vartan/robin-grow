@@ -20,11 +20,13 @@
 
     // Styles
     GM_addStyle('.robin--username {cursor: pointer} #robin-grow-tabbar {padding-left:10px;} .robin-grow-tab {cursor:pointer; display: inline-block !important;width: auto;padding: 7px;font-size: 16pt !important;text-transform:none !important;}');
+    GM_addStyle('.robin--username {cursor: pointer}');
+	GM_addStyle('#standingsTable table {width: 100%}');
+	GM_addStyle('#standingsTable table th {font-weight: bold}');
     var currentChannelTab = "";
     function getChannelPrefix() {
         var channels = settings.channel && settings.channel.split(",") || "";
         return currentChannelTab || settings.filterChannel && settings.channel && settings.channel[0] || "";
-
     }
     // Utils
     function hasChannel(source, channels) {
@@ -57,7 +59,7 @@
 			success: function( data ) {
 				var standingsPost = $(data).find("entry > content").first();
 				var decoded = $($('<div/>').html(standingsPost).text()).find('table').first();
-				decoded.find('tr').each(function(i) { $(this).find('td,th').slice(3).remove();});
+				decoded.find('tr').each(function(i) { $(this).css().find('td,th').slice(3).remove();});
 				$("#standingsTable").html(decoded);
 			},
 			dataType: 'xml'
@@ -154,7 +156,7 @@
 			    '<div class="robin-chat--sidebar" style="display:none;" id="standingsContainer">' +
                     '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="standingsContent">' +
 					    '<div id="standingsTable"></div>' +
-						'<a class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" href="https://www.reddit.com/r/robintracking/comments/4czzo2/robin_chatter_leader_board_official/" target="robinStandingsTab">Full Leaderboard</a>' +
+						'<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;"><a href="https://www.reddit.com/r/robintracking/comments/4czzo2/robin_chatter_leader_board_official/" target="robinStandingsTab">Full Leaderboard</a></div>' +
                         '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeStandingsBtn">Close Standings</div>' +
                     '</div>' +
                 '</div>'
