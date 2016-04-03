@@ -413,6 +413,15 @@
     });
 
 
+    //colored text thanks to OrangeredStilton! https://gist.github.com/Two9A/3f33ee6f6daf6a14c1cc3f18f276dacd
+    var colors = {
+        '$': 'rgba(255,0,0,0.2)',
+        '%': 'rgba(0,255,0,0.2)',
+        '*': 'rgba(255,255,0,0.2)',
+        '#': 'rgba(0,0,255,0.2)',
+        '@': 'rgba(0,255,255,0.2)',
+        '&': 'rgba(255,0,255,0.2)'
+    };
     // credit to wwwroth for idea (notification audio)
     // i think this method is better
     var notifAudio = new Audio("https://slack.global.ssl.fastly.net/dfc0/sounds/push/knock_brush.mp3");
@@ -464,6 +473,10 @@
                         notifAudio.play();
                         console.log("got new mention");
                     }
+	
+                    if (messageText.toLowerCase()[0] in colors) {
+                        $message.parent().css("background",colors[messageText.toLowerCase()[0]]);
+                    }
                     if(urlRegex.test(messageText)) {
                         urlRegex.lastIndex = 0;
                         var url = encodeURI(urlRegex.exec(messageText)[0]);
@@ -490,6 +503,7 @@
         '#0083c7', // blue
         '#820080'  // purple
     ];
+
 
     function colorFromName(name) {
         sanitizedName = name.toLowerCase().replace(/[^a-z0-9]/g, "");
