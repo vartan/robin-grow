@@ -176,6 +176,20 @@
 
     var list = {};
     $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
+    $(".text-counter-input").keydown(function(e) {
+        console.log('keyup called');
+        var text = $(".text-counter-input").val();
+        var code = e.keyCode || e.which;
+        if(code == 13) {
+            if(settings.filterChannel &&
+                String(settings.channel).length > 0) {
+
+                    setTimeout(function() {
+                        $(".text-counter-input").val(settings.channel+" ");
+                    }, 10);
+                }
+        }
+    });
 
     function update() {
         switch(settings.vote) {
