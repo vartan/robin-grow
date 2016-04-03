@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.840
+// @version      1.850
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -56,22 +56,15 @@
 		});
 	}
 
-    function howLongLeft() { // mostly from /u/Yantrio
-        var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
-        if (remainingMessageContainer.length === 0) {
-            // for cases where it says "soon" instead of a time on page load
+    function howLongLeft(endTime) {
+        if (endTime === null) {
             return 0;
         }
-        var message = $(".robin-message--message", remainingMessageContainer).text();
-        var time = new Date($(".robin--user-class--system:contains('approx') .robin-message--timestamp").attr("datetime"));
         try {
-            var endTime = addMins(time, message.match(/\d+/)[0]);
             return Math.floor((endTime - new Date()) / 60 / 1000 * 10) / 10;
         } catch (e) {
             return 0;
         }
-
-        //grab the timestamp from the first post and then calc the difference using the estimate it gives you on boot
     }
 
 
@@ -215,8 +208,12 @@
     Settings.addBool("filterChannel", "Filter by channel", false);
     // Options end
 
-    // Add version at the end
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow</a></div>');
+    // Add version at the end (if available from script engine)
+    var versionString = "";
+    if (typeof GM_info !== "undefined") {
+        versionString = " - v" + GM_info.script.version;
+    }
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow' + versionString + '</a></div>');
     // Settings end
 
     var timeStarted = new Date();
@@ -244,6 +241,31 @@
                 }
         }
     });
+    
+    var isEndingSoon = false;
+    var endTime = null;
+    
+    // Grab the timestamp from the time remaining message and then calc the ending time using the estimate it gives you
+    function getEndTime() { // mostly from /u/Yantrio, modified by /u/voltaek
+        var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
+        if (remainingMessageContainer.length === 0) {
+            // for cases where it says "soon" instead of a time on page load
+            var endingSoonMessageContainer = $(".robin--user-class--system:contains('soon')");
+            if (endingSoonMessageContainer.length !== 0) {
+                isEndingSoon = true;
+            }
+            return null;
+        }
+        var message = $(".robin-message--message", remainingMessageContainer).text();
+        var time = new Date($(".robin-message--timestamp", remainingMessageContainer).attr("datetime"));
+        try {
+            return addMins(time, message.match(/\d+/)[0]);
+        } catch (e) {
+            return null;
+        }
+    }
+    
+    endTime = getEndTime();
 
     function update() {
         switch(settings.vote) {
@@ -258,7 +280,12 @@
                 $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click();
                 break;
         }
-        $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
+        if (endTime === null && !isEndingSoon) {
+            $(".timeleft").hide();
+        }
+        else {
+            $(".timeleft").text(isEndingSoon ? "ending soon" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
+        }
 
         var users = 0;
         $.get("/robin/", function(a) {
@@ -503,10 +530,22 @@
         return flairColor[flairNum];
     }
 
-    // Color names in user list
+    // Initial pass to color names in user list
     $('#robinUserList').find('.robin--username').each(function(){
         this.style.color = colorFromName(this.textContent);
     });
+
+    // When a user's status changes, they are removed from the user list and re-added with new status classes,
+    // so here we watch for names being added to the user list to re-color
+    var myUserListObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length > 0) {
+                var usernameSpan = mutation.addedNodes[0].children[1];
+                usernameSpan.style.color = colorFromName(usernameSpan.innerHTML);
+            }
+        });
+    });
+    myUserListObserver.observe(document.getElementById("robinUserList"), { childList: true });
 
     // Color current user's name in chat and darken post backgrounds
     var currentUserColor = colorFromName(currentUsersName);
@@ -515,4 +554,9 @@
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
     $('#robinChatInput').css('background', '#EFEFED');
+    
+    // RES Night Mode support
+    if ($("body").hasClass("res")) {
+        $('<style>.res-nightmode .robin-message, .res-nightmode .robin--user-class--self .robin--username, .res-nightmode .robin-room-participant .robin--username, .res-nightmode :not([class*=flair]) > .robin--username, .res-nightmode .robin-chat .robin-chat--vote, .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { color: #DDD; } .res-nightmode .robin-chat .robin-chat--sidebar, .res-nightmode .robin-chat .robin-chat--vote { background-color: #262626; } .res-nightmode #robinChatInput { background-color: #262626 !important; } .res-nightmode .robin-chat .robin-chat--vote { box-shadow: 0px 0px 2px 1px #888; } .res-nightmode .robin-chat .robin-chat--vote.robin--active { background-color: #444444; box-shadow: 1px 1px 5px 1px black inset; } .res-nightmode .robin-chat .robin-chat--vote:focus { background-color: #848484; outline: 1px solid #9A9A9A; } .res-nightmode .robin--user-class--self { background-color: #424242; } .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { background-color: #520000 !important; } .res-nightmode .robin-chat .robin-chat--user-list-widget { overflow-x: hidden; } .res-nightmode .robin-chat .robin-chat--sidebar-widget { border-bottom: none; }</style>').appendTo('body');
+    }
 })();
