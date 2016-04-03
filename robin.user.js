@@ -392,8 +392,6 @@
     });
 
     function mutationHandler(mutationRecords) {
-        if (mutationRecords.length !== 0) findAndHideSpam();
-
         mutationRecords.forEach(function(mutation) {
             var jq = $(mutation.addedNodes);
             // There are nodes added
@@ -427,6 +425,7 @@
                         var newHTML = oldHTML.replace(url, parsedUrl);
                         $(jq[0]).find('.robin-message--message').html(newHTML);
                     }
+                    findAndHideSpam();
                 }
             }
         });
