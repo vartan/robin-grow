@@ -82,7 +82,7 @@
 	
 	function stopStandings(standingsInterval) {
 		if (standingsInterval){
-			standingsInterval.clearInterval();
+			clearInterval(standingsInterval);
 			standingsInterval = 0;
 		}
 		return standingsInterval;
