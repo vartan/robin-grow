@@ -32,22 +32,15 @@
         return newDateObj;
     }
 
-    function howLongLeft() { // mostly from /u/Yantrio
-        var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
-        if (remainingMessageContainer.length === 0) {
-            // for cases where it says "soon" instead of a time on page load
+    function howLongLeft(endTime) {
+        if (endTime === null) {
             return 0;
         }
-        var message = $(".robin-message--message", remainingMessageContainer).text();
-        var time = new Date($(".robin--user-class--system:contains('approx') .robin-message--timestamp").attr("datetime"));
         try {
-            var endTime = addMins(time, message.match(/\d+/)[0]);
             return Math.floor((endTime - new Date()) / 60 / 1000 * 10) / 10;
         } catch (e) {
             return 0;
         }
-
-        //grab the timestamp from the first post and then calc the difference using the estimate it gives you on boot
     }
 
 
@@ -195,6 +188,31 @@
                 }
         }
     });
+    
+    var isEndingSoon = false;
+    var endTime = null;
+    
+    // Grab the timestamp from the time remaining message and then calc the ending time using the estimate it gives you
+    function getEndTime() { // mostly from /u/Yantrio, modified by /u/voltaek
+        var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
+        if (remainingMessageContainer.length === 0) {
+            // for cases where it says "soon" instead of a time on page load
+            var endingSoonMessageContainer = $(".robin--user-class--system:contains('soon')");
+            if (endingSoonMessageContainer.length !== 0) {
+                isEndingSoon = true;
+            }
+            return null;
+        }
+        var message = $(".robin-message--message", remainingMessageContainer).text();
+        var time = new Date($(".robin-message--timestamp", remainingMessageContainer).attr("datetime"));
+        try {
+            return addMins(time, message.match(/\d+/)[0]);
+        } catch (e) {
+            return null;
+        }
+    }
+    
+    endTime = getEndTime();
 
     function update() {
         switch(settings.vote) {
@@ -209,7 +227,12 @@
                 $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click();
                 break;
         }
-        $(".timeleft").text(formatNumber(howLongLeft()) + " minutes remaining");
+        if (endTime === null) {
+            $(".timeleft").hide();
+        }
+        else {
+            $(".timeleft").text(isEndingSoon ? "ending soon" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
+        }
 
         var users = 0;
         $.get("/robin/", function(a) {
