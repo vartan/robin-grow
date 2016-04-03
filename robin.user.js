@@ -53,9 +53,9 @@
             // Setting container
             $(".robin-chat--sidebar").before(
                 '<div class="robin-chat--sidebar" style="display:none;" id="settingContainer">' +
-                    '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent">' +
-                        '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>' +
-                    '</div>' +
+                '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent">' +
+                '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>' +
+                '</div>' +
                 '</div>'
             );
 
@@ -126,9 +126,9 @@
             $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '"><br>' + description + '</label></div>');
             $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
                 .on("change", function() {
-                    settings[name] = $(this).val();
-                    Settings.save(settings);
-                });
+                settings[name] = $(this).val();
+                Settings.save(settings);
+            });
             settings[name] = defaultSetting;
         }
     };
@@ -173,10 +173,10 @@
     var urlRegex = new RegExp(/(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?/ig);
 
     var list = {};
-    $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
+    $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"");
     $(".text-counter-input").keyup(function(e) {
         if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0) {
-            $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val())
+            $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val());
         }
     });
 
@@ -185,12 +185,12 @@
         var code = e.keyCode || e.which;
         if(code == 13) {
             if(settings.filterChannel &&
-                String(settings.channel).length > 0) {
+               String(settings.channel).length > 0) {
 
-                    setTimeout(function() {
-                        $(".text-counter-input").val(settings.channel+" ");
-                    }, 10);
-                }
+                setTimeout(function() {
+                    $(".text-counter-input").val(settings.channel+" ");
+                }, 10);
+            }
         }
     });
 
@@ -375,10 +375,10 @@
             text == "voted to ABANDON" ||
             text.indexOf("Autovoter") > -1 ||
             (UNICODE_SPAM_RE.test(text));
-        var spamFilters = settings.spamFilters.split(",").map(function(filter) { return filter.trim().toLowerCase() });
+        var spamFilters = settings.spamFilters.split(",").map(function(filter) { return filter.trim().toLowerCase(); });
         spamFilters.forEach(function(filterVal) {
-            filter = filter || filterVal.length > 0 && text.toLowerCase().indexOf(filterVal) >= 0
-        })
+            filter = filter || filterVal.length > 0 && text.toLowerCase().indexOf(filterVal) >= 0;
+        });
         // if(filter)console.log("removing "+text);
         return filter;
     }
@@ -401,7 +401,7 @@
             listMutedUsers();
         }
     });
-    
+
     $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
 
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
@@ -458,9 +458,9 @@
                     (mutedList.indexOf(thisUser) >= 0) ||
                     (settings.removeSpam && isBotSpam(messageText)) ||
                     (settings.filterChannel &&
-                        !jq.hasClass('robin--user-class--system') &&
-                        String(settings.channel).length > 0 &&
-                        !hasChannel(messageText, settings.channel));
+                     !jq.hasClass('robin--user-class--system') &&
+                     String(settings.channel).length > 0 &&
+                     !hasChannel(messageText, settings.channel));
 
 
                 if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
