@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.840
+// @version      1.850
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -16,9 +16,14 @@
     GM_addStyle('.robin--username {cursor: pointer}');
 
     // Utils
-    function hasChannel(source, channel) {
-        channel = String(channel).toLowerCase();
-        return String(source).toLowerCase().startsWith(channel);
+    function hasChannel(source, channels) {
+	    for (var i in channels) {
+	        var channel = String(channels[i]).toLowerCase();
+	        if (String(source).toLowerCase().startsWith(channel)) {
+	            return true;
+	        }
+	    }
+	    return false;
     }
 
     function formatNumber(n) {
@@ -423,7 +428,7 @@
                     (settings.filterChannel &&
                         !jq.hasClass('robin--user-class--system') &&
                         String(settings.channel).length > 0 &&
-                        !hasChannel(messageText, settings.channel));
+                        !hasChannel(messageText, settings.channel.split(",")));
 
 
                 if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
@@ -439,9 +444,13 @@
                     $(jq[0]).remove();
                 } else {
                     if(settings.filterChannel) {
-                        if(messageText.indexOf(settings.channel) == 0) {
-                            $message.text(messageText.substring(settings.channel.length).trim());
-                        }
+					    var channels = settings.channel.split(",")
+					    for (var i in channels) {
+					        var channel = channels[i];
+					        if(messageText.indexOf(channel) == 0) {
+					            $message.text(messageText.substring(channel.length).trim());
+					        }
+					    }
                     }
                     if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
                         $message.parent().css("background","#FFA27F").css("color","white");
