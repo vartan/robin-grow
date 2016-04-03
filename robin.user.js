@@ -444,13 +444,13 @@
                     $(jq[0]).remove();
                 } else {
                     if(settings.filterChannel) {
-					    var channels = settings.channel.split(",")
-					    for (var i in channels) {
-					        var channel = channels[i];
-					        if(messageText.indexOf(channel) == 0) {
-					            $message.text(messageText.substring(channel.length).trim());
-					        }
-					    }
+		        var channels = settings.channel.split(",")
+		        for (var i in channels) {
+		            var channel = channels[i];
+		            if(messageText.indexOf(channel) == 0) {
+		                $message.text(messageText.substring(channel.length).trim());
+		            }
+		        }
                     }
                     if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
                         $message.parent().css("background","#FFA27F").css("color","white");
