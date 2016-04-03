@@ -159,8 +159,12 @@
     Settings.addBool("filterChannel", "Filter by channel", false);
     // Options end
 
-    // Add version at the end
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow</a></div>');
+    // Add version at the end (if available from script engine)
+    var versionString = "";
+    if (typeof GM_info !== "undefined") {
+        versionString = " - v" + GM_info.script.version;
+    }
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow' + versionString + '</a></div>');
     // Settings end
 
     var timeStarted = new Date();
