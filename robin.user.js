@@ -55,6 +55,18 @@
 			dataType: 'xml'
 		});
 	}
+	
+	function startStandings(standingsInterval) {
+		grabStandings();
+		standingsInterval = setInterval(grabStandings, 120000);
+	}
+	
+	function stopStandings(standingsInterval) {
+		if (standingsInterval){
+			standingsInterval.clearInterval();
+			standingsInterval = 0;
+		}
+	}
 
     function howLongLeft(endTime) {
         if (endTime === null) {
@@ -102,14 +114,16 @@
                 $("#settingContainer").show();
             });
 			
+			var standingsInterval;
 			$("#standingsBtn").on("click", function openStandings() {
 				$(".robin-chat--sidebar").hide();
-				grabStandings();
+				startStandings(standingsInterval);
 				$("#standingsContainer").show();
 			});
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
+				stopStandings(standingsInterval);
                 $("#settingContainer").hide();
 				$("#standingsContainer").hide();
             });
