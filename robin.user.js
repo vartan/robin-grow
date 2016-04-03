@@ -68,14 +68,22 @@
 
             $("#robinDesktopNotifier").detach().appendTo("#settingContent");
 
+            $("<style type='text/css'> .anim{position:absolute;} </style>").appendTo("head");
+
             $("#openBtn").on("click", function openSettings() {
-                $(".robin-chat--sidebar").hide();
-                $("#settingContainer").show();
+                $("#settingContainer").addClass("anim");
+                $(".robin-chat--sidebar").fadeOut();
+                $("#settingContainer").fadeIn(function() {
+                    $("#settingContainer").removeClass("anim");
+                });
             });
 
             $("#closeBtn").on("click", function closeSettings() {
-                $(".robin-chat--sidebar").show();
-                $("#settingContainer").hide();
+                $("#settingContainer").addClass("anim");
+                $(".robin-chat--sidebar").fadeIn();
+                $("#settingContainer").fadeOut(function() {
+                    $("#settingContainer").removeClass("anim");
+                });
             });
 
             function setVote(vote) {
