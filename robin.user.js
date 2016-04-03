@@ -130,7 +130,7 @@
         addInput: function addInputSetting(name, description, defaultSetting) {
             defaultSetting = settings[name] || defaultSetting;
 
-            $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '">' + description + '</label></div>');
+            $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '"><br>' + description + '</label></div>');
             $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
                 .on("change", function() {
                     settings[name] = $(this).val();
@@ -161,8 +161,8 @@
     // Options begin
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
-    Settings.addInput("channel", "Channel filter", "");
     Settings.addInput("maxprune", "Max messages before pruning", "500");
+    Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
     // Options end
 
@@ -292,18 +292,18 @@
     var spamCounts = {};
 
     function findAndHideSpam() {
+        var $messages = $(".robin-message");
+
+        var maxprune = parseInt(settings.maxprune || "1000", 10);
+        if (maxprune < 10 || isNaN(maxprune)) {
+            maxprune = 1000;
+        }
+
+        if ($messages.length > maxprune) {
+            $messages.slice(0, $messages.length - maxprune).remove();
+        }
+
         if (settings.findAndHideSpam) {
-            var $messages = $(".robin-message");
-
-            var maxprune = parseInt(settings.maxprune || "1000", 10);
-            if (maxprune < 10 || isNaN(maxprune)) {
-                maxprune = 1000;
-            }
-
-            if ($messages.length > maxprune) {
-                $messages.slice(0, $messages.length - maxprune).remove();
-            }
-
             // skips over ones that have been hidden during this run of the loop
             $('.robin--user-class--user .robin-message--message:not(.addon--hide)').each(function() {
                 var $this = $(this);
@@ -392,8 +392,6 @@
     });
 
     function mutationHandler(mutationRecords) {
-        if (mutationRecords.length !== 0) findAndHideSpam();
-
         mutationRecords.forEach(function(mutation) {
             var jq = $(mutation.addedNodes);
             // There are nodes added
@@ -407,6 +405,7 @@
                     (mutedList.indexOf(thisUser) >= 0) ||
                     (settings.removeSpam && isBotSpam(messageText)) ||
                     (settings.filterChannel &&
+                        !jq.hasClass('robin--user-class--system') &&
                         String(settings.channel).length > 0 &&
                         !hasChannel(messageText, settings.channel));
 
@@ -427,6 +426,7 @@
                         var newHTML = oldHTML.replace(url, parsedUrl);
                         $(jq[0]).find('.robin-message--message').html(newHTML);
                     }
+                    findAndHideSpam();
                 }
             }
         });
