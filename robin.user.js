@@ -497,4 +497,7 @@
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
     $('#robinChatInput').css('background', '#EFEFED');
+    
+    // Full screen-height chat - subtracts #header and header.robin-chat--header heights from viewport height and hides footers
+    $('<style>@media (min-width: 769px) { body > .content + .footer-parent, body > .content + .footer-parent ~ .debuginfo { display: none; } .robin-chat .robin-chat--body { height: calc(100vh - 118px); } }</style>').appendTo('body');
 })();
