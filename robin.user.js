@@ -158,8 +158,8 @@
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
-    Settings.addBool("showtrivia", "Show/Highlight Trivia", false);
-    Settings.addInput("triviahosts", "List of Trivia Hosts", "dthunder,nbagf");
+    Settings.addBool("showtrivia", "Username Highlighing", false);
+    Settings.addInput("triviahosts", "Usernames to highlight, comma delimited.", "dthunder,nbagf");
     // Options end
 
     // Add version at the end (if available from script engine)
