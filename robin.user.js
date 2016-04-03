@@ -31,6 +31,21 @@
         var newDateObj = new Date(date.getTime() + mins * 60000);
         return newDateObj;
     }
+	
+	function grabStandings() {
+		var standings;
+		$.ajax({
+			url: 'https://www.reddit.com/r/robintracking/comments/4czzo2/robin_chatter_leader_board_official/.rss?limit=1',
+			data: {},
+			success: function( data ) {
+				var standingsPost = $(data).find("entry > content").first();
+				var decoded = $($('<div/>').html(standingsPost).text()).find('table').first();
+				decoded.find('tr').each(function(i) { $(this).find('td,th').slice(3).remove();});
+				$("#standingsContent").html(decoded);
+			},
+			dataType: 'xml'
+		});
+	}
 
     function howLongLeft() { // mostly from /u/Yantrio
         var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
@@ -57,6 +72,7 @@
             $robinVoteWidget.prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             // Open Settings button
             $robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>');
+			$robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="standingsBtn">Standings</div></div>');
             // Setting container
             $(".robin-chat--sidebar").before(
                 '<div class="robin-chat--sidebar" style="display:none;" id="settingContainer">' +
@@ -65,6 +81,16 @@
                     '</div>' +
                 '</div>'
             );
+			
+			// Standing container
+			$(".robin-chat--sidebar").before(
+			    '<div class="robin-chat--sidebar" style="display:none;" id="standingsContainer">' +
+                    '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="standingsContent">' +
+					    '<div id="standingsTable"></div>' +
+                        '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="standingsCloseBtn">Close Standings</div>' +
+                    '</div>' +
+                '</div>'
+			);
 
             $("#robinDesktopNotifier").detach().appendTo("#settingContent");
 
@@ -72,11 +98,22 @@
                 $(".robin-chat--sidebar").hide();
                 $("#settingContainer").show();
             });
+			
+			$("#standingsBtn").on("click", function openStandings() {
+				$(".robin-chat--sidebar").hide();
+				grabStandings();
+				$("#standingsContainer").show();
+			});
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
             });
+			
+			$("#closeStandingsBtn").on("click", function closeStandings() {
+				$(".robin-chat--sidebar").show();
+				$("#settingsContainer").hide();
+			});
 
             function setVote(vote) {
                 return function() {
