@@ -164,7 +164,7 @@
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
-    Settings.addInput("channel", "Channel filter", "");
+    Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
     // Options end
 
