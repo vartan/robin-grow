@@ -130,7 +130,7 @@
         addInput: function addInputSetting(name, description, defaultSetting) {
             defaultSetting = settings[name] || defaultSetting;
 
-            $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '">' + description + '</label></div>');
+            $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '"><br>' + description + '</label></div>');
             $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
                 .on("change", function() {
                     settings[name] = $(this).val();
@@ -161,8 +161,8 @@
     // Options begin
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
-    Settings.addInput("channel", "Channel filter", "");
     Settings.addInput("maxprune", "Max messages before pruning", "500");
+    Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
     // Options end
 
