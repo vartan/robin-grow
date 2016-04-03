@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      1.869.2
+// @version      1.869.3
 // @description  Try to take over the world!
 // @author       /u/mvartan 
 // @include      https://www.reddit.com/robin*
@@ -515,7 +515,7 @@
                         console.log("got new mention");
                     }
 		    //still show mentions in highlight color.	
-                    else if (messageText.toLowerCase()[0] in colors) {
+                    else if (messageText.toLowerCase().split(" ")[0] in colors) {
                         $message.parent().css("background",colors[messageText.toLowerCase()[0]]);
                     }
                     if(urlRegex.test(messageText)) {
