@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.820
+// @version      1.840
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -133,9 +133,9 @@
                     Settings.save(settings);
                 };
             }
-            $(".robin--vote-class--abandon").on("click", setVote("abandon"));
-            $(".robin--vote-class--continue").on("click", setVote("stay"));
-            $(".robin--vote-class--increase").on("click", setVote("grow"));
+            $(".robin-chat--vote.robin--vote-class--abandon").on("click", setVote("abandon"));
+            $(".robin-chat--vote.robin--vote-class--continue").on("click", setVote("stay"));
+            $(".robin-chat--vote.robin--vote-class--increase").on("click", setVote("grow"));
 
             $('.robin-chat--buttons').prepend("<div class='robin-chat--vote robin--vote-class--novote'><span class='robin--icon'></span><div class='robin-chat--vote-label'></div></div>");
             $robinVoteWidget.find('.robin-chat--vote').css('padding', '5px');
@@ -225,8 +225,13 @@
 
     var list = {};
     $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
+    $(".text-counter-input").keyup(function(e) {
+        if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0) {
+            $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val())
+        }
+    });
+
     $(".text-counter-input").keydown(function(e) {
-        console.log('keyup called');
         var text = $(".text-counter-input").val();
         var code = e.keyCode || e.which;
         if(code == 13) {
