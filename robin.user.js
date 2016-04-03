@@ -153,7 +153,7 @@
 
     // Options begin
     Settings.addBool("removeSpam", "Remove bot spam", true);
-    Settings.addBool("findAndHideSpam", "Removes messages that have been sent more than 3 times", true);
+    Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     Settings.addInput("channel", "Channel filter", "");
@@ -393,12 +393,45 @@
             // Mute our user.
             mutedList.push(username);
             this.style.textDecoration = "line-through";
+            listMutedUsers();
         } else {
             // Unmute our user.
             this.style.textDecoration = "none";
             mutedList.splice(clickedUser, 1);
+            listMutedUsers();
         }
     });
+    
+    $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
+
+    $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
+
+    function listMutedUsers() {
+
+        $("#blockedUserList").remove();
+
+        $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
+
+        $.each(mutedList, function(index, value){
+
+            var mutedHere = "present";
+
+            var userInArray = $.grep(list, function(e) {
+                return e.name === value;
+            });
+
+            if (userInArray[0].present === true) {
+                mutedHere = "present";
+            } else {
+                mutedHere = "away";
+            }
+
+            $("#blockedUserList").append("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>");
+            $("#blockedUserList>.robin-room-participant").last().append("<span class='robin--icon'></span>");
+            $("#blockedUserList>.robin-room-participant").last().append("<span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>");
+
+        });
+    }
 
 
     // credit to wwwroth for idea (notification audio)
