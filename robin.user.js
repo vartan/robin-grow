@@ -481,10 +481,14 @@
         return flairColor[flairNum];
     }
 
-    // Color names in user list
-    $('#robinUserList').find('.robin--username').each(function(){
-        this.style.color = colorFromName(this.textContent);
-    });
+    // Color names in user list, unless they've already been colored
+    function colorUserListNames() {
+        $('#robinUserList').find('.robin--username:not([style])').each(function(){
+            this.style.color = colorFromName(this.textContent);
+        });
+    }
+    setInterval(colorUserListNames, 11000);
+    colorUserListNames();
 
     // Color current user's name in chat and darken post backgrounds
     var currentUserColor = colorFromName(currentUsersName);
