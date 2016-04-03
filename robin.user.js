@@ -175,12 +175,11 @@
     var list = {};
     $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
     $(".text-counter-input").keyup(function(e) {
-		if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel + " /" == 0) {
-			$(".text-counter-input").val($(".text-counter-input").val().substring(settings.channel.length))
+		if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel+" /" == 0) {
+			$(".text-counter-input").val($(".text-counter-input").val().substring(settings.channel.length));
 		}  
-        else if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0
-		    && $(".text-counter-input").val().charAt(0) != '/') {
-            $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val())
+        else if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0 && $(".text-counter-input").val().charAt(0) != '/') {
+            $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val());
         }
     });
 
