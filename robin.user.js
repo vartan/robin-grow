@@ -72,7 +72,7 @@
             $robinVoteWidget.prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             // Open Settings button
             $robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>');
-			$robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="standingsBtn">Standings</div></div>');
+			$robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="standingsBtn">Show Standings</div></div>');
             // Setting container
             $(".robin-chat--sidebar").before(
                 '<div class="robin-chat--sidebar" style="display:none;" id="settingContainer">' +
@@ -87,7 +87,8 @@
 			    '<div class="robin-chat--sidebar" style="display:none;" id="standingsContainer">' +
                     '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="standingsContent">' +
 					    '<div id="standingsTable"></div>' +
-                        '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="standingsCloseBtn">Close Standings</div>' +
+						'<a href="https://www.reddit.com/r/robintracking/comments/4czzo2/robin_chatter_leader_board_official/" target="robinStandingsTab">Full Leaderboard</a>' +
+                        '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeStandingsBtn">Close Standings</div>' +
                     '</div>' +
                 '</div>'
 			);
