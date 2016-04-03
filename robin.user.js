@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Robin Grow
+// @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
 // @version      1.840
 // @description  Try to take over the world!
-// @author       /u/mvartan
+// @author       /u/mvartan 
 // @include      https://www.reddit.com/robin*
-// @updateURL    https://github.com/vartan/robin-grow/raw/master/robin.user.js
+// @updateURL    https://github.com/5a1t/robin-grow/raw/master/robin.user.js
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant   GM_getValue
 // @grant   GM_setValue
@@ -18,7 +18,21 @@
     // Utils
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase();
-        return String(source).toLowerCase().startsWith(channel);
+	channel_array = channel.split(",");
+	startschar = false;
+	
+	for (i = 0; i < channel_array.length; i++){
+		if(String(source).toLowerCase().startsWith(channel_array[i])){
+			startschar = true;
+			console.log("true!");
+		}
+	}
+	
+	if (	(String(source).toLowerCase().startsWith(channel) || startschar)){
+
+			console.log("true2");
+	}
+        return (String(source).toLowerCase().startsWith(channel) || startschar);
     }
 
     function formatNumber(n) {
