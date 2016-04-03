@@ -14,7 +14,7 @@ If you get a bunch of code instead of it installing, you can copy and paste the 
 You can view the source code or contribute at:   
 https://github.com/vartan/robin-grow
 
-# Features
+## Features
 1. Automatically votes "grow" in each round
 2. Spam blocking: Automatically blocks spammers and bots. Click on a username to block additional users
 3. Shows a countdown of the time remaining in each round
