@@ -153,7 +153,7 @@
 
     // Options begin
     Settings.addBool("removeSpam", "Remove bot spam", true);
-    Settings.addBool("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
+    Settings.addBool("findAndHideSpam", "Removes messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
