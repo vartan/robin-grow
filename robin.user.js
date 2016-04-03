@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      1.869.9
+// @version      1.869.5
 // @description  Try to take over the world!
 // @author       /u/mvartan 
 // @include      https://www.reddit.com/robin*
@@ -185,11 +185,11 @@
     var list = {};
 
     if(settings.channelPrepend){
- 	   $(".text-counter-input").val(settings.filterChannel? settings.channel.split[','][0]+" " :"");
+ 	   $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"");
 	}
     $(".text-counter-input").keyup(function(e) {
         if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0 && settings.channelPrepend) {
-            $(".text-counter-input").val(settings.channel.split[','][0]+" "+$(".text-counter-input").val())
+            $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val())
         }
     });
 
@@ -203,7 +203,7 @@
 		    if(settings.channelPrepend){
 
 			    setTimeout(function() {
-				$(".text-counter-input").val(settings.channel.split[","][0]+" ");
+				$(".text-counter-input").val(settings.channel+" ");
 			    }, 10);
 			}
                 }
@@ -451,18 +451,8 @@
 
 
     //colored text thanks to OrangeredStilton! https://gist.github.com/Two9A/3f33ee6f6daf6a14c1cc3f18f276dacd
-    var colors = {
-        '$': 'rgba(255,0,0,0.2)',
-        '%': 'rgba(0,255,0,0.2)',
-        '%chat': 'rgba(0,200,0,0.2)',
-        '%mh': 'rgba(200,200,0,0.2)',
-        'penis/': 'rgba(255,255,0,0.2)',
-        '#': 'rgba(0,0,255,0.2)',
-        '#rpg': 'rgba(0,200,200,0.2)',
-        '@': 'rgba(0,255,255,0.2)',
-        '&': 'rgba(255,0,255,0.2)',
-        '+': $("body").hasClass('res-nightmode') ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'
-    };
+    var colors = ['rgba(255,0,0,0.2)','rgba(0,255,0,0.2)','rgba(0,0,255,0.2)', 'rgba(0,255,255,0.2)','rgba(255,0,255,0.2)', 'rgba(255,255,0,0.2)'];
+
     // credit to wwwroth for idea (notification audio)
     // i think this method is better
     var notifAudio = new Audio("https://slack.global.ssl.fastly.net/dfc0/sounds/push/knock_brush.mp3");
@@ -478,6 +468,12 @@
             var jq = $(mutation.addedNodes);
             // There are nodes added
             if (jq.length > 0) {
+                    var colors_match = {};
+                    split_channels = settings.channel.split(",");
+    
+                    for(i = 0; i < split_channels.length; i++){
+                        colors_match[split_channels[i]] = colors[i];
+                    }
                 // cool we have a message.
                 var thisUser = $(jq[0].children && jq[0].children[1]).text();
                 var $message = $(jq[0].children && jq[0].children[2]);
@@ -515,8 +511,8 @@
                         console.log("got new mention");
                     }
 		    //still show mentions in highlight color.	
-                    else if (messageText.toLowerCase().split(" ")[0] in colors) {
-                        $message.parent().css("background",colors[messageText.toLowerCase().split(" ")[0]]);
+                    else if (messageText.toLowerCase().split(" ")[0][0] in colors_match) {
+                        $message.parent().css("background",colors_match[messageText.toLowerCase().split(" ")[0][0]]);
                     }
                     if(urlRegex.test(messageText)) {
                         urlRegex.lastIndex = 0;
@@ -582,3 +578,4 @@
         $('<style>.res-nightmode .robin-message, .res-nightmode .robin--user-class--self .robin--username, .res-nightmode .robin-room-participant .robin--username, .res-nightmode :not([class*=flair]) > .robin--username, .res-nightmode .robin-chat .robin-chat--vote, .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { color: #DDD; } .res-nightmode .robin-chat .robin-chat--sidebar, .res-nightmode .robin-chat .robin-chat--vote { background-color: #262626; } .res-nightmode #robinChatInput { background-color: #262626 !important; } .res-nightmode .robin-chat .robin-chat--vote { box-shadow: 0px 0px 2px 1px #888; } .res-nightmode .robin-chat .robin-chat--vote.robin--active { background-color: #444444; box-shadow: 1px 1px 5px 1px black inset; } .res-nightmode .robin-chat .robin-chat--vote:focus { background-color: #848484; outline: 1px solid #9A9A9A; } .res-nightmode .robin--user-class--self { background-color: #424242; } .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { background-color: #520000 !important; } .res-nightmode .robin-chat .robin-chat--user-list-widget { overflow-x: hidden; } .res-nightmode .robin-chat .robin-chat--sidebar-widget { border-bottom: none; }</style>').appendTo('body');
     }
 })();
+
