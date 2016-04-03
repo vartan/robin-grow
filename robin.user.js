@@ -189,7 +189,7 @@
 			
 			$("#closeStandingsBtn").on("click", function closeStandings() {
 				$(".robin-chat--sidebar").show();
-				$("#settingsContainer").hide();
+				$("#standingsContainer").hide();
 			});
 
             function setVote(vote) {
