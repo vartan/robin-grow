@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      1.869.5
+// @version      1.871
 // @description  Try to take over the world!
 // @author       /u/mvartan 
 // @include      https://www.reddit.com/robin*
