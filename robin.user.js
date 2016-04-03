@@ -234,9 +234,9 @@
         }
         if (endTime === null && !isEndingSoon) {
             $(".timeleft").hide();
-        }
-        else {
-            $(".timeleft").text(isEndingSoon ? "ending soon" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
+            endTime = getEndTime();
+        } else {
+            $(".timeleft").show().text(isEndingSoon ? "ending soon" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
         }
 
         var users = 0;
