@@ -58,7 +58,7 @@
 				var standingsPost = $(data).find("entry > content").first();
 				var decoded = $($('<div/>').html(standingsPost).text()).find('table').first();
 				decoded.find('tr').each(function(i) { $(this).find('td,th').slice(3).remove();});
-				$("#standingsContent").html(decoded);
+				$("#standingsTable").html(decoded);
 			},
 			dataType: 'xml'
 		});
