@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      1.869
+// @version      1.869.2
 // @description  Try to take over the world!
 // @author       /u/mvartan 
 // @include      https://www.reddit.com/robin*
@@ -458,7 +458,7 @@
         '#': 'rgba(0,0,255,0.2)',
         '@': 'rgba(0,255,255,0.2)',
         '&': 'rgba(255,0,255,0.2)',
-        '+': 'rgba(255,255,255,0.2)',
+        '+': $("body").hasClass('res-nightmode') ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'
     };
     // credit to wwwroth for idea (notification audio)
     // i think this method is better
