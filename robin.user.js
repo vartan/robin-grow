@@ -84,9 +84,9 @@
                     Settings.save(settings);
                 };
             }
-            $(".robin--vote-class--abandon").on("click", setVote("abandon"));
-            $(".robin--vote-class--continue").on("click", setVote("stay"));
-            $(".robin--vote-class--increase").on("click", setVote("grow"));
+            $(".robin-chat--vote.robin--vote-class--abandon").on("click", setVote("abandon"));
+            $(".robin-chat--vote.robin--vote-class--continue").on("click", setVote("stay"));
+            $(".robin-chat--vote.robin--vote-class--increase").on("click", setVote("grow"));
 
             $('.robin-chat--buttons').prepend("<div class='robin-chat--vote robin--vote-class--novote'><span class='robin--icon'></span><div class='robin-chat--vote-label'></div></div>");
             $robinVoteWidget.find('.robin-chat--vote').css('padding', '5px');
