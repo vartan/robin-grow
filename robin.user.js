@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      1.869.3
+// @version      1.869.4
 // @description  Try to take over the world!
 // @author       /u/mvartan 
 // @include      https://www.reddit.com/robin*
@@ -455,7 +455,7 @@
         '$': 'rgba(255,0,0,0.2)',
         '%': 'rgba(0,255,0,0.2)',
         '%chat': 'rgba(0,200,0,0.2)',
-        '%MH': 'rgba(200,200,0,0.2)',
+        '%mh': 'rgba(200,200,0,0.2)',
         'penis/': 'rgba(255,255,0,0.2)',
         '#': 'rgba(0,0,255,0.2)',
         '#rpg': 'rgba(0,200,200,0.2)',
