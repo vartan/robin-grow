@@ -159,6 +159,7 @@
     Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
     Settings.addBool("reportStats", "Report Statistics", false);
+    Settings.addInput("statReportingInterval", "Report Statistics Interval (seconds)", "60");
     // Options end
 
     // Add version at the end (if available from script engine)
@@ -220,7 +221,7 @@
 
     endTime = getEndTime();
 
-    var statisticsCounter = 0;
+    var lastStatisticsUpdate = 0;
     function update() {
         switch(settings.vote) {
             case "abandon":
@@ -267,9 +268,11 @@
             users = list.length;
             $(".usercount").text(formatNumber(users) + " users in chat");
 
-            // Given 10s interval, statisticsCounter%6==60s reporting interval
-            if(settings.reportStats && 0==(statisticsCounter%6))
+            currentTime = Math.floor(Date.now()/1000);
+            if(settings.reportStats && (currentTime-lastStatisticsUpdate)>=parseInt(settings.statReportingInterval))
             {
+                lastStatisticsUpdate = currentTime;
+
                 // Report statistics to the automated leaderboard
                 trackers = [
                     "https://monstrouspeace.com/robintracker/track.php"
@@ -289,7 +292,6 @@
                     $.get(tracker + queryString);
                 });
             }
-            statisticsCounter++;
 
         });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
