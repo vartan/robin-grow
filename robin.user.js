@@ -454,10 +454,11 @@
     var colors = {
         '$': 'rgba(255,0,0,0.2)',
         '%': 'rgba(0,255,0,0.2)',
-        '*': 'rgba(255,255,0,0.2)',
+        'penis/': 'rgba(255,255,0,0.2)',
         '#': 'rgba(0,0,255,0.2)',
         '@': 'rgba(0,255,255,0.2)',
-        '&': 'rgba(255,0,255,0.2)'
+        '&': 'rgba(255,0,255,0.2)',
+        '+': 'rgba(255,255,255,0.2)',
     };
     // credit to wwwroth for idea (notification audio)
     // i think this method is better
