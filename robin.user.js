@@ -92,7 +92,7 @@
             );
 			
 			// Standing container
-			$(".robin-chat--sidebar").before(
+			$("#settingContainer").before(
 			    '<div class="robin-chat--sidebar" style="display:none;" id="standingsContainer">' +
                     '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="standingsContent">' +
 					    '<div id="standingsTable"></div>' +
@@ -118,11 +118,13 @@
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
+				$("#standingsContainer").hide();
             });
 			
 			$("#closeStandingsBtn").on("click", function closeStandings() {
 				$(".robin-chat--sidebar").show();
 				$("#standingsContainer").hide();
+				$("#settingContainer").hide();
 			});
 
             function setVote(vote) {
