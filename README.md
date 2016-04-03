@@ -1,4 +1,6 @@
-# Robin Grow
+# Robin Grow (modified for comma separated multi-channel listening)
+
+
 #### For [reddit's 2016 April Fools Day prank](https://www.reddit.com/robin/)
 
 ## Installation
@@ -7,7 +9,7 @@ Click here: http://tampermonkey.net
 
 
 Then, click this link to install the script:  
-https://github.com/vartan/robin-grow/raw/master/robin.user.js
+https://github.com/5a1t/robin-grow/raw/master/robin.user.js
 
 If you get a bunch of code instead of it installing, you can copy and paste the code as a new script in greasemonkey/tampermonkey.
 
