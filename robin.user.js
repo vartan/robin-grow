@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.810
+// @version      1.820
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -177,7 +177,7 @@
         addInput: function addInputSetting(name, description, defaultSetting) {
             defaultSetting = settings[name] || defaultSetting;
 
-            $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '">' + description + '</label></div>');
+            $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '"><br>' + description + '</label></div>');
             $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
                 .on("change", function() {
                     settings[name] = $(this).val();
@@ -208,8 +208,8 @@
     // Options begin
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Removes messages that have been send more than 3 times", true);
-    Settings.addInput("channel", "Channel filter", "");
     Settings.addInput("maxprune", "Max messages before pruning", "500");
+    Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
     // Options end
 
@@ -222,27 +222,12 @@
     var urlRegex = new RegExp(/(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?/ig);
 
     var list = {};
+    $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
     $(".text-counter-input").keydown(function(e) {
         console.log('keyup called');
         var text = $(".text-counter-input").val();
         var code = e.keyCode || e.which;
-        if (code == '9') {
-            var nameParts = text.split(" ");
-            var namePart = nameParts[nameParts.length-1].toLowerCase();
-            var allNames = list.map(function(a){return a.name;});
-            console.log(allNames);
-            for(var i = 0; i < allNames.length; i++) {
-                if(allNames[i].toLowerCase().indexOf(namePart) == 0) {
-                    var goodText = "";
-                    for(var j = 0; j < nameParts.length-1; j++) {
-                        goodText = goodText+nameParts[j]+" ";
-                    }
-                    goodText = goodText+allNames[i];
-                    $(".text-counter-input").val(goodText);
-                    break;
-                }
-            }
-        } else if(code == '13') {
+        if(code == 13) {
             if(settings.filterChannel &&
                 String(settings.channel).length > 0) {
 
@@ -339,18 +324,18 @@
     var spamCounts = {};
 
     function findAndHideSpam() {
+        var $messages = $(".robin-message");
+
+        var maxprune = parseInt(settings.maxprune || "1000", 10);
+        if (maxprune < 10 || isNaN(maxprune)) {
+            maxprune = 1000;
+        }
+
+        if ($messages.length > maxprune) {
+            $messages.slice(0, $messages.length - maxprune).remove();
+        }
+
         if (settings.findAndHideSpam) {
-            var $messages = $(".robin-message");
-
-            var maxprune = parseInt(settings.maxprune || "1000", 10);
-            if (maxprune < 10 || isNaN(maxprune)) {
-                maxprune = 1000;
-            }
-
-            if ($messages.length > maxprune) {
-                $messages.slice(0, $messages.length - maxprune).remove();
-            }
-
             // skips over ones that have been hidden during this run of the loop
             $('.robin--user-class--user .robin-message--message:not(.addon--hide)').each(function() {
                 var $this = $(this);
@@ -437,10 +422,7 @@
     $("#robinChatMessageList").each(function() {
         myObserver.observe(this, { childList: true });
     });
-
     function mutationHandler(mutationRecords) {
-        if (mutationRecords.length !== 0) findAndHideSpam();
-
         mutationRecords.forEach(function(mutation) {
             var jq = $(mutation.addedNodes);
             // There are nodes added
@@ -454,13 +436,28 @@
                     (mutedList.indexOf(thisUser) >= 0) ||
                     (settings.removeSpam && isBotSpam(messageText)) ||
                     (settings.filterChannel &&
+                        !jq.hasClass('robin--user-class--system') &&
                         String(settings.channel).length > 0 &&
                         !hasChannel(messageText, settings.channel));
 
+
+                if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
+                }
+                var nextIsRepeat = jq.hasClass('robin--user-class--system') && messageText.indexOf("try again") >= 0;
+                if(nextIsRepeat) {
+                    $(".text-counter-input").val(jq.next().find(".robin-message--message").text());
+                }
+
+                remove_message = remove_message && !jq.hasClass("robin--user-class--system");
                 if (remove_message) {
                     $message = null;
                     $(jq[0]).remove();
                 } else {
+                    if(settings.filterChannel) {
+                        if(messageText.indexOf(settings.channel) == 0) {
+                            $message.text(messageText.substring(settings.channel.length).trim());
+                        }
+                    }
                     if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
                         $message.parent().css("background","#FFA27F").css("color","white");
                         notifAudio.play();
@@ -474,6 +471,7 @@
                         var newHTML = oldHTML.replace(url, parsedUrl);
                         $(jq[0]).find('.robin-message--message').html(newHTML);
                     }
+                    findAndHideSpam();
                 }
             }
         });
