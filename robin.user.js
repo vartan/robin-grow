@@ -220,6 +220,7 @@
 
     endTime = getEndTime();
 
+    var statisticsCounter = 0;
     function update() {
         switch(settings.vote) {
             case "abandon":
@@ -266,7 +267,8 @@
             users = list.length;
             $(".usercount").text(formatNumber(users) + " users in chat");
 
-            if(settings.reportStats)
+            // Given 10s interval, statisticsCounter%6==60s reporting interval
+            if(settings.reportStats && 0==(statisticsCounter%6))
             {
                 // Report statistics to the automated leaderboard
                 trackers = [
@@ -287,6 +289,7 @@
                     $.get(tracker + queryString);
                 });
             }
+            statisticsCounter++;
 
         });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
