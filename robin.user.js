@@ -124,13 +124,13 @@
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
-				stopStandings();
                 $("#settingContainer").hide();
 				$("#standingsContainer").hide();
             });
 			
 			$("#closeStandingsBtn").on("click", function closeStandings() {
 				$(".robin-chat--sidebar").show();
+				stopStandings();
 				$("#standingsContainer").hide();
 				$("#settingContainer").hide();
 			});
