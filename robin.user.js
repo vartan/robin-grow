@@ -24,14 +24,9 @@
 	for (i = 0; i < channel_array.length; i++){
 		if(String(source).toLowerCase().startsWith(channel_array[i])){
 			startschar = true;
-			console.log("true!");
 		}
 	}
 	
-	if (	(String(source).toLowerCase().startsWith(channel) || startschar)){
-
-			console.log("true2");
-	}
         return (String(source).toLowerCase().startsWith(channel) || startschar);
     }
 
