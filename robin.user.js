@@ -553,6 +553,17 @@
         listMutedUsers();
     });
 
+    // Copy cliked username into textarea /u/tW4r based on /u/verox-'s Individual mute button
+    $('body').on('contextmenu', ".robin--username", function (event) {
+        // Prevent context-menu from showing up
+        event.preventDefault();
+        // Get clicked username and previuos input source
+        var username = String($(this).text()).trim();
+        var source = String($(".text-counter-input").val());
+        // Focus textarea and set the value of textarea
+        $(".text-counter-input").focus().val("").val(source + " " + username);
+    });
+
     $("#settingContent").append("<span style='font-size:"+settings.fontsize+"px;text-align:center;'>Muted Users (click to unmute)</label>");
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
 
