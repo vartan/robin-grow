@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      1.95
+// @version      1.98
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -210,7 +210,6 @@
     Settings.addBool("filterChannel", "Filter by channel", true);
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
-
 
     // Add version at the end (if available from script engine)
     var versionString = "";
@@ -447,7 +446,7 @@
     }
 
     // Individual mute button /u/verox-
-    var mutedList = [];
+    var mutedList = settings.mutedUsersList || [];
     $('body').on('click', ".robin--username", function() {
         var username = $(this).text();
         var clickedUser = mutedList.indexOf(username);
@@ -456,24 +455,22 @@
             // Mute our user.
             mutedList.push(username);
             this.style.textDecoration = "line-through";
-            listMutedUsers();
         } else {
             // Unmute our user.
             this.style.textDecoration = "none";
             mutedList.splice(clickedUser, 1);
-            listMutedUsers();
         }
-    });
-    
-    $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
 
+        settings.mutedUsersList = mutedList;
+        Settings.save(settings);
+        listMutedUsers();
+    });
+
+    $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
 
     function listMutedUsers() {
-
-        $("#blockedUserList").remove();
-
-        $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
+        $("#blockedUserList").html("");
 
         $.each(mutedList, function(index, value){
 
@@ -489,13 +486,15 @@
                 mutedHere = "away";
             }
 
-            $("#blockedUserList").append("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>");
-            $("#blockedUserList>.robin-room-participant").last().append("<span class='robin--icon'></span>");
-            $("#blockedUserList>.robin-room-participant").last().append("<span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>");
-
+            $("#blockedUserList").append(
+                $("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>")
+                    .append("<span class='robin--icon'></span><span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>")
+            );
         });
     }
-
+    setTimeout(function() {
+        listMutedUsers();
+    }, 1500);
 
     //colored text thanks to OrangeredStilton! https://gist.github.com/Two9A/3f33ee6f6daf6a14c1cc3f18f276dacd
     var colors = ['rgba(255,0,0,0.1)','rgba(0,255,0,0.1)','rgba(0,0,255,0.1)', 'rgba(0,255,255,0.1)','rgba(255,0,255,0.1)', 'rgba(255,255,0,0.1)'];
