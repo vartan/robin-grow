@@ -561,7 +561,7 @@
         var username = String($(this).text()).trim();
         var source = String($(".text-counter-input").val());
         // Focus textarea and set the value of textarea
-        $(".text-counter-input").focus().val("").val(source + " " + username);
+        $(".text-counter-input").focus().val("").val(source + " " + username + " ");
     });
 
     $("#settingContent").append("<span style='font-size:"+settings.fontsize+"px;text-align:center;'>Muted Users (click to unmute)</label>");
