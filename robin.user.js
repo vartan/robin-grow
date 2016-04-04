@@ -714,12 +714,12 @@
         return $("#robinChatMessageList-ch" + index);
     }
 
-    function moveChannelMessage(channel, message)
+    function moveChannelMessage(channelIndex, message)
     {
-        var channel = getChannelMessageList(channel);
+        var channel = getChannelMessageList(channelIndex);
         channel.append(message);
 
-        markChannelChanged(channel);
+        markChannelChanged(channelIndex);
 
         if(GOTO_BOTTOM)
             channel.scrollTop(channel[0].scrollHeight);
