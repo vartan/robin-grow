@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.04
+// @version      2.09
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -26,6 +26,16 @@
         }
         return prepend_str + str;
     };
+
+    function tryHide(){
+	if(settings.hideVote){
+		console.log("hiding vote buttons.");
+		$('.robin-chat--buttons').hide();
+	}
+	else{
+		$('.robin-chat--buttons').show();
+	}
+    }
 
     function buildDropdown(){
         $("#chat-prepend-area").remove();
@@ -127,6 +137,7 @@
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
                 buildDropdown();
+		tryHide();
             });
 
             function setVote(vote) {
@@ -165,7 +176,7 @@
             localStorage["robin-grow-settings"] = JSON.stringify(settings);
         },
 
-        addBool: function addBoolSetting(name, description, defaultSetting) {
+        addBool: function addBoolSetting(name, description, defaultSetting, callback) {
             defaultSetting = settings[name] || defaultSetting;
 
             $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
@@ -178,6 +189,10 @@
             } else {
                 settings[name] = defaultSetting;
             }
+
+                if(callback) {
+                    callback();
+                }
         },
 
         addInput: function addInputSetting(name, description, defaultSetting, callback) {
@@ -216,6 +231,7 @@
     var settings = Settings.load();
 
     // Options begin
+    Settings.addBool("hideVote", "Hide voting panel to prevent misclicks.", false, tryHide());
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
