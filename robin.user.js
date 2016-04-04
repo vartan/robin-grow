@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.19
+// @version      2.22
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -652,7 +652,7 @@
         $("#robinChatWindow").before("<div id=\"robinChannelDiv\" class=\"robin-chat--message-list\"><ul id=\"robinChannelList\"></ul></div>");
 
         // Add tab for all other messages
-        $("#robinChannelList").append("<li id=\"robinChannelTab\"><a id=\"robinChannelLink\" href=\"#robinCh\" class>General</a></li>");
+        $("#robinChannelList").append("<li id=\"robinChannelTab\"><a id=\"robinChannelLink\" href=\"#robinCh\" class>System</a></li>");
 
         // Room tab events
         var tab = $("#robinChannelLink");
@@ -680,7 +680,7 @@
             chatBox.append("<div id=\"robinChatMessageList-ch" + i + "\" class=\"robin-chat--message-list\">");
 
             // Room tab
-            tabBar.append("<li id=\"robinChannelTab-ch" + i + "\"><a id=\"robinChannelLink-ch" + i + "\" href=\"#robinCh" + i + "\" class>Room " + channelList[i] + "</a></li>");
+            tabBar.append("<li id=\"robinChannelTab-ch" + i + "\"><a id=\"robinChannelLink-ch" + i + "\" href=\"#robinCh" + i + "\" class>" + channelList[i] + "</a></li>");
 
             // Room tab event
             var tab = $("#robinChannelLink-ch" + i);
@@ -742,7 +742,8 @@
     function moveChannelMessage(channelIndex, message)
     {
         var channel = getChannelMessageList(channelIndex);
-        channel.append(message);
+        //var message_copy = jQuery.extend(true, {}, message);
+	    channel.append(message.cloneNode(true));
 
         markChannelChanged(channelIndex);
 
@@ -782,8 +783,8 @@
                 var alignedUser = settings['alignment'] ? $user.html().lpad('&nbsp;', 20) : $user.html().rpad('&nbsp;', 20);
 
                 $user.html(alignedUser);
-		var stylecalc = ""
-		if(settings.fontstyle != ""){
+		var stylecalc = "";
+		if(settings.fontstyle !== ""){
 			stylecalc = '"'+settings.fontstyle.trim()+'"' + ",";
 		}
 		stylecalc = stylecalc +  '"Lucida Console", Monaco, monospace';
@@ -878,10 +879,9 @@
                     robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
                 }
 
-				// Move channel messages to channel tabs
+		// Move channel messages to channel tabs
                 if (results_chan.has)
                 {
-                    $message.text(messageText.substring(results_chan.name.length).trim());
                     moveChannelMessage(results_chan.index, jq[0]);
                 }
             }
