@@ -215,7 +215,7 @@
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
-    Settings.addInput("username_bg", "Background color of usernames", "");
+    Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "", buildDropdown);
     Settings.addBool("channelPrepend", "Prepend chat input with primary channel + listening channels", false);
     Settings.addBool("filterChannel", "Filter by channel", true);
