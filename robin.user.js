@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.09
+// @version      2.10
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -132,7 +132,7 @@
             // Setting container
             $(".robin-chat--sidebar").before(
                 '<div class="robin-chat--sidebar" style="display:none;" id="settingContainer">' +
-                '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent">' +
+                '<div style="overflow: scroll;" class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent">' +
                 '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>' +
                 '</div>' +
                 '</div>'
