@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.10
+// @version      2.11
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -15,8 +15,10 @@
     // Styles
     GM_addStyle('.robin--username {cursor: pointer}');
 
-    // hacky solution
-    CURRENT_CHANNEL = "";
+    // hacky solutions
+    var CURRENT_CHANNEL = "";
+    var GOTO_BOTTOM = true;
+    var robinChatWindow = $('#robinChatWindow');
 
     String.prototype.lpad = function(padString, length) {
         var str = this;
@@ -241,7 +243,7 @@
 
 
     function clearChat() {
-	console.log("chat cleared!");
+    console.log("chat cleared!");
         $("#robinChatMessageList").empty();
     }
 
@@ -275,7 +277,7 @@
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive)", "", buildDropdown);
     Settings.addBool("filterChannel", "Filter by channels (check = on; uncheck = off)", true);
-	Settings.addBool("twitchEmotes", "Twitch emotes. https://twitchemotes.com/filters/global", false);
+    Settings.addBool("twitchEmotes", "Twitch emotes. https://twitchemotes.com/filters/global", false);
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
 
@@ -575,7 +577,7 @@
     var colors = ['rgba(255,0,0,0.1)','rgba(0,255,0,0.1)','rgba(0,0,255,0.1)', 'rgba(0,255,255,0.1)','rgba(255,0,255,0.1)', 'rgba(255,255,0,0.1)'];
 
 
-	//twitch emotes
+    //twitch emotes
     var emotes = {};
     $.getJSON("https://twitchemotes.com/api_cache/v2/global.json", function( data ) {
         emotes = data.emotes;
@@ -689,20 +691,25 @@
                     var newHTML = oldHTML.replace(url, parsedUrl);
                     $(jq[0]).find('.robin-message--message').html(newHTML);
                 }
-				if(settings.twitchEmotes){
-					var split = messageText.split(' ');
-					var changes = false;
-					for (var i=0; i < split.length; i++) {
-						if(emotes.hasOwnProperty(split[i])){
-							split[i] = "<img src=\"https://static-cdn.jtvnw.net/emoticons/v1/"+emotes[split[i]].image_id+"/1.0\">";
-							changes = true;
-						}
-					}
-					if (changes) {
-						$(jq[0]).find('.robin-message--message').html(split.join(' '));
-					}
-				}
+                if(settings.twitchEmotes){
+                    var split = messageText.split(' ');
+                    var changes = false;
+                    for (var i=0; i < split.length; i++) {
+                        if(emotes.hasOwnProperty(split[i])){
+                            split[i] = "<img src=\"https://static-cdn.jtvnw.net/emoticons/v1/"+emotes[split[i]].image_id+"/1.0\">";
+                            changes = true;
+                        }
+                    }
+                    if (changes) {
+                        $(jq[0]).find('.robin-message--message').html(split.join(' '));
+                    }
+                }
                 findAndHideSpam();
+
+                if(GOTO_BOTTOM) {
+                    robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
+                }
+
             }
         });
     }
@@ -759,6 +766,19 @@
         $('<style>.res-nightmode .robin-message, .res-nightmode .robin--user-class--self .robin--username, .res-nightmode .robin-room-participant .robin--username, .res-nightmode :not([class*=flair]) > .robin--username, .res-nightmode .robin-chat .robin-chat--vote, .res-nightmode .robin-message[style*="color: white"] { color: #DDD; } .res-nightmode .robin-chat .robin-chat--sidebar, .res-nightmode .robin-chat .robin-chat--vote { background-color: #262626; } .res-nightmode #robinChatInput { background-color: #262626 !important; } .res-nightmode .robin-chat .robin-chat--vote { box-shadow: 0px 0px 2px 1px #888; } .res-nightmode .robin-chat .robin-chat--vote.robin--active { background-color: #444444; box-shadow: 1px 1px 5px 1px black inset; } .res-nightmode .robin-chat .robin-chat--vote:focus { background-color: #848484; outline: 1px solid #9A9A9A; } .res-nightmode .robin--user-class--self { background-color: #424242; } .res-nightmode .robin-message[style*="background: rgb(255, 162, 127)"] { background-color: #520000 !important; } .res-nightmode .robin-chat .robin-chat--user-list-widget { overflow-x: hidden; } .res-nightmode .robin-chat .robin-chat--sidebar-widget { border-bottom: none; }</style>').appendTo('body');
     }
 
+
     // Change font to fixed-width
-    $('#robinChatWindow').css('font-family', '"Lucida Console", Monaco, monospace');
+    robinChatWindow.css('font-family', '"Lucida Console", Monaco, monospace');
+
+    $('#robinChatWindow').scroll(function() {
+        if(robinChatWindow.scrollTop() >= robinChatWindow[0].scrollHeight - robinChatWindow.height()) {
+
+            GOTO_BOTTOM = true;
+            return;
+        }
+
+        GOTO_BOTTOM = false;
+
+        // not bottom
+    });
 })();
