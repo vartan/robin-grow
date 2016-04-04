@@ -529,7 +529,7 @@
             // There are nodes added
             if (jq.length > 0) {
                     var colors_match = {};
-                    split_channels = settings.channel.split(",");
+                    split_channels = settings.channel.toLowerCase().split(",");
 
                     for(i = 0; i < split_channels.length; i++){
                         colors_match[split_channels[i].trim()] = colors[i];
@@ -581,12 +581,17 @@
                     if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
                         $message.parent().css("background","#FFA27F");
                         notifAudio.play();
-                        console.log("got new mention");
+                    } else {
+
+                        //still show mentions in highlight color.
+
+                        var result = hasChannel(messageText, settings.channel);
+
+                        if(result.has && result.name in colors_match) {
+                            $message.parent().css("background", colors_match[result.name]);
+                        }
                     }
-            //still show mentions in highlight color.
-                    else if (messageText.toLowerCase().split(" ")[0] in colors_match) {
-                        $message.parent().css("background",colors_match[messageText.toLowerCase().split(" ")[0]]);
-                    }
+
                     if(urlRegex.test(messageText)) {
                         urlRegex.lastIndex = 0;
                         var url = encodeURI(urlRegex.exec(messageText)[0]);
