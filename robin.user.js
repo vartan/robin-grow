@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.89
 // @description  Try to take over the world!
-// @author       /u/mvartan 
+// @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
 // @updateURL    https://github.com/5a1t/robin-grow/raw/master/robin.user.js
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
@@ -16,31 +16,31 @@
     GM_addStyle('.robin--username {cursor: pointer}');
 
     function buildDropdown(){
-	   $("#chat-prepend-area").remove();
-	    //select dropdown chat. 
-	    //generate dropdown html
-	    split_channels= settings.channel.split(",");
-	    drop_html = ""
-	    for (tag in split_channels){
-		drop_html = drop_html + '<option value="'+split_channels[tag]+'">'+split_channels[tag]+'</option>'
-	    }
+       $("#chat-prepend-area").remove();
+        //select dropdown chat.
+        //generate dropdown html
+        split_channels= settings.channel.split(",");
+        drop_html = ""
+        for (tag in split_channels){
+        drop_html = drop_html + '<option value="'+split_channels[tag]+'">'+split_channels[tag]+'</option>'
+        }
 
-	   $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
+       $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
 
     }
 
     // Utils
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase();
-	channel_array = channel.split(",");
-	startschar = false;
-	
-	for (i = 0; i < channel_array.length; i++){
-		if(String(source).toLowerCase().startsWith(channel_array[i])){
-			startschar = true;
-		}
-	}
-	
+    channel_array = channel.split(",");
+    startschar = false;
+
+    for (i = 0; i < channel_array.length; i++){
+        if(String(source).toLowerCase().startsWith(channel_array[i])){
+            startschar = true;
+        }
+    }
+
         return (String(source).toLowerCase().startsWith(channel) || startschar);
     }
 
@@ -87,13 +87,13 @@
             $("#openBtn").on("click", function openSettings() {
                 $(".robin-chat--sidebar").hide();
                 $("#settingContainer").show();
-		buildDropdown();
+        buildDropdown();
             });
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
-		buildDropdown();
+        buildDropdown();
             });
 
             function setVote(vote) {
@@ -102,8 +102,8 @@
                     Settings.save(settings);
                 };
             }
-	 
-	
+
+
             $(".robin-chat--vote.robin--vote-class--abandon").on("click", setVote("abandon"));
             $(".robin-chat--vote.robin--vote-class--continue").on("click", setVote("stay"));
             $(".robin-chat--vote.robin--vote-class--increase").on("click", setVote("grow"));
@@ -145,7 +145,7 @@
             } else {
                 settings[name] = defaultSetting;
             }
-	
+
         },
 
         addInput: function addInputSetting(name, description, defaultSetting) {
@@ -189,7 +189,7 @@
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
 
-	
+
     // Add version at the end (if available from script engine)
     var versionString = "";
     if (typeof GM_info !== "undefined") {
@@ -207,8 +207,8 @@
     buildDropdown();
 
     if(settings.channelPrepend){
- 	   $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
-	}
+       $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
+    }
     $(".text-counter-input").keyup(function(e) {
         if(settings.filterChannel && $(".text-counter-input").val().indexOf($("#chat-prepend-select").val()) != 0 && settings.channelPrepend) {
             $(".text-counter-input").val($("#chat-prepend-select").val()+" "+$(".text-counter-input").val())
@@ -222,13 +222,13 @@
             if(settings.filterChannel &&
                 String(settings.channel).length > 0) {
 
-		    if(settings.channelPrepend){
+            if(settings.channelPrepend){
 
-			    setTimeout(function() {
-				$(".text-counter-input").val($("#chat-prepend-select").val()+" ");
-				console.log("section2");
-			    }, 10);
-			}
+                setTimeout(function() {
+                $(".text-counter-input").val($("#chat-prepend-select").val()+" ");
+                console.log("section2");
+                }, 10);
+            }
                 }
         }
     });
@@ -440,7 +440,7 @@
             listMutedUsers();
         }
     });
-    
+
     $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
 
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
@@ -494,11 +494,11 @@
             if (jq.length > 0) {
                     var colors_match = {};
                     split_channels = settings.channel.split(",");
-    
+
                     for(i = 0; i < split_channels.length; i++){
                         colors_match[split_channels[i]] = colors[i];
                     }
-	
+
 
                 // cool we have a message.
                 var thisUser = $(jq[0].children && jq[0].children[1]).text();
@@ -526,20 +526,7 @@
                     $message = null;
                     $(jq[0]).remove();
                 } else {
-                    if(settings.filterChannel) {
-                        if(messageText.indexOf(settings.channel) == 0) {
-                            $message.text(messageText.substring(settings.channel.length).trim());
-                        }
-                    }
-                    if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
-                        $message.parent().css("background","#FFA27F");
-                        notifAudio.play();
-                        console.log("got new mention");
-                    }
-		    //still show mentions in highlight color.	
-                    else if (messageText.toLowerCase().split(" ")[0][0] in colors_match) {
-                        $message.parent().css("background",colors_match[messageText.toLowerCase().split(" ")[0][0]]);
-                    }
+
                     if(urlRegex.test(messageText)) {
                         urlRegex.lastIndex = 0;
                         var url = encodeURI(urlRegex.exec(messageText)[0]);
@@ -548,6 +535,27 @@
                         var newHTML = oldHTML.replace(url, parsedUrl);
                         $(jq[0]).find('.robin-message--message').html(newHTML);
                     }
+
+                    if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
+                        $message.parent().css("background","#FFA27F");
+                        notifAudio.play();
+                        console.log("got new mention");
+
+                        return;
+                    }
+                    //still show mentions in highlight color.
+                    else if (messageText.toLowerCase().split(" ")[0][0] in colors_match) {
+                        $message.parent().css("background",colors_match[messageText.toLowerCase().split(" ")[0][0]]);
+
+                        return;
+                    }
+
+                    if(settings.filterChannel) {
+                        if(messageText.indexOf(settings.channel) == 0) {
+                            $message.text(messageText.substring(settings.channel.length).trim());
+                        }
+                    }
+
                     findAndHideSpam();
                 }
             }
