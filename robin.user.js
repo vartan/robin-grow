@@ -29,6 +29,16 @@
         return prepend_str + str;
     };
 
+    String.prototype.rpad = function(padString, length) {
+        var str = this;
+        var prepend_str = "";
+        for (var i = str.length; i < length; i++) {
+            prepend_str = padString + prepend_str;
+        }
+        return str + prepend_str;
+    };
+
+
     function tryHide(){
     if(settings.hideVote){
         console.log("hiding vote buttons.");
@@ -276,6 +286,7 @@
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("fontsize", "Chat font size", "12");
+    Settings.addBool("alignment", "Text alignment (false = left; true = right)", true);
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive)", "", buildDropdown);
     Settings.addBool("filterChannel", "Filter by channels (check = on; uncheck = off)", true);
@@ -621,7 +632,9 @@
                     $user.css("background",  String(settings['username_bg']));
                 }
 
-                $user.html($user.html().lpad('&nbsp;', 20));
+                var alignedUser = settings['alignment'] ? $user.html().lpad('&nbsp;', 20) : $user.html().rpad('&nbsp;', 20);
+
+                $user.html(alignedUser);
                 $user.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", settings.fontsize+"px");
                 $message.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", settings.fontsize+"px");
 
