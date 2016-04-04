@@ -60,7 +60,7 @@
 
             if(String(source).toLowerCase().startsWith(current_chan)){
                 return {
-                    name: channel_array[i],
+                    name: current_chan,
                     has: true
                 };
             }
