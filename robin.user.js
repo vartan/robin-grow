@@ -244,8 +244,11 @@
        $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
     }
     $(".text-counter-input").keyup(function(e) {
-        if(settings.filterChannel && $(".text-counter-input").val().indexOf($("#chat-prepend-select").val()) != 0 && settings.channelPrepend) {
-            $(".text-counter-input").val($("#chat-prepend-select").val().trim() +" "+$(".text-counter-input").val());
+
+        var channel_needle = $("#chat-prepend-select").val().trim();
+
+        if(settings.filterChannel && $(".text-counter-input").val().indexOf(channel_needle) != 0 && settings.channelPrepend) {
+            $(".text-counter-input").val(channel_needle +" "+$(".text-counter-input").val());
         }
     });
 
