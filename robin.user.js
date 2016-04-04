@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.16
+// @version      2.17
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -91,10 +91,9 @@
         channel_array = channel.split(",");
         source = String(source).toLowerCase();
 
-        var c = 1 - channel_array.length;
         var idx = channel_array.length;
         while(idx-- > 0) {
-            var current_chan = String(channel_array[idx + c]).toLowerCase().trim();
+            var current_chan = String(channel_array[idx]).toLowerCase().trim();
 
             if(source.startsWith(current_chan)) {
                 return {
