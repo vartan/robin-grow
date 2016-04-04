@@ -83,6 +83,7 @@
 
             $('.robin-chat--buttons').prepend("<div class='robin-chat--vote robin--vote-class--novote'><span class='robin--icon'></span><div class='robin-chat--vote-label'></div></div>");
             $robinVoteWidget.find('.robin-chat--vote').css('padding', '5px');
+            $('.robin-chat--user-list-widget').css('margin-top', '122px');
             $('.robin--vote-class--novote').css('pointer-events', 'none');
         },
 
