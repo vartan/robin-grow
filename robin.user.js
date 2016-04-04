@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.01
+// @version      2.02
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -532,7 +532,7 @@
                     split_channels = settings.channel.split(",");
 
                     for(i = 0; i < split_channels.length; i++){
-                        colors_match[split_channels[i]] = colors[i];
+                        colors_match[split_channels[i].trim()] = colors[i];
                     }
 
 
