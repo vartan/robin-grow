@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.04
+// @version      2.06
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -70,6 +70,9 @@
 
     }
 
+
+	
+
     // Utils
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase().trim();
@@ -116,13 +119,12 @@
         }
     }
 
-    function clearChat() {
-        $("#robinChatMessageList").empty();
-    }
 
 
     var Settings = {
         setupUI: function() {
+	    
+		
             $robinVoteWidget.prepend("<div class='addon'><div class='usercount robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             $robinVoteWidget.prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             // Open Settings button
@@ -221,13 +223,27 @@
             });
             settings[name] = defaultSetting;
         },
+
         addButton: function(id, description, callback, options) {
             options = options || {};
             $("#settingContent").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + id + '">' + description + '</div></div>');
             $('#' + id).on('click', function(e) { callback(e, options); });
+        },
+
+
+        addMainButton: function(id, description, callback, options) {
+            options = options || {};
+            $("#robinChatInput").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + id + '">' + description + '</div></div>');
+            $('#' + id).on('click', function(e) { callback(e, options); });
         }
     };
 
+
+
+    function clearChat() {
+	console.log("chat cleared!");
+        $("#robinChatMessageList").empty();
+    }
 
     var currentUsersName = $('div#header span.user a').html();
 
@@ -247,7 +263,9 @@
     var settings = Settings.load();
 
     // Options begin
-    Settings.addButton("clearChat", "Clear Chat", clearChat);
+    //Settings.addButton("clearChat", "Clear Chat", clearChat);
+    Settings.addMainButton("clear-chat-button", "Clear Chat",  clearChat);
+
     Settings.addBool("hideVote", "Hide voting panel to prevent misclicks.", false, tryHide());
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("enableUnicode", "Allow unicode characters. Unicode is considered spam and thus are filtered out.", false);
@@ -278,6 +296,7 @@
 
     // hacky solution
     CURRENT_CHANNEL = $("#chat-prepend-select").val().trim();
+
 
     $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val().trim() + " " : "");
 
