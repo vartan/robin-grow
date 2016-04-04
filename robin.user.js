@@ -641,7 +641,6 @@
                 }
 				if(settings.twitchEmotes){
 					var split = messageText.split(' ');
-					console.log(split);
 					var changes = false;
 					for (var i=0; i < split.length; i++) {
 						if(emotes.hasOwnProperty(split[i])){
