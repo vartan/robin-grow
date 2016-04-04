@@ -384,7 +384,7 @@
     }
 
     // Individual mute button /u/verox-
-    var mutedList = [];
+    var mutedList = settings.mutedUsersList || [];
     $('body').on('click', ".robin--username", function() {
         var username = $(this).text();
         var clickedUser = mutedList.indexOf(username);
@@ -393,24 +393,22 @@
             // Mute our user.
             mutedList.push(username);
             this.style.textDecoration = "line-through";
-            listMutedUsers();
         } else {
             // Unmute our user.
             this.style.textDecoration = "none";
             mutedList.splice(clickedUser, 1);
-            listMutedUsers();
         }
+
+        settings.mutedUsersList = mutedList;
+        Settings.save(settings);
+        listMutedUsers();
     });
-    
     $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
 
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
 
     function listMutedUsers() {
-
-        $("#blockedUserList").remove();
-
-        $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
+        $("#blockedUserList").html("");
 
         $.each(mutedList, function(index, value){
 
@@ -426,13 +424,15 @@
                 mutedHere = "away";
             }
 
-            $("#blockedUserList").append("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>");
-            $("#blockedUserList>.robin-room-participant").last().append("<span class='robin--icon'></span>");
-            $("#blockedUserList>.robin-room-participant").last().append("<span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>");
-
+            $("#blockedUserList").append(
+                $("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>")
+                    .append("<span class='robin--icon'></span><span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>")
+            );
         });
     }
-
+    setTimeout(function() {
+        listMutedUsers();
+    }, 1500);
 
     // credit to wwwroth for idea (notification audio)
     // i think this method is better
