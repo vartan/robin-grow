@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.15
+// @version      2.16
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -286,7 +286,7 @@
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("fontsize", "Chat font size", "12");
-    Settings.addBool("alignment", "Text alignment (false = left; true = right)", true);
+    Settings.addBool("alignment", "Username alignment (false = left; true = right)", true);
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive)", "", buildDropdown);
     Settings.addBool("filterChannel", "Filter by channels (check = on; uncheck = off)", true);
@@ -691,7 +691,7 @@
 
                 if(settings.filterChannel) {
                     if(results_chan.has) {
-						messageText = messageText.substring(results_chan.name.length).trim();
+                        messageText = messageText.substring(results_chan.name.length).trim();
                         $message.text(messageText);
                     }
 
