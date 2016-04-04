@@ -55,7 +55,9 @@ http://piratepad.net/Zg3MJL40Qh
     1.8: Links in chat are clickable
     1.9: Dropdown menu for chat channels that auto-prepends (dashed). Also mute persistency (voltaek).
     2.0: The chat channel is before username w/ set tabbing and custom username background (dashed, Daegalus). 
-     2.0.3+: Adds a font size box. Global username mentions (dashed). Removed useless settings. Chat clear button. Unicode support. Twitch emotes.
+     2.0.3: Adds a font size box. Global username mentions (dashed). Removed useless settings. 
+     2.0.4+: Chat clear button. Toggleable Unicode support. Twitch emotes (anadee).
+    2.1: Simplified settings box (dashed). Lots of cleaning up. Username alignment setting.
 
 ## Screenshots
 
