@@ -34,7 +34,9 @@
         split_channels= settings.channel.split(",");
         drop_html = "";
         for (var tag in split_channels){
-            drop_html = drop_html + '<option value="'+split_channels[tag]+'">'+split_channels[tag]+'</option>';
+
+            var channel_name = split_channels[tag].trim();
+            drop_html = drop_html + '<option value="'+channel_name+'">'+channel_name+'</option>';
         }
 
         $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
