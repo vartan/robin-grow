@@ -91,9 +91,10 @@
         channel_array = channel.split(",");
         source = String(source).toLowerCase();
 
+        var c = 1 - channel_array.length;
         var idx = channel_array.length;
         while(idx-- > 0) {
-            var current_chan = String(channel_array[idx]).toLowerCase().trim();
+            var current_chan = String(channel_array[idx + c]).toLowerCase().trim();
 
             if(source.startsWith(current_chan)) {
                 return {
