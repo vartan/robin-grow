@@ -27,6 +27,16 @@
         return prepend_str + str;
     };
 
+    function tryHide(){
+	if(settings.hideVote){
+		console.log("hiding vote buttons.");
+		$('.robin-chat--buttons').hide();
+	}
+	else{
+		$('.robin-chat--buttons').show();
+	}
+    }
+
     function buildDropdown(){
         $("#chat-prepend-area").remove();
         //select dropdown chat.
@@ -138,6 +148,7 @@
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
                 buildDropdown();
+		tryHide();
             });
 
             function setVote(vote) {
@@ -176,7 +187,7 @@
             localStorage["robin-grow-settings"] = JSON.stringify(settings);
         },
 
-        addBool: function addBoolSetting(name, description, defaultSetting) {
+        addBool: function addBoolSetting(name, description, defaultSetting, callback) {
             defaultSetting = settings[name] || defaultSetting;
 
             $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="checkbox" name="setting-' + name + '">' + description + '</label></div>');
@@ -189,6 +200,10 @@
             } else {
                 settings[name] = defaultSetting;
             }
+
+                if(callback) {
+                    callback();
+                }
         },
 
         addInput: function addInputSetting(name, description, defaultSetting, callback) {
@@ -233,6 +248,7 @@
 
     // Options begin
     Settings.addButton("clearChat", "Clear Chat", clearChat);
+    Settings.addBool("hideVote", "Hide voting panel to prevent misclicks.", false, tryHide());
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("enableUnicode", "Allow unicode characters. Unicode is considered spam and thus are filtered out.", false);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
