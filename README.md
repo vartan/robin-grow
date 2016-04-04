@@ -43,6 +43,8 @@ https://github.com/vartan/robin-grow
     1.6: Adds a send message button for mobile
     1.7: Refreshes the page if reddit is down. Also highlights your messages in the chat
     1.8: Links in chat are clickable
+    1.9: Added in a dropdown menu for chat channels that auto-prepends by dashed. Also mute persistency by voltaek.
+    2.0: Adds in a feature to set custom username backgrounds, moves the chat channel before username.
 
 ## Screenshots
 
