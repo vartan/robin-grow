@@ -164,7 +164,6 @@
             } else {
                 settings[name] = defaultSetting;
             }
-
         },
 
         addInput: function addInputSetting(name, description, defaultSetting, callback) {
@@ -465,7 +464,7 @@
             listMutedUsers();
         }
     });
-
+    
     $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
 
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
@@ -592,7 +591,6 @@
         '#820080'  // purple
     ];
 
-
     function colorFromName(name) {
         sanitizedName = name.toLowerCase().replace(/[^a-z0-9]/g, "");
         flairNum = parseInt(sanitizedName, 36) % 6;
@@ -623,6 +621,9 @@
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
     $('#robinChatInput').css('background', '#EFEFED');
+    
+    // Simple Height Increase
+    $('.robin-chat--body').css('height', '80vh');
 
     // RES Night Mode support
     if ($("body").hasClass("res")) {
