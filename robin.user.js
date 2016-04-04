@@ -64,6 +64,19 @@
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase().trim();
         channel_array = channel.split(",");
+        source = String(source).toLowerCase();
+
+        var idx = channel_array.length;
+        while(idx-- > 0) {
+            var current_chan = String(channel_array[i]).toLowerCase().trim();
+
+            if(source.startsWith(current_chan)) {
+                return {
+                    name: current_chan,
+                    has: true
+                };
+            }
+        }
 
         var index = channel_array.indexOf(source.trim().split(" ")[0]);
         if (index >= 0) {
@@ -75,7 +88,7 @@
 
         return {
             name: channel,
-            has: String(source).toLowerCase().startsWith(channel)
+            has: source.startsWith(channel)
         };
     }
 
