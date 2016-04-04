@@ -529,7 +529,7 @@
             // There are nodes added
             if (jq.length > 0) {
                     var colors_match = {};
-                    split_channels = settings.channel.split(",").toLowerCase();
+                    split_channels = settings.channel.toLowerCase().split(",");
 
                     for(i = 0; i < split_channels.length; i++){
                         colors_match[split_channels[i].trim()] = colors[i];
