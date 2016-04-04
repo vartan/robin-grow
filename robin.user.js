@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.17
+// @version      2.19
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -286,6 +286,7 @@
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("fontsize", "Chat font size", "12");
+    Settings.addInput("fontstyle", "Font Style (will default to Lucida Console if unavailable)", "");
     Settings.addBool("alignment", "Username alignment (false = left; true = right)", true);
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive;spaces are NOT stripped)", "", buildDropdown);
@@ -646,8 +647,13 @@
                 var alignedUser = settings['alignment'] ? $user.html().lpad('&nbsp;', 20) : $user.html().rpad('&nbsp;', 20);
 
                 $user.html(alignedUser);
-                $user.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", settings.fontsize+"px");
-                $message.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", settings.fontsize+"px");
+		var stylecalc = ""
+		if(settings.fontstyle != ""){
+			stylecalc = '"'+settings.fontstyle.trim()+'"' + ",";
+		}
+		stylecalc = stylecalc +  '"Lucida Console", Monaco, monospace';
+                $user.css("font-family", stylecalc).css("font-size", settings.fontsize+"px");
+                $message.css("font-family", stylecalc).css("font-size", settings.fontsize+"px");
 
 
                 var is_muted = (mutedList.indexOf(thisUser) >= 0);
