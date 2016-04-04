@@ -42,7 +42,7 @@
                 source = source.startsWith(" ") ? source.substring(1) : source;
             }
 
-            console.log(CURRENT_CHANNEL, new_channel, source);
+            CURRENT_CHANNEL = new_channel;
 
             $(".text-counter-input").val(new_channel + " " + source);
         });
