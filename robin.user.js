@@ -32,7 +32,7 @@
 
         $("#chat-prepend-select").change(function() {
 
-            var new_channel = String($('option:selected', this).text()).toLowerCase();
+            var new_channel = String($('option:selected', this).text()).toLowerCase().trim();
             var source = String($(".text-counter-input").val()).toLowerCase();
 
             CURRENT_CHANNEL = String(CURRENT_CHANNEL);
@@ -42,7 +42,7 @@
                 source = source.startsWith(" ") ? source.substring(1) : source;
             }
 
-            CURRENT_CHANNEL = new_channel;
+            CURRENT_CHANNEL = new_channel.trim();
 
             $(".text-counter-input").val(new_channel + " " + source);
         });
