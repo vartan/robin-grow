@@ -499,7 +499,7 @@
 
 
     //colored text thanks to OrangeredStilton! https://gist.github.com/Two9A/3f33ee6f6daf6a14c1cc3f18f276dacd
-    var colors = ['rgba(255,0,0,0.2)','rgba(0,255,0,0.2)','rgba(0,0,255,0.2)', 'rgba(0,255,255,0.2)','rgba(255,0,255,0.2)', 'rgba(255,255,0,0.2)'];
+    var colors = ['rgba(255,0,0,0.1)','rgba(0,255,0,0.1)','rgba(0,0,255,0.1)', 'rgba(0,255,255,0.1)','rgba(255,0,255,0.1)', 'rgba(255,255,0,0.1)'];
 
 
     // credit to wwwroth for idea (notification audio)
