@@ -1,6 +1,8 @@
 # Robin Grow
 #### For [reddit's 2016 April Fools Day prank](https://www.reddit.com/robin/)
 
+Special thanks to OrangeredStilton, Voltaek, and dashed.
+
 ## Installation
 Install a userscript extension such as greasemonkey or tampermonkey:  
 Click here: http://tampermonkey.net
@@ -15,12 +17,17 @@ You can view the source code or contribute at:
 https://github.com/vartan/robin-grow
 
 ## Features
-1. Automatically votes "grow" in each round
-2. Spam blocking: Automatically blocks spammers and bots. Click on a username to block additional users
-3. Shows a countdown of the time remaining in each round
-4. Displays the total vote counts for each option
-5. Your username color is visible in chat
-
+1. Automatically votes "grow" in each round. Respects your current choice though. Hides vote buttons.
+2. Spam blocking: Automatically blocks spammers and bots. Click on a username to block additional users (persistent).
+3. Shows a countdown of the time remaining in each round.
+4. Displays the total vote counts for each option.
+5. Your username color is visible in chat.
+6. Chat links are clickable.
+7. Dropdown menu for different chat channels.
+8. Visuals rework, complete with font size, spacing, clearing, and padding.
+9. Supports unicode!
+10. Global username mentions
+11. Twitch.tv emotes!
 
 ## Updates (times Pacific time)
 
@@ -40,7 +47,10 @@ https://github.com/vartan/robin-grow
     1.6: Adds a send message button for mobile
     1.7: Refreshes the page if reddit is down. Also highlights your messages in the chat
     1.8: Links in chat are clickable
+    1.9: Dropdown menu for chat channels that auto-prepends (dashed). Also mute persistency (voltaek).
+    2.0: The chat channel is before username w/ set tabbing and custom username background (dashed, Daegalus). 
+     2.0.3+: Adds a font size box. Global username mentions (dashed). Removed useless settings. Chat clear button. Unicode support. Twitch emotes.
 
 ## Screenshots
 
-![1](http://i.imgur.com/WVIjpb6.png) ![2](http://i.imgur.com/t13VChw.png)
+![1](https://lambda.sx/HIx.png) ![2](https://lambda.sx/g2S.png)
