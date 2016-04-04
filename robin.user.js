@@ -483,7 +483,7 @@
     // Individual mute button /u/verox-
     var mutedList = settings.mutedUsersList || [];
     $('body').on('click', ".robin--username", function() {
-        var username = $(this).text();
+        var username = String($(this).text()).trim();
         var clickedUser = mutedList.indexOf(username);
 
         if (clickedUser == -1) {
