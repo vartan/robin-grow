@@ -561,6 +561,7 @@
 
                 var is_muted = (mutedList.indexOf(thisUser) >= 0);
                 var is_spam = (settings.removeSpam && isBotSpam(messageText));
+                var results_chan = hasChannel(messageText, settings.channel);
 
                 var remove_message = is_muted || is_spam;
 
@@ -593,7 +594,6 @@
                         $message.parent().css("background", colors_match[result.name]);
                     } else {
 
-                    var results_chan = hasChannel(messageText, settings.channel);
                     var is_not_in_channels = (settings.filterChannel &&
                          !jq.hasClass('robin--user-class--system') &&
                          String(settings.channel).length > 0 &&
