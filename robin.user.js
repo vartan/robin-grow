@@ -245,7 +245,7 @@
     }
     $(".text-counter-input").keyup(function(e) {
         if(settings.filterChannel && $(".text-counter-input").val().indexOf($("#chat-prepend-select").val()) != 0 && settings.channelPrepend) {
-            $(".text-counter-input").val($("#chat-prepend-select").val()+" "+$(".text-counter-input").val());
+            $(".text-counter-input").val($("#chat-prepend-select").val().trim() +" "+$(".text-counter-input").val());
         }
     });
 
@@ -259,7 +259,7 @@
             if(settings.channelPrepend){
 
                 setTimeout(function() {
-                    $(".text-counter-input").val($("#chat-prepend-select").val()+" ");
+                    $(".text-counter-input").val($("#chat-prepend-select").val().trim() +" ");
                 }, 10);
             }
                 }
