@@ -230,6 +230,7 @@
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "", buildDropdown);
     Settings.addBool("filterChannel", "Filter by channel", true);
+	Settings.addBool("twitchEmotes", "Twitch emotes", false);
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
 
@@ -523,6 +524,13 @@
     //colored text thanks to OrangeredStilton! https://gist.github.com/Two9A/3f33ee6f6daf6a14c1cc3f18f276dacd
     var colors = ['rgba(255,0,0,0.1)','rgba(0,255,0,0.1)','rgba(0,0,255,0.1)', 'rgba(0,255,255,0.1)','rgba(255,0,255,0.1)', 'rgba(255,255,0,0.1)'];
 
+	
+	//twitch emotes
+    var emotes = {};
+    $.getJSON("https://twitchemotes.com/api_cache/v2/global.json", function( data ) {
+        emotes = data.emotes;
+        console.log(emotes);
+    });
 
     // credit to wwwroth for idea (notification audio)
     // i think this method is better
@@ -631,6 +639,20 @@
                     var newHTML = oldHTML.replace(url, parsedUrl);
                     $(jq[0]).find('.robin-message--message').html(newHTML);
                 }
+				if(settings.twitchEmotes){
+					var split = messageText.split(' ');
+					console.log(split);
+					var changes = false;
+					for (var i=0; i < split.length; i++) {
+						if(emotes.hasOwnProperty(split[i])){
+							split[i] = "<img src=\"https://static-cdn.jtvnw.net/emoticons/v1/"+emotes[split[i]].image_id+"/1.0\">";
+							changes = true;
+						}
+					}
+					if (changes) {
+						$(jq[0]).find('.robin-message--message').html(split.join(' '));
+					}
+				}
                 findAndHideSpam();
             }
         });
