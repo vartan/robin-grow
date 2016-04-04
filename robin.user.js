@@ -675,7 +675,8 @@
 
                 if(settings.filterChannel) {
                     if(results_chan.has) {
-                        $message.text(messageText.substring(results_chan.name.length).trim());
+						messageText = messageText.substring(results_chan.name.length).trim();
+                        $message.text(messageText);
                     }
 
                     $("<span class='robin-message--from'><strong>" + results_chan.name.lpad("&nbsp", 6) + "</strong></span>").css("font-family", '"Lucida Console", Monaco, monospace')
