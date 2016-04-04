@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.860
+// @version      1.870
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -41,6 +41,10 @@
         } catch (e) {
             return 0;
         }
+    }
+
+    function clearChat() {
+        $("#robinChatMessageList").html("");
     }
 
 
@@ -83,6 +87,7 @@
 
             $('.robin-chat--buttons').prepend("<div class='robin-chat--vote robin--vote-class--novote'><span class='robin--icon'></span><div class='robin-chat--vote-label'></div></div>");
             $robinVoteWidget.find('.robin-chat--vote').css('padding', '5px');
+            if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) $('.robin-chat--user-list-widget').css('margin-top', '122px');
             $('.robin--vote-class--novote').css('pointer-events', 'none');
         },
 
@@ -130,6 +135,11 @@
                     Settings.save(settings);
                 });
             settings[name] = defaultSetting;
+        },
+        addButton: function(id, description, callback, options) {
+            options = options || {};
+            $("#settingContent").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + id + '">' + description + '</div></div>');
+            $('#' + id).on('click', function(e) { callback(e, options); });
         }
     };
 
@@ -160,6 +170,9 @@
     Settings.addBool("filterChannel", "Filter by channel", false);
     Settings.addBool("showtrivia", "Username Highlighing", false);
     Settings.addInput("triviahosts", "Usernames to highlight, comma delimited.", "dthunder,nbagf");
+    Settings.addBool("reportStats", "Contribute statistics to the <a href='https://monstrouspeace.com/robintracker/'>Automated Leaderboard</a>.", false);
+    Settings.addInput("statReportingInterval", "Report Statistics Interval (seconds)", "60");
+    Settings.addButton("clearChat", "Clear Chat", clearChat);
     // Options end
 
     // Add version at the end (if available from script engine)
@@ -244,6 +257,7 @@
 
     endTime = getEndTime();
 
+    var lastStatisticsUpdate = 0;
     function update() {
         switch(settings.vote) {
             case "abandon":
@@ -259,16 +273,19 @@
         }
         if (endTime === null && !isEndingSoon) {
             $(".timeleft").hide();
-        }
-        else {
-            $(".timeleft").text(isEndingSoon ? "ending soon" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
+            endTime = getEndTime();
+        } else {
+            $(".timeleft").show().text(isEndingSoon ? "ending soon" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
         }
 
         var users = 0;
         $.get("/robin/", function(a) {
-            var start = "{" + a.substring(a.indexOf("\"robin_user_list\": ["));
-            var end = start.substring(0, start.indexOf("}]") + 2) + "}";
-            list = JSON.parse(end).robin_user_list;
+            var START_TOKEN = "<script type=\"text/javascript\" id=\"config\">r.setup(";
+            var END_TOKEN = ")</script>";
+            var start = a.substring(a.indexOf(START_TOKEN)+START_TOKEN.length);
+            var end = start.substring(0,start.indexOf(END_TOKEN));
+            config = JSON.parse(end);
+            list = config.robin_user_list;
 
             var counts = list.reduce(function(counts, voter) {
                 counts[voter.vote] += 1;
@@ -286,6 +303,32 @@
             $robinVoteWidget.find('.robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + formatNumber(counts.CONTINUE) + ')');
             users = list.length;
             $(".usercount").text(formatNumber(users) + " users in chat");
+
+            currentTime = Math.floor(Date.now()/1000);
+            if(settings.reportStats && (currentTime-lastStatisticsUpdate)>=parseInt(settings.statReportingInterval))
+            {
+                lastStatisticsUpdate = currentTime;
+
+                // Report statistics to the automated leaderboard
+                trackers = [
+                    "https://monstrouspeace.com/robintracker/track.php"
+                ];
+
+                queryString = "?id=" + config.robin_room_name.substr(0,10) +
+                    "&guid=" + config.robin_room_id +
+                    "&ab=" + counts.ABANDON +
+                    "&st=" + counts.CONTINUE +
+                    "&gr=" + counts.INCREASE +
+                    "&nv=" + counts.NOVOTE +
+                    "&count=" + users +
+                    "&ft=" + Math.floor(config.robin_room_date / 1000) +
+                    "&rt=" + Math.floor(config.robin_room_reap_time / 1000);
+
+                trackers.forEach(function(tracker){
+                    $.get(tracker + queryString);
+                });
+            }
+
         });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
@@ -398,8 +441,7 @@
             text == "voted to STAY" ||
             text == "voted to GROW" ||
             text == "voted to ABANDON" ||
-            text.toLowerCase().indexOf("autovoter") > -1 ||
-            text.toLowerCase().indexOf("madden") > -1 ||
+            text.indexOf("Autovoter") > -1 ||
             (UNICODE_SPAM_RE.test(text));
         var spamFilters = settings.spamFilters.split(",").map(function(filter) { return filter.trim().toLowerCase() });
         spamFilters.forEach(function(filterVal) {
@@ -410,7 +452,7 @@
     }
 
     // Individual mute button /u/verox-
-    var mutedList = [];
+    var mutedList = settings.mutedUsersList || [];
     $('body').on('click', ".robin--username", function() {
         var username = $(this).text();
         var clickedUser = mutedList.indexOf(username);
@@ -419,24 +461,22 @@
             // Mute our user.
             mutedList.push(username);
             this.style.textDecoration = "line-through";
-            listMutedUsers();
         } else {
             // Unmute our user.
             this.style.textDecoration = "none";
             mutedList.splice(clickedUser, 1);
-            listMutedUsers();
         }
-    });
-    
-    $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
 
+        settings.mutedUsersList = mutedList;
+        Settings.save(settings);
+        listMutedUsers();
+    });
+
+    $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
 
     function listMutedUsers() {
-
-        $("#blockedUserList").remove();
-
-        $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
+        $("#blockedUserList").html("");
 
         $.each(mutedList, function(index, value){
 
@@ -452,13 +492,15 @@
                 mutedHere = "away";
             }
 
-            $("#blockedUserList").append("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>");
-            $("#blockedUserList>.robin-room-participant").last().append("<span class='robin--icon'></span>");
-            $("#blockedUserList>.robin-room-participant").last().append("<span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>");
-
+            $("#blockedUserList").append(
+                $("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>")
+                    .append("<span class='robin--icon'></span><span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>")
+            );
         });
     }
-
+    setTimeout(function() {
+        listMutedUsers();
+    }, 1500);
 
     // credit to wwwroth for idea (notification audio)
     // i think this method is better
@@ -578,9 +620,13 @@
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
     $('#robinChatInput').css('background', '#EFEFED');
+    
+    // Full-screen-height chat
+    $('<style>@media(min-width:769px){.content {border:none}.footer-parent{margin-top:0;font-size:inherit}.debuginfo{display:none}.bottommenu{padding:0 3px;display:inline-block}#robinChatInput{padding:2px}#sendBtn{margin-bottom:0}.robin-chat .robin-chat--body{height:calc(100vh - 130px)}}</style>').appendTo('body');
 
     // RES Night Mode support
     if ($("body").hasClass("res")) {
         $('<style>.res-nightmode .robin-message, .res-nightmode .robin--user-class--self .robin--username, .res-nightmode .robin-room-participant .robin--username, .res-nightmode :not([class*=flair]) > .robin--username, .res-nightmode .robin-chat .robin-chat--vote, .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { color: #DDD; } .res-nightmode .robin-chat .robin-chat--sidebar, .res-nightmode .robin-chat .robin-chat--vote { background-color: #262626; } .res-nightmode #robinChatInput { background-color: #262626 !important; } .res-nightmode .robin-chat .robin-chat--vote { box-shadow: 0px 0px 2px 1px #888; } .res-nightmode .robin-chat .robin-chat--vote.robin--active { background-color: #444444; box-shadow: 1px 1px 5px 1px black inset; } .res-nightmode .robin-chat .robin-chat--vote:focus { background-color: #848484; outline: 1px solid #9A9A9A; } .res-nightmode .robin--user-class--self { background-color: #424242; } .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { background-color: #520000 !important; } .res-nightmode .robin-chat .robin-chat--user-list-widget { overflow-x: hidden; } .res-nightmode .robin-chat .robin-chat--sidebar-widget { border-bottom: none; }</style>').appendTo('body');
     }
+
 })();
