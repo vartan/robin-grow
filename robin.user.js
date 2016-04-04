@@ -27,6 +27,19 @@
 
 	   $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
 
+        $("#chat-prepend-select").change(function() {
+
+            var new_channel = String($('option:selected', this).text()).toLowerCase();
+            var source = String($(".text-counter-input").val()).toLowerCase();
+
+            if(source.startsWith(new_channel)) {
+                source = source.substring(new_channel.length);
+                source = source.charAt(0) === " " ? source.substring(1) : source;
+            }
+
+            $(".text-counter-input").val(new_channel + " " + source);
+        });
+
     }
 
     // Utils
@@ -215,7 +228,7 @@
 	}
     $(".text-counter-input").keyup(function(e) {
         if(settings.filterChannel && $(".text-counter-input").val().indexOf($("#chat-prepend-select").val()) != 0 && settings.channelPrepend) {
-            $(".text-counter-input").val($("#chat-prepend-select").val()+" "+$(".text-counter-input").val())
+            $(".text-counter-input").val($("#chat-prepend-select").val()+" "+$(".text-counter-input").val());
         }
     });
 
@@ -229,8 +242,8 @@
 		    if(settings.channelPrepend){
 
 			    setTimeout(function() {
-				$(".text-counter-input").val($("#chat-prepend-select").val()+" ");
-				console.log("section2");
+				    $(".text-counter-input").val($("#chat-prepend-select").val()+" ");
+				    console.log("section2");
 			    }, 10);
 			}
                 }
