@@ -565,8 +565,8 @@
                 var remove_message = is_muted || is_spam;
 
 
-                if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
-                }
+                // if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
+                // }
                 var nextIsRepeat = jq.hasClass('robin--user-class--system') && messageText.indexOf("try again") >= 0;
                 if(nextIsRepeat) {
                     $(".text-counter-input").val(jq.next().find(".robin-message--message").text());
@@ -609,7 +609,7 @@
 
 
                 if(settings.filterChannel) {
-                    if(messageText.indexOf(results_chan.name) === 0) {
+                    if(results_chan.has) {
                         $message.text(messageText.substring(results_chan.name.length).trim());
                     }
 
