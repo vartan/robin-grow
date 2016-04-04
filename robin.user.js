@@ -403,8 +403,8 @@
         Settings.save(settings);
         listMutedUsers();
     });
-    $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
 
+    $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
 
     function listMutedUsers() {
