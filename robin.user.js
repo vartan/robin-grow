@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      1.871
+// @version      1.89
 // @description  Try to take over the world!
 // @author       /u/mvartan 
 // @include      https://www.reddit.com/robin*
@@ -14,6 +14,20 @@
 (function() {
     // Styles
     GM_addStyle('.robin--username {cursor: pointer}');
+
+    function buildDropdown(){
+	   $("#chat-prepend-area").remove();
+	    //select dropdown chat. 
+	    //generate dropdown html
+	    split_channels= settings.channel.split(",");
+	    drop_html = ""
+	    for (tag in split_channels){
+		drop_html = drop_html + '<option value="'+split_channels[tag]+'">'+split_channels[tag]+'</option>'
+	    }
+
+	   $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
+
+    }
 
     // Utils
     function hasChannel(source, channel) {
@@ -73,11 +87,13 @@
             $("#openBtn").on("click", function openSettings() {
                 $(".robin-chat--sidebar").hide();
                 $("#settingContainer").show();
+		buildDropdown();
             });
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
+		buildDropdown();
             });
 
             function setVote(vote) {
@@ -86,6 +102,8 @@
                     Settings.save(settings);
                 };
             }
+	 
+	
             $(".robin-chat--vote.robin--vote-class--abandon").on("click", setVote("abandon"));
             $(".robin-chat--vote.robin--vote-class--continue").on("click", setVote("stay"));
             $(".robin-chat--vote.robin--vote-class--increase").on("click", setVote("grow"));
@@ -127,6 +145,7 @@
             } else {
                 settings[name] = defaultSetting;
             }
+	
         },
 
         addInput: function addInputSetting(name, description, defaultSetting) {
@@ -170,6 +189,7 @@
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
 
+	
     // Add version at the end (if available from script engine)
     var versionString = "";
     if (typeof GM_info !== "undefined") {
@@ -184,12 +204,14 @@
 
     var list = {};
 
+    buildDropdown();
+
     if(settings.channelPrepend){
- 	   $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"");
+ 	   $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
 	}
     $(".text-counter-input").keyup(function(e) {
-        if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0 && settings.channelPrepend) {
-            $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val())
+        if(settings.filterChannel && $(".text-counter-input").val().indexOf($("#chat-prepend-select").val()) != 0 && settings.channelPrepend) {
+            $(".text-counter-input").val($("#chat-prepend-select").val()+" "+$(".text-counter-input").val())
         }
     });
 
@@ -203,7 +225,8 @@
 		    if(settings.channelPrepend){
 
 			    setTimeout(function() {
-				$(".text-counter-input").val(settings.channel+" ");
+				$(".text-counter-input").val($("#chat-prepend-select").val()+" ");
+				console.log("section2");
 			    }, 10);
 			}
                 }
@@ -453,6 +476,7 @@
     //colored text thanks to OrangeredStilton! https://gist.github.com/Two9A/3f33ee6f6daf6a14c1cc3f18f276dacd
     var colors = ['rgba(255,0,0,0.2)','rgba(0,255,0,0.2)','rgba(0,0,255,0.2)', 'rgba(0,255,255,0.2)','rgba(255,0,255,0.2)', 'rgba(255,255,0,0.2)'];
 
+
     // credit to wwwroth for idea (notification audio)
     // i think this method is better
     var notifAudio = new Audio("https://slack.global.ssl.fastly.net/dfc0/sounds/push/knock_brush.mp3");
@@ -474,6 +498,8 @@
                     for(i = 0; i < split_channels.length; i++){
                         colors_match[split_channels[i]] = colors[i];
                     }
+	
+
                 // cool we have a message.
                 var thisUser = $(jq[0].children && jq[0].children[1]).text();
                 var $message = $(jq[0].children && jq[0].children[2]);
