@@ -43,6 +43,10 @@
         }
     }
 
+    function clearChat() {
+        $("#robinChatMessageList").html("");
+    }
+
 
     var Settings = {
         setupUI: function() {
@@ -130,6 +134,11 @@
                     Settings.save(settings);
                 });
             settings[name] = defaultSetting;
+        },
+        addButton: function(id, description, callback, options) {
+            options = options || {};
+            $("#settingContent").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + id + '">' + description + '</div></div>');
+            $('#' + id).on('click', function(e) { callback(e, options); });
         }
     };
 
@@ -158,6 +167,7 @@
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
+    Settings.addButton("clearChat", "Clear Chat", clearChat);
     // Options end
 
     // Add version at the end (if available from script engine)
