@@ -536,9 +536,12 @@
 
                 // cool we have a message.
                 var $timestamp = $(jq[0] && jq[0].children[0]);
+                var $user = $(jq[0].children && jq[0].children[1]);
                 var thisUser = $(jq[0].children && jq[0].children[1]).text();
                 var $message = $(jq[0].children && jq[0].children[2]);
                 var messageText = $message.text();
+
+                $user.css("background","#fff");
 
                 var results_chan = hasChannel(messageText, settings.channel);
 
