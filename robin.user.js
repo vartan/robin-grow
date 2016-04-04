@@ -60,7 +60,7 @@
 
             if(String(source).toLowerCase().startsWith(current_chan)){
                 return {
-                    name: channel_array[i],
+                    name: current_chan,
                     has: true
                 };
             }
@@ -587,7 +587,7 @@
 
                         var result = hasChannel(messageText, settings.channel);
 
-                        if(result.has && result.name in colors_match) {
+                        if(result.has) {
                             $message.parent().css("background", colors_match[result.name]);
                         }
                     }
