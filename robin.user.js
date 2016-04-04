@@ -368,7 +368,7 @@
             $(".timeleft").hide();
         }
         else {
-            $(".timeleft").text(isEndingSoon ? "ending soon" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
+            $(".timeleft").text(isEndingSoon ? "Waiting to Merge" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
         }
 
         var users = 0;
