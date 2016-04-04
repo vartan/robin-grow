@@ -534,6 +534,7 @@
                     for(i = 0; i < split_channels.length; i++){
                         colors_match[split_channels[i].trim()] = colors[i];
                     }
+                    console.log(colors_match);
 
 
                 // cool we have a message.
@@ -586,6 +587,7 @@
                         //still show mentions in highlight color.
 
                         var result = hasChannel(messageText, settings.channel);
+                        console.log(result.has, result.name, messageText);
 
                         if(result.has && result.name in colors_match) {
                             $message.parent().css("background", colors_match[result.name]);
