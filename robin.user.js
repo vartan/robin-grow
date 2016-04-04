@@ -15,6 +15,9 @@
     // Styles
     GM_addStyle('.robin--username {cursor: pointer}');
 
+    // hacky solution
+    CURRENT_CHANNEL = "";
+
     function buildDropdown(){
 	   $("#chat-prepend-area").remove();
 	    //select dropdown chat.
@@ -32,10 +35,14 @@
             var new_channel = String($('option:selected', this).text()).toLowerCase();
             var source = String($(".text-counter-input").val()).toLowerCase();
 
-            if(source.startsWith(new_channel)) {
-                source = source.substring(new_channel.length);
-                source = source.charAt(0) === " " ? source.substring(1) : source;
+            CURRENT_CHANNEL = String(CURRENT_CHANNEL);
+
+            if(CURRENT_CHANNEL.length > 0 && source.startsWith(CURRENT_CHANNEL)) {
+                source = source.substring(CURRENT_CHANNEL.length);
+                source = source.startsWith(" ") ? source.substring(1) : source;
             }
+
+            CURRENT_CHANNEL = new_channel;
 
             $(".text-counter-input").val(new_channel + " " + source);
         });
@@ -222,6 +229,9 @@
     var list = {};
 
     buildDropdown();
+
+    // hacky solution
+    CURRENT_CHANNEL = $("#chat-prepend-select").val();
 
     if(settings.channelPrepend){
  	   $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
