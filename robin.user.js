@@ -243,7 +243,6 @@
 
 			    setTimeout(function() {
 				    $(".text-counter-input").val($("#chat-prepend-select").val()+" ");
-				    console.log("section2");
 			    }, 10);
 			}
                 }
