@@ -68,7 +68,7 @@
 
         var idx = channel_array.length;
         while(idx-- > 0) {
-            var current_chan = String(channel_array[i]).toLowerCase().trim();
+            var current_chan = String(channel_array[idx]).toLowerCase().trim();
 
             if(source.startsWith(current_chan)) {
                 return {
