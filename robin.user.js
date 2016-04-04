@@ -587,9 +587,9 @@
                         //still show mentions in highlight color.
 
                         var result = hasChannel(messageText, settings.channel);
-                        console.log(result.has, result.name, messageText);
+                        console.log(result.has, result.name, messageText, result.name in colors_match);
 
-                        if(result.has && result.name in colors_match) {
+                        if(result.has) {
                             $message.parent().css("background", colors_match[result.name]);
                         }
                     }
