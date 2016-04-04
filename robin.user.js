@@ -289,10 +289,10 @@
     Settings.addInput("fontsize", "Chat font size", "12");
     Settings.addBool("alignment", "Username alignment (false = left; true = right)", true);
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
-    Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive)", "", buildDropdown);
+    Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive;spaces are NOT stripped)", "", buildDropdown);
     Settings.addBool("filterChannel", "Filter by channels (check = on; uncheck = off)", true);
     Settings.addBool("twitchEmotes", "Twitch emotes. https://twitchemotes.com/filters/global", false);
-    Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
+    Settings.addInput("spamFilters", "Custom spam filters, comma delimited, spaces are NOT stripped", "spam example 1, spam example 2");
     // Options end
 
     // Add version at the end (if available from script engine)
