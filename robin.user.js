@@ -53,15 +53,14 @@
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase();
 	channel_array = channel.split(",");
-	startschar = false;
 
 	for (i = 0; i < channel_array.length; i++){
 		if(String(source).toLowerCase().startsWith(channel_array[i])){
-			startschar = true;
+            return true;
 		}
 	}
 
-        return (String(source).toLowerCase().startsWith(channel) || startschar);
+        return (String(source).toLowerCase().startsWith(channel));
     }
 
     function formatNumber(n) {
