@@ -44,7 +44,7 @@ https://github.com/vartan/robin-grow
     1.7: Refreshes the page if reddit is down. Also highlights your messages in the chat
     1.8: Links in chat are clickable
     1.9: Dropdown menu for chat channels that auto-prepends (dashed). Also mute persistency (voltaek).
-    2.0: Settable custom username backgrounds. Moves the chat channel before username w/ set tabbing (dashed, Daegalus). Adds a font size box.
+    2.0: Custom username backgrounds. The chat channel is before username w/ set tabbing (dashed, Daegalus). Adds a font size box.
 
 ## Screenshots
 
