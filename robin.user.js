@@ -78,14 +78,6 @@
             }
         }
 
-        var index = channel_array.indexOf(source.trim().split(" ")[0]);
-        if (index >= 0) {
-            return {
-                name: channel_array[index],
-                has: true
-            };
-        }
-
         return {
             name: channel,
             has: source.startsWith(channel)
