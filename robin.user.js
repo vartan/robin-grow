@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.12
+// @version      2.13
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -772,14 +772,13 @@
     robinChatWindow.css('font-family', '"Lucida Console", Monaco, monospace');
 
     $('#robinChatWindow').scroll(function() {
-        if(robinChatWindow.scrollTop() >= robinChatWindow[0].scrollHeight - robinChatWindow.height()) {
+        if(robinChatWindow.scrollTop() < robinChatWindow[0].scrollHeight - robinChatWindow.height()) {
 
-            GOTO_BOTTOM = true;
+            GOTO_BOTTOM = false;
             return;
         }
 
-        GOTO_BOTTOM = false;
+        GOTO_BOTTOM = true;
 
-        // not bottom
     });
 })();
