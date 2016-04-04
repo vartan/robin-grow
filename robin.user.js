@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.09
+// @version      2.04
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -44,7 +44,9 @@
         split_channels= settings.channel.split(",");
         drop_html = "";
         for (var tag in split_channels){
-            drop_html = drop_html + '<option value="'+split_channels[tag]+'">'+split_channels[tag]+'</option>';
+
+            var channel_name = split_channels[tag].trim();
+            drop_html = drop_html + '<option value="'+channel_name+'">'+channel_name+'</option>';
         }
 
         $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
@@ -72,18 +74,23 @@
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase().trim();
         channel_array = channel.split(",");
+        source = String(source).toLowerCase();
 
-        var index = channel_array.indexOf(source.trim().split(" ")[0]);
-        if (index >= 0) {
-            return {
-                name: channel_array[index],
-                has: true
-            };
+        var idx = channel_array.length;
+        while(idx-- > 0) {
+            var current_chan = String(channel_array[idx]).toLowerCase().trim();
+
+            if(source.startsWith(current_chan)) {
+                return {
+                    name: current_chan,
+                    has: true
+                };
+            }
         }
 
         return {
             name: channel,
-            has: String(source).toLowerCase().startsWith(channel)
+            has: source.startsWith(channel)
         };
     }
 
@@ -107,6 +114,10 @@
         } catch (e) {
             return 0;
         }
+    }
+
+    function clearChat() {
+        $("#robinChatMessageList").empty();
     }
 
 
@@ -209,6 +220,11 @@
                 }
             });
             settings[name] = defaultSetting;
+        },
+        addButton: function(id, description, callback, options) {
+            options = options || {};
+            $("#settingContent").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + id + '">' + description + '</div></div>');
+            $('#' + id).on('click', function(e) { callback(e, options); });
         }
     };
 
@@ -231,6 +247,7 @@
     var settings = Settings.load();
 
     // Options begin
+    Settings.addButton("clearChat", "Clear Chat", clearChat);
     Settings.addBool("hideVote", "Hide voting panel to prevent misclicks.", false, tryHide());
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
@@ -261,7 +278,7 @@
     // hacky solution
     CURRENT_CHANNEL = $("#chat-prepend-select").val().trim();
 
-    $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
+    $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val().trim() + " " : "");
 
     $(".text-counter-input").keyup(function(e) {
 
@@ -579,8 +596,8 @@
                 var remove_message = is_muted || is_spam;
 
 
-                if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
-                }
+                // if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
+                // }
                 var nextIsRepeat = jq.hasClass('robin--user-class--system') && messageText.indexOf("try again") >= 0;
                 if(nextIsRepeat) {
                     $(".text-counter-input").val(jq.next().find(".robin-message--message").text());
@@ -623,7 +640,7 @@
 
 
                 if(settings.filterChannel) {
-                    if(messageText.indexOf(results_chan.name) === 0) {
+                    if(results_chan.has) {
                         $message.text(messageText.substring(results_chan.name.length).trim());
                     }
 
