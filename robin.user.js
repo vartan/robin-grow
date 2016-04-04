@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.860
+// @version      1.870
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -168,6 +168,8 @@
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
+    Settings.addBool("showtrivia", "Username Highlighing", false);
+    Settings.addInput("triviahosts", "Usernames to highlight, comma delimited.", "dthunder,nbagf");
     Settings.addBool("reportStats", "Contribute statistics to the <a href='https://monstrouspeace.com/robintracker/'>Automated Leaderboard</a>.", false);
     Settings.addInput("statReportingInterval", "Report Statistics Interval (seconds)", "60");
     Settings.addButton("clearChat", "Clear Chat", clearChat);
@@ -186,6 +188,29 @@
     var urlRegex = new RegExp(/(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?/ig);
 
     var list = {};
+
+    // Instead of forcing the channel filter into the box all the time, lets hook this more intuitively
+    var targetTextBox = $("#robinSendMessage").find("input[type='text']");
+    targetTextBox.next().on('click', function ()
+    {
+        if( settings.filterChannel && String(settings.channel).length > 0 )
+        {
+            var sendingMessage = targetTextBox.val();
+            if( sendingMessage.length <= 0 ) return false;
+
+            if( sendingMessage.startsWith("/") ) return true; // this is a command, we dont need to do anything
+            if( sendingMessage.startsWith("-") )
+            {
+                targetTextBox.val(sendingMessage.substring(1)); // Remove the - character from the beginning of the string
+                return true; // this prefix means we should not touch output (raw)
+            }
+
+            // Append our chat prefix to the outgoing message
+            if( !sendingMessage.startsWith(settings.channel) ) targetTextBox.val(settings.channel + sendingMessage);
+        }
+    });
+
+    /*
     $(".text-counter-input").val(settings.filterChannel? settings.channel+" " :"")
     $(".text-counter-input").keyup(function(e) {
         if(settings.filterChannel && $(".text-counter-input").val().indexOf(settings.channel) != 0) {
@@ -205,7 +230,7 @@
                     }, 10);
                 }
         }
-    });
+    });*/
 
     var isEndingSoon = false;
     var endTime = null;
@@ -505,6 +530,16 @@
                         String(settings.channel).length > 0 &&
                         !hasChannel(messageText, settings.channel));
 
+                // Trivia bot highlighting
+                if( settings.showtrivia ) {
+                    $.each(settings.triviahosts.split(','), function(key, value) {
+                        if( value.toLowerCase() == thisUser.toLowerCase() ) {
+                            $(jq[0]).css("background", "rgba(107, 207, 95, 0.8)").css("color", "white").css("font-weight", "bold");
+                            remove_message = false;
+                            return;
+                        }
+                    });              
+                }
 
                 if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
                 }
