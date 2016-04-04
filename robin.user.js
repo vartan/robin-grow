@@ -697,7 +697,9 @@
         }
         else
         {
-            tab.attr("class", "");
+            if (tab.attr("class") == "robin-chan-tab-selected")
+                tab.attr("class", "");
+
             box.css("display", "none");
         }
     }
