@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.03
 // @description  Try to take over the world!
-// @author       /u/mvartan
+// @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
 // @updateURL    https://github.com/5a1t/robin-grow/raw/master/robin.user.js
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
@@ -232,7 +232,7 @@
     if (typeof GM_info !== "undefined") {
         versionString = " - v" + GM_info.script.version;
     }
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/vartan/robin-grow">robin-grow' + versionString + '</a></div>');
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/robin-grow">robin-grow - soKukunelits fork - ' + versionString + '</a></div>');
     // Settings end
 
     var timeStarted = new Date();
