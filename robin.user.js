@@ -39,8 +39,10 @@
 
             if(CURRENT_CHANNEL.length > 0 && source.startsWith(CURRENT_CHANNEL)) {
                 source = source.substring(CURRENT_CHANNEL.length);
-                source = source.charAt(0) === " " ? source.substring(1) : source;
+                source = source.startsWith(" ") ? source.substring(1) : source;
             }
+
+            console.log(CURRENT_CHANNEL, new_channel, source);
 
             $(".text-counter-input").val(new_channel + " " + source);
         });
