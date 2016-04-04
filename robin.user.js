@@ -72,30 +72,44 @@
 
     }
 
-
-
-
     // Utils
-    function hasChannel(source, channel) {
-        channel = String(channel).toLowerCase().trim();
-        channel_array = channel.split(",");
+    function getChannelList()
+    {
+        var channels = String(settings.channel).split(",");
+        var channelArray = [];
+
+        for (i = 0; i < channels.length; i++)
+        {
+            var channel = channels[i].trim();
+            if (channel.length > 0)
+                channelArray.push(channel.toLowerCase());
+        }
+
+        return channelArray;
+    }
+
+    function hasChannel(source)
+    {
+        channel_array = getChannelList();
         source = String(source).toLowerCase();
 
-        var idx = channel_array.length;
-        while(idx-- > 0) {
-            var current_chan = String(channel_array[idx]).toLowerCase().trim();
+        for (idx = 0; idx < channel_array.length; idx++)
+        {
+            var current_chan = channel_array[idx];
 
             if(source.startsWith(current_chan)) {
                 return {
                     name: current_chan,
-                    has: true
+                    has: true,
+                    index: idx
                 };
             }
         }
 
         return {
-            name: channel,
-            has: source.startsWith(channel)
+            name: "",
+            has: false,
+            index: 0
         };
     }
 
@@ -310,7 +324,9 @@
         var channel_needle = $("#chat-prepend-select").val().trim();
         var source = String($(".text-counter-input").val());
 
-        if(settings.filterChannel && !(source.toLowerCase().startsWith(channel_needle.toLowerCase()))) {
+        if (selectedChannel >= 0 && !(source.toLowerCase().startsWith(channelList[selectedChannel].toLowerCase())))
+            $(".text-counter-input").val(channelList[selectedChannel] + " " + source);
+        else if (settings.filterChannel && !(source.toLowerCase().startsWith(channel_needle.toLowerCase()))) {
             $(".text-counter-input").val(channel_needle + " " + source);
         }
     });
@@ -591,6 +607,124 @@
     // i think this method is better
     var notifAudio = new Audio("https://slack.global.ssl.fastly.net/dfc0/sounds/push/knock_brush.mp3");
 
+	//
+    // Tabbed channel windows by /u/lost_penguin
+    //
+    var channelList = [];
+    var selectedChannel = -1;
+
+    function setupMultiChannel()
+    {
+        // Style for tab bar
+        $('<style>' +
+          ' ul#robinChannelList { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }' +
+          ' ul#robinChannelList li { display: inline; }' +
+          ' ul#robinChannelList li a { color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-bottom: none; padding: 0.3em; text-decoration: none; }' +
+          ' ul#robinChannelList li a:hover { background-color: #f1f0ee; }' +
+          ' ul#robinChannelList li a.robin-chan-tab-changed { color: red; font-weight: bold; }' +
+          ' ul#robinChannelList li a.robin-chan-tab-selected { color: blue; background-color: #f1f0ee; font-weight: bold; padding: 0.7em 0.3em 0.38em 0.3em; }' +
+          '</style>').appendTo('body');
+
+        // Add div to hold tabs
+        $("#robinChatWindow").before("<div id=\"robinChannelDiv\" class=\"robin-chat--message-list\"><ul id=\"robinChannelList\"></ul></div>");
+
+        // Add tab for all other messages
+        $("#robinChannelList").append("<li id=\"robinChannelTab\"><a id=\"robinChannelLink\" href=\"#robinCh\" class>General</a></li>");
+
+        // Room tab events
+        var tab = $("#robinChannelLink");
+        tab.on("click", function() { selectChannel(""); });
+
+        // Add rooms
+        resetChannels();
+    }
+
+    function resetChannels()
+    {
+        channelList = getChannelList();
+
+        var chatBox = $("#robinChatWindow");
+        var tabBar = $("#robinChannelList");
+
+        // Remove all existing rooms
+        chatBox.children().each(function() { if (this.id.startsWith("robinChatMessageList-ch")) this.remove(); });
+        tabBar.children().each(function() { if (this.id.startsWith("robinChannelTab-ch")) this.remove(); });
+
+        // Create fresh rooms
+        for (i = 0; i < channelList.length; i++)
+        {
+            // Room message window
+            chatBox.append("<div id=\"robinChatMessageList-ch" + i + "\" class=\"robin-chat--message-list\">");
+
+            // Room tab
+            tabBar.append("<li id=\"robinChannelTab-ch" + i + "\"><a id=\"robinChannelLink-ch" + i + "\" href=\"#robinCh" + i + "\" class>Room " + channelList[i] + "</a></li>");
+
+            // Room tab event
+            var tab = $("#robinChannelLink-ch" + i);
+            tab.on("click", function() { selectChannel($(this).attr("href")); });
+        }
+
+        selectChannel("");
+    }
+
+    function selectChannel(channelLinkId)
+    {
+        // Get channel index
+        var channelIndex = -1;
+        if (channelLinkId.length > 8)
+            channelIndex = channelLinkId.substring(8);
+
+        // Remember selection
+        selectedChannel = channelIndex;
+
+        // Update tab selection
+        for (i = -1; i < channelList.length; i++)
+            setChannelSelected(getChannelTab(i), getChannelMessageList(i), channelIndex == i);
+    }
+
+    function markChannelChanged(index)
+    {
+        if (index != selectedChannel)
+            getChannelTab(index).attr("class", "robin-chan-tab-changed");
+    }
+
+    function setChannelSelected(tab, box, select)
+    {
+        if (select)
+        {
+            tab.attr("class", "robin-chan-tab-selected");
+            box.css("display", "");
+        }
+        else
+        {
+            tab.attr("class", "");
+            box.css("display", "none");
+        }
+    }
+
+    function getChannelTab(index)
+    {
+        if (index == -1) return $("#robinChannelLink");
+        return $("#robinChannelLink-ch" + index);
+    }
+
+    function getChannelMessageList(index)
+    {
+        if (index == -1) return $("#robinChatMessageList");
+        return $("#robinChatMessageList-ch" + index);
+    }
+
+    function moveChannelMessage(channel, message)
+    {
+        var channel = getChannelMessageList(channel);
+        channel.append(message);
+
+        markChannelChanged(channel);
+
+        if(GOTO_BOTTOM)
+            channel.scrollTop(channel[0].scrollHeight);
+    }
+
     var myObserver = new MutationObserver(mutationHandler);
     //--- Add a target node to the observer. Can only add one node at a time.
     // XXX Shou: we should only need to watch childList, more can slow it down.
@@ -608,7 +742,6 @@
                 for(i = 0; i < split_channels.length; i++){
                     colors_match[split_channels[i].trim()] = colors[i];
                 }
-
 
                 // cool we have a message.
                 var $timestamp = $(jq[0] && jq[0].children[0]);
@@ -675,7 +808,6 @@
                     }
                 }
 
-
                 if(settings.filterChannel) {
                     if(results_chan.has) {
 						messageText = messageText.substring(results_chan.name.length).trim();
@@ -714,6 +846,12 @@
                     robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
                 }
 
+				// Move channel messages to channel tabs
+                if (results_chan.has)
+                {
+                    $message.text(messageText.substring(results_chan.name.length).trim());
+                    moveChannelMessage(results_chan.index, jq[0]);
+                }
             }
         });
     }
@@ -764,6 +902,9 @@
 
     // Simple Height Increase
     $('.robin-chat--body').css('height', '80vh');
+
+	// Setup page for tabbed channels
+    setupMultiChannel();
 
     // RES Night Mode support
     if ($("body").hasClass("res")) {
