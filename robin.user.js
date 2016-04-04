@@ -106,6 +106,10 @@
         }
     }
 
+    function clearChat() {
+        $("#robinChatMessageList").empty();
+    }
+
 
     var Settings = {
         setupUI: function() {
@@ -201,6 +205,11 @@
                 }
             });
             settings[name] = defaultSetting;
+        },
+        addButton: function(id, description, callback, options) {
+            options = options || {};
+            $("#settingContent").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + id + '">' + description + '</div></div>');
+            $('#' + id).on('click', function(e) { callback(e, options); });
         }
     };
 
@@ -223,6 +232,7 @@
     var settings = Settings.load();
 
     // Options begin
+    Settings.addButton("clearChat", "Clear Chat", clearChat);
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
