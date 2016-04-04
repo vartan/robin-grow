@@ -245,7 +245,7 @@
     // hacky solution
     CURRENT_CHANNEL = $("#chat-prepend-select").val().trim();
 
-    $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
+    $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val().trim() + " " : "");
 
     $(".text-counter-input").keyup(function(e) {
 
