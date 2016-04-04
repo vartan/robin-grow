@@ -28,7 +28,7 @@
     };
 
     function buildDropdown(){
-       $("#chat-prepend-area").remove();
+        $("#chat-prepend-area").remove();
         //select dropdown chat.
         //generate dropdown html
         split_channels= settings.channel.split(",");
@@ -37,7 +37,7 @@
             drop_html = drop_html + '<option value="'+split_channels[tag]+'">'+split_channels[tag]+'</option>';
         }
 
-       $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
+        $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
 
         $("#chat-prepend-select").change(function() {
 
@@ -109,9 +109,9 @@
             // Setting container
             $(".robin-chat--sidebar").before(
                 '<div class="robin-chat--sidebar" style="display:none;" id="settingContainer">' +
-                    '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent">' +
-                        '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>' +
-                    '</div>' +
+                '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="settingContent">' +
+                '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeBtn">Close Settings</div>' +
+                '</div>' +
                 '</div>'
             );
 
@@ -120,13 +120,13 @@
             $("#openBtn").on("click", function openSettings() {
                 $(".robin-chat--sidebar").hide();
                 $("#settingContainer").show();
-                  buildDropdown();
+                buildDropdown();
             });
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
-                  buildDropdown();
+                buildDropdown();
             });
 
             function setVote(vote) {
@@ -186,13 +186,13 @@
             $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '"><br>' + description + '</label></div>');
             $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
                 .on("change", function() {
-                    settings[name] = $(this).val();
-                    Settings.save(settings);
+                settings[name] = $(this).val();
+                Settings.save(settings);
 
-                    if(callback) {
-                        callback();
-                    }
-                });
+                if(callback) {
+                    callback();
+                }
+            });
             settings[name] = defaultSetting;
         }
     };
@@ -246,7 +246,7 @@
     CURRENT_CHANNEL = $("#chat-prepend-select").val().trim();
 
     if(settings.channelPrepend){
-       $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
+        $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
     }
     $(".text-counter-input").keyup(function(e) {
 
@@ -262,14 +262,13 @@
         var code = e.keyCode || e.which;
         if(code == 13) {
             if(settings.filterChannel &&
-                String(settings.channel).length > 0) {
+               String(settings.channel).length > 0) {
 
-            if(settings.channelPrepend){
+                if(settings.channelPrepend){
 
-                setTimeout(function() {
-                    $(".text-counter-input").val($("#chat-prepend-select").val().trim() +" ");
-                }, 10);
-            }
+                    setTimeout(function() {
+                        $(".text-counter-input").val($("#chat-prepend-select").val().trim() +" ");
+                    }, 10);
                 }
             }
         }
@@ -509,7 +508,7 @@
 
             $("#blockedUserList").append(
                 $("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>")
-                    .append("<span class='robin--icon'></span><span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>")
+                .append("<span class='robin--icon'></span><span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>")
             );
         });
     }
@@ -536,12 +535,12 @@
             var jq = $(mutation.addedNodes);
             // There are nodes added
             if (jq.length > 0) {
-                    var colors_match = {};
-                    split_channels = settings.channel.toLowerCase().split(",");
+                var colors_match = {};
+                split_channels = settings.channel.toLowerCase().split(",");
 
-                    for(i = 0; i < split_channels.length; i++){
-                        colors_match[split_channels[i].trim()] = colors[i];
-                    }
+                for(i = 0; i < split_channels.length; i++){
+                    colors_match[split_channels[i].trim()] = colors[i];
+                }
 
 
                 // cool we have a message.
@@ -565,9 +564,9 @@
                     (mutedList.indexOf(thisUser) >= 0) ||
                     (settings.removeSpam && isBotSpam(messageText)) ||
                     (settings.filterChannel &&
-                        !jq.hasClass('robin--user-class--system') &&
-                        String(settings.channel).length > 0 &&
-                        !results_chan.has);
+                     !jq.hasClass('robin--user-class--system') &&
+                     String(settings.channel).length > 0 &&
+                     !results_chan.has);
 
 
                 if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
