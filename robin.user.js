@@ -165,7 +165,6 @@
             } else {
                 settings[name] = defaultSetting;
             }
-
         },
 
         addInput: function addInputSetting(name, description, defaultSetting, callback) {
@@ -466,7 +465,7 @@
             listMutedUsers();
         }
     });
-
+    
     $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
 
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
@@ -592,7 +591,6 @@
         '#0083c7', // blue
         '#820080'  // purple
     ];
-
 
     function colorFromName(name) {
         sanitizedName = name.toLowerCase().replace(/[^a-z0-9]/g, "");
