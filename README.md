@@ -1,7 +1,8 @@
-# Robin Grow (modified for comma separated multi-channel listening)
+# Robin Grow Experimental (modified for comma separated multi-channel listening, colors, channel selection! Amazing!)
 
+This is not the main branch! But it has some great additional features!
 
-#### For [reddit's 2016 April Fools Day prank](https://www.reddit.com/robin/)
+Special thanks to OrangeredStilton, Voltaek, and dashed.
 
 ## Installation
 Install a userscript extension such as greasemonkey or tampermonkey:  
