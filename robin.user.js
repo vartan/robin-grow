@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.14
+// @version      2.15
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -139,6 +139,8 @@
                 '</div>' +
                 '</div>'
             );
+
+            $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><ul style="list-style-type: circle;"><li>Click on usernames to mute.</li><li>Tab autocomplete for usernames is available in the message box.</li><li>Report any bugs or issues to: https://github.com/5a1t/robin-grow</li><li>Created for soKukuneli chat (T16)</li></ul></div>');
 
             $("#robinDesktopNotifier").detach().appendTo("#settingContent");
 
@@ -540,7 +542,7 @@
         listMutedUsers();
     });
 
-    $("#settingContent").append("<span style='font-size:"+settings.fontsize+"px;text-align:center;'>Muted Users</label>");
+    $("#settingContent").append("<span style='font-size:"+settings.fontsize+"px;text-align:center;'>Muted Users (click to unmute)</label>");
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
 
     function listMutedUsers() {
