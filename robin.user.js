@@ -250,6 +250,7 @@
     Settings.addButton("clearChat", "Clear Chat", clearChat);
     Settings.addBool("hideVote", "Hide voting panel to prevent misclicks.", false, tryHide());
     Settings.addBool("removeSpam", "Remove bot spam", true);
+    Settings.addBool("enableUnicode", "Allow unicode characters. Unicode is considered spam and thus are filtered out.", false);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("fontsize", "Chat font size", "12");
@@ -486,7 +487,7 @@
             text == "voted to GROW" ||
             text == "voted to ABANDON" ||
             text.indexOf("Autovoter") > -1 ||
-            (UNICODE_SPAM_RE.test(text));
+            (!settings['enableUnicode'] && UNICODE_SPAM_RE.test(text));
         var spamFilters = settings.spamFilters.split(",").map(function(filter) { return filter.trim().toLowerCase(); });
         spamFilters.forEach(function(filterVal) {
             filter = filter || filterVal.length > 0 && text.toLowerCase().indexOf(filterVal) >= 0;
