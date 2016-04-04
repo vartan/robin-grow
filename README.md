@@ -1,4 +1,6 @@
-# Robin Grow Experimental (modified for comma separated multi-channel listening, colors, channel selection! Amazing!)
+# Robin Grow Fork (modified for comma separated multi-channel listening, colors, channel selection! Amazing!)
+
+**THIS FORK WAS MADE WITHIN soKukuneli**
 
 This is not the main branch! But it has some great additional features!
 
