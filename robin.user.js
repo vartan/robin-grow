@@ -222,7 +222,6 @@
     Settings.addInput("fontsize", "Chat font size", "12");
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "", buildDropdown);
-    Settings.addBool("channelPrepend", "Prepend chat input with primary channel + listening channels", false);
     Settings.addBool("filterChannel", "Filter by channel", true);
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
@@ -246,14 +245,13 @@
     // hacky solution
     CURRENT_CHANNEL = $("#chat-prepend-select").val().trim();
 
-    if(settings.channelPrepend){
-        $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
-    }
+    $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
+
     $(".text-counter-input").keyup(function(e) {
 
         var channel_needle = $("#chat-prepend-select").val().trim();
 
-        if(settings.filterChannel && $(".text-counter-input").val().indexOf(channel_needle) != 0 && settings.channelPrepend) {
+        if(settings.filterChannel && $(".text-counter-input").val().indexOf(channel_needle) != 0 ) {
             $(".text-counter-input").val(channel_needle +" "+$(".text-counter-input").val());
         }
     });
@@ -265,12 +263,10 @@
             if(settings.filterChannel &&
                String(settings.channel).length > 0) {
 
-                if(settings.channelPrepend){
 
                     setTimeout(function() {
                         $(".text-counter-input").val($("#chat-prepend-select").val().trim() +" ");
                     }, 10);
-                }
             }
         }
     });
