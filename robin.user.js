@@ -51,12 +51,12 @@
 
     // Utils
     function hasChannel(source, channel) {
-        channel = String(channel).toLowerCase();
+        channel = String(channel).toLowerCase().trim();
         channel_array = channel.split(",");
 
         for (i = 0; i < channel_array.length; i++){
 
-            var current_chan = String(channel_array[i]).toLowerCase();
+            var current_chan = String(channel_array[i]).toLowerCase().trim();
 
             if(String(source).toLowerCase().startsWith(current_chan)){
                 return {
@@ -641,7 +641,7 @@
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
     $('#robinChatInput').css('background', '#EFEFED');
-    
+
     // Simple Height Increase
     $('.robin-chat--body').css('height', '80vh');
 
