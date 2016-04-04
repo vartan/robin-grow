@@ -28,13 +28,13 @@
     };
 
     function tryHide(){
-	if(settings.hideVote){
-		console.log("hiding vote buttons.");
-		$('.robin-chat--buttons').hide();
-	}
-	else{
-		$('.robin-chat--buttons').show();
-	}
+    if(settings.hideVote){
+        console.log("hiding vote buttons.");
+        $('.robin-chat--buttons').hide();
+    }
+    else{
+        $('.robin-chat--buttons').show();
+    }
     }
 
     function buildDropdown(){
@@ -150,7 +150,7 @@
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
                 buildDropdown();
-		tryHide();
+        tryHide();
             });
 
             function setVote(vote) {
@@ -550,14 +550,18 @@
                 return e.name === value;
             });
 
-            if (userInArray[0].present === true) {
+            if (userInArray && userInArray.length > 0 && userInArray[0].present === true) {
                 mutedHere = "present";
             } else {
                 mutedHere = "away";
             }
 
+            var votestyle = userInArray && userInArray.length > 0 ?
+                " robin--vote-class--" + userInArray[0].vote.toLowerCase()
+                : "";
+
             $("#blockedUserList").append(
-                $("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + " robin--vote-class--" + userInArray[0].vote.toLowerCase() + "'></div>")
+                $("<div class='robin-room-participant robin--user-class--user robin--presence-class--" + mutedHere + votestyle + "'></div>")
                 .append("<span class='robin--icon'></span><span class='robin--username' style='color:" + colorFromName(value) + "'>" + value + "</span>")
             );
         });
