@@ -168,6 +168,8 @@
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
+    Settings.addBool("reportStats", "Contribute statistics to the <a href='https://monstrouspeace.com/robintracker/'>Automated Leaderboard</a>.", false);
+    Settings.addInput("statReportingInterval", "Report Statistics Interval (seconds)", "60");
     Settings.addButton("clearChat", "Clear Chat", clearChat);
     // Options end
 
@@ -230,6 +232,7 @@
 
     endTime = getEndTime();
 
+    var lastStatisticsUpdate = 0;
     function update() {
         switch(settings.vote) {
             case "abandon":
@@ -252,9 +255,12 @@
 
         var users = 0;
         $.get("/robin/", function(a) {
-            var start = "{" + a.substring(a.indexOf("\"robin_user_list\": ["));
-            var end = start.substring(0, start.indexOf("}]") + 2) + "}";
-            list = JSON.parse(end).robin_user_list;
+            var START_TOKEN = "<script type=\"text/javascript\" id=\"config\">r.setup(";
+            var END_TOKEN = ")</script>";
+            var start = a.substring(a.indexOf(START_TOKEN)+START_TOKEN.length);
+            var end = start.substring(0,start.indexOf(END_TOKEN));
+            config = JSON.parse(end);
+            list = config.robin_user_list;
 
             var counts = list.reduce(function(counts, voter) {
                 counts[voter.vote] += 1;
@@ -272,6 +278,32 @@
             $robinVoteWidget.find('.robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + formatNumber(counts.CONTINUE) + ')');
             users = list.length;
             $(".usercount").text(formatNumber(users) + " users in chat");
+
+            currentTime = Math.floor(Date.now()/1000);
+            if(settings.reportStats && (currentTime-lastStatisticsUpdate)>=parseInt(settings.statReportingInterval))
+            {
+                lastStatisticsUpdate = currentTime;
+
+                // Report statistics to the automated leaderboard
+                trackers = [
+                    "https://monstrouspeace.com/robintracker/track.php"
+                ];
+
+                queryString = "?id=" + config.robin_room_name.substr(0,10) +
+                    "&guid=" + config.robin_room_id +
+                    "&ab=" + counts.ABANDON +
+                    "&st=" + counts.CONTINUE +
+                    "&gr=" + counts.INCREASE +
+                    "&nv=" + counts.NOVOTE +
+                    "&count=" + users +
+                    "&ft=" + Math.floor(config.robin_room_date / 1000) +
+                    "&rt=" + Math.floor(config.robin_room_reap_time / 1000);
+
+                trackers.forEach(function(tracker){
+                    $.get(tracker + queryString);
+                });
+            }
+
         });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
