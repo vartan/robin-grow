@@ -238,7 +238,7 @@
     buildDropdown();
 
     // hacky solution
-    CURRENT_CHANNEL = $("#chat-prepend-select").val();
+    CURRENT_CHANNEL = $("#chat-prepend-select").val().trim();
 
     if(settings.channelPrepend){
        $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
