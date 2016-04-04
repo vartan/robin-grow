@@ -1,8 +1,5 @@
-# Robin Grow Fork (modified for comma separated multi-channel listening, colors, channel selection! Amazing!)
-
-**THIS FORK WAS MADE WITHIN soKukuneli**
-
-This is not the main branch! But it has some great additional features!
+# Robin Grow
+#### For [reddit's 2016 April Fools Day prank](https://www.reddit.com/robin/)
 
 Special thanks to OrangeredStilton, Voltaek, and dashed.
 
@@ -12,15 +9,12 @@ Click here: http://tampermonkey.net
 
 
 Then, click this link to install the script:  
-https://github.com/5a1t/robin-grow/raw/master/robin.user.js
+https://github.com/vartan/robin-grow/raw/master/robin.user.js
 
 If you get a bunch of code instead of it installing, you can copy and paste the code as a new script in greasemonkey/tampermonkey.
 
 You can view the source code or contribute at:   
 https://github.com/vartan/robin-grow
-
-Public Suggestion / Bug List:
-http://piratepad.net/Zg3MJL40Qh
 
 ## Features
 1. Automatically votes "grow" in each round. Respects your current choice though. Hides vote buttons.
