@@ -273,8 +273,8 @@
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("fontsize", "Chat font size", "12");
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
-    Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "", buildDropdown);
-    Settings.addBool("filterChannel", "Filter by channel", true);
+    Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive)", "", buildDropdown);
+    Settings.addBool("filterChannel", "Filter by channels (check = on; uncheck = off)", true);
 	Settings.addBool("twitchEmotes", "Twitch emotes. https://twitchemotes.com/filters/global", false);
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
