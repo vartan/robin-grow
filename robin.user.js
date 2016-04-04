@@ -158,7 +158,7 @@
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     Settings.addInput("channel", "Channel filter", "");
     Settings.addBool("filterChannel", "Filter by channel", false);
-    Settings.addBool("reportStats", "Report Statistics", false);
+    Settings.addBool("reportStats", "Report Statistics to the <a href='https://monstrouspeace.com/robintracker/'>Automated Leaderboard</a>.", false);
     Settings.addInput("statReportingInterval", "Report Statistics Interval (seconds)", "60");
     // Options end
 
