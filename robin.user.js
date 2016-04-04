@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.13
+// @version      2.14
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -306,9 +306,10 @@
     $(".text-counter-input").keyup(function(e) {
 
         var channel_needle = $("#chat-prepend-select").val().trim();
+        var source = String($(".text-counter-input").val());
 
-        if(settings.filterChannel && $(".text-counter-input").val().indexOf(channel_needle) != 0 ) {
-            $(".text-counter-input").val(channel_needle +" "+$(".text-counter-input").val());
+        if(settings.filterChannel && !(source.toLowerCase().startsWith(channel_needle.toLowerCase()))) {
+            $(".text-counter-input").val(channel_needle + " " + source);
         }
     });
 
