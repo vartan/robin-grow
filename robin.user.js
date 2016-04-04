@@ -558,15 +558,11 @@
                 $user.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", "12px");
                 $message.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", "12px");
 
-                var results_chan = hasChannel(messageText, settings.channel);
 
-                var remove_message =
-                    (mutedList.indexOf(thisUser) >= 0) ||
-                    (settings.removeSpam && isBotSpam(messageText)) ||
-                    (settings.filterChannel &&
-                     !jq.hasClass('robin--user-class--system') &&
-                     String(settings.channel).length > 0 &&
-                     !results_chan.has);
+                var is_muted = (mutedList.indexOf(thisUser) >= 0);
+                var is_spam = (settings.removeSpam && isBotSpam(messageText));
+
+                var remove_message = is_muted || is_spam;
 
 
                 if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
@@ -580,40 +576,58 @@
                 if (remove_message) {
                     $message = null;
                     $(jq[0]).remove();
-                } else {
-                    if(settings.filterChannel) {
-                        if(messageText.indexOf(results_chan.name) === 0) {
-                            $message.text(messageText.substring(results_chan.name.length).trim());
-                        }
 
-                        $("<span class='robin-message--from'><strong>" + results_chan.name.lpad("&nbsp", 6) + "</strong></span>").css("font-family", '"Lucida Console", Monaco, monospace')
-                            .css("font-size", "12px")
-                            .insertAfter($timestamp);
-                    }
-                    if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
-                        $message.parent().css("background","#FFA27F");
-                        notifAudio.play();
+                    return;
+                }
+
+                if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
+                    $message.parent().css("background","#FFA27F");
+                    notifAudio.play();
+                } else {
+
+                    //still show mentions in highlight color.
+
+                    var result = hasChannel(messageText, settings.channel);
+
+                    if(result.has) {
+                        $message.parent().css("background", colors_match[result.name]);
                     } else {
 
-                        //still show mentions in highlight color.
+                    var results_chan = hasChannel(messageText, settings.channel);
+                    var is_not_in_channels = (settings.filterChannel &&
+                         !jq.hasClass('robin--user-class--system') &&
+                         String(settings.channel).length > 0 &&
+                         !results_chan.has);
 
-                        var result = hasChannel(messageText, settings.channel);
+                        if (is_not_in_channels) {
+                            $message = null;
+                            $(jq[0]).remove();
 
-                        if(result.has) {
-                            $message.parent().css("background", colors_match[result.name]);
+                            return;
                         }
                     }
-
-                    if(urlRegex.test(messageText)) {
-                        urlRegex.lastIndex = 0;
-                        var url = encodeURI(urlRegex.exec(messageText)[0]);
-                        var parsedUrl = url.replace(/^/, "<a target=\"_blank\" href=\"").replace(/$/, "\">"+url+"</a>");
-                        var oldHTML = $(jq[0]).find('.robin-message--message').html();
-                        var newHTML = oldHTML.replace(url, parsedUrl);
-                        $(jq[0]).find('.robin-message--message').html(newHTML);
-                    }
-                    findAndHideSpam();
                 }
+
+
+                if(settings.filterChannel) {
+                    if(messageText.indexOf(results_chan.name) === 0) {
+                        $message.text(messageText.substring(results_chan.name.length).trim());
+                    }
+
+                    $("<span class='robin-message--from'><strong>" + results_chan.name.lpad("&nbsp", 6) + "</strong></span>").css("font-family", '"Lucida Console", Monaco, monospace')
+                        .css("font-size", "12px")
+                        .insertAfter($timestamp);
+                }
+
+                if(urlRegex.test(messageText)) {
+                    urlRegex.lastIndex = 0;
+                    var url = encodeURI(urlRegex.exec(messageText)[0]);
+                    var parsedUrl = url.replace(/^/, "<a target=\"_blank\" href=\"").replace(/$/, "\">"+url+"</a>");
+                    var oldHTML = $(jq[0]).find('.robin-message--message').html();
+                    var newHTML = oldHTML.replace(url, parsedUrl);
+                    $(jq[0]).find('.robin-message--message').html(newHTML);
+                }
+                findAndHideSpam();
             }
         });
     }
