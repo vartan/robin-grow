@@ -1,4 +1,4 @@
-# Robin Grow Fork (modified for comma separated multi-channel listening, colors, channel selection! Amazing!)
+# Parrot - Robin Grow Fork, modified for comma separated multi-channel listening, colors, channel selection, Twitch Emotes, and more!
 
 **THIS FORK WAS MADE WITHIN soKukuneli**
 
