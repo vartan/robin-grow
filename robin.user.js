@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Robin Grow (modified multichat)
+// @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
 // @version      2.16
 // @description  Try to take over the world!
@@ -295,7 +295,7 @@
     if (typeof GM_info !== "undefined") {
         versionString = " - v" + GM_info.script.version;
     }
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/robin-grow">robin-grow - soKukunelits fork - ' + versionString + '</a></div>');
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/robin-grow">parrot - soKukunelits fork - ' + versionString + '</a></div>');
     // Settings end
 
     var timeStarted = new Date();
