@@ -71,7 +71,7 @@
     }
 
 
-	
+
 
     // Utils
     function hasChannel(source, channel) {
@@ -123,8 +123,8 @@
 
     var Settings = {
         setupUI: function() {
-	    
-		
+
+
             $robinVoteWidget.prepend("<div class='addon'><div class='usercount robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             $robinVoteWidget.prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             // Open Settings button
@@ -275,7 +275,7 @@
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "", buildDropdown);
     Settings.addBool("filterChannel", "Filter by channel", true);
-	Settings.addBool("twitchEmotes", "Twitch emotes", false);
+	Settings.addBool("twitchEmotes", "Twitch emotes. https://twitchemotes.com/filters/global", false);
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited.", "spam example 1, spam example 2");
     // Options end
 
@@ -574,7 +574,7 @@
     //colored text thanks to OrangeredStilton! https://gist.github.com/Two9A/3f33ee6f6daf6a14c1cc3f18f276dacd
     var colors = ['rgba(255,0,0,0.1)','rgba(0,255,0,0.1)','rgba(0,0,255,0.1)', 'rgba(0,255,255,0.1)','rgba(255,0,255,0.1)', 'rgba(255,255,0,0.1)'];
 
-	
+
 	//twitch emotes
     var emotes = {};
     $.getJSON("https://twitchemotes.com/api_cache/v2/global.json", function( data ) {
