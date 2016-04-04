@@ -542,8 +542,8 @@
                 var $message = $(jq[0].children && jq[0].children[2]);
                 var messageText = $message.text();
 
-                if(String(username_bg).length > 0) {
-                    $user.css("background",  String(username_bg));
+                if(String(settings['username_bg']).length > 0) {
+                    $user.css("background",  String(settings['username_bg']));
                 }
 
                 var results_chan = hasChannel(messageText, settings.channel);
