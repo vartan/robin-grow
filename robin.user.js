@@ -35,14 +35,14 @@
             var new_channel = String($('option:selected', this).text()).toLowerCase().trim();
             var source = String($(".text-counter-input").val()).toLowerCase();
 
-            CURRENT_CHANNEL = String(CURRENT_CHANNEL);
+            CURRENT_CHANNEL = String(CURRENT_CHANNEL).trim();
 
             if(CURRENT_CHANNEL.length > 0 && source.startsWith(CURRENT_CHANNEL)) {
                 source = source.substring(CURRENT_CHANNEL.length);
                 source = source.startsWith(" ") ? source.substring(1) : source;
             }
 
-            CURRENT_CHANNEL = new_channel.trim();
+            CURRENT_CHANNEL = new_channel;
 
             $(".text-counter-input").val(new_channel + " " + source);
         });
