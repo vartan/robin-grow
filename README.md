@@ -54,4 +54,4 @@ https://github.com/vartan/robin-grow
 
 ## Screenshots
 
-![1](https://lambda.sx/643.png) ![2](https://lambda.sx/hB8.png)
+![1](https://lambda.sx/HIx.png) ![2](https://lambda.sx/g2S.png)
