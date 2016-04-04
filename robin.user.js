@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow (modified multichat)
 // @namespace    http://tampermonkey.net/
-// @version      2.02
+// @version      2.03
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -219,6 +219,7 @@
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
+    Settings.addInput("fontsize", "Chat font size", "12");
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening.  First room is primary chat.)", "", buildDropdown);
     Settings.addBool("channelPrepend", "Prepend chat input with primary channel + listening channels", false);
@@ -486,7 +487,7 @@
         listMutedUsers();
     });
 
-    $("#settingContent").append("<span style='font-size:12px;text-align:center;'>Muted Users</label>");
+    $("#settingContent").append("<span style='font-size:"+settings.fontsize+"px;text-align:center;'>Muted Users</label>");
     $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
 
     function listMutedUsers() {
@@ -555,8 +556,8 @@
                 }
 
                 $user.html($user.html().lpad('&nbsp;', 20));
-                $user.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", "12px");
-                $message.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", "12px");
+                $user.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", settings.fontsize+"px");
+                $message.css("font-family", '"Lucida Console", Monaco, monospace').css("font-size", settings.fontsize+"px");
 
                 var results_chan = hasChannel(messageText, settings.channel);
 
@@ -587,7 +588,7 @@
                         }
 
                         $("<span class='robin-message--from'><strong>" + results_chan.name.lpad("&nbsp", 6) + "</strong></span>").css("font-family", '"Lucida Console", Monaco, monospace')
-                            .css("font-size", "12px")
+                            .css("font-size", settings.fontsize+"px")
                             .insertAfter($timestamp);
                     }
                     if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
