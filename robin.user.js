@@ -19,16 +19,16 @@
     CURRENT_CHANNEL = "";
 
     function buildDropdown(){
-	   $("#chat-prepend-area").remove();
-	    //select dropdown chat.
-	    //generate dropdown html
-	    split_channels= settings.channel.split(",");
-	    drop_html = ""
-	    for (tag in split_channels){
-		drop_html = drop_html + '<option value="'+split_channels[tag]+'">'+split_channels[tag]+'</option>'
-	    }
+       $("#chat-prepend-area").remove();
+        //select dropdown chat.
+        //generate dropdown html
+        split_channels= settings.channel.split(",");
+        drop_html = ""
+        for (tag in split_channels){
+        drop_html = drop_html + '<option value="'+split_channels[tag]+'">'+split_channels[tag]+'</option>'
+        }
 
-	   $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
+       $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
 
         $("#chat-prepend-select").change(function() {
 
@@ -52,15 +52,24 @@
     // Utils
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase();
-	channel_array = channel.split(",");
+        channel_array = channel.split(",");
 
-	for (i = 0; i < channel_array.length; i++){
-		if(String(source).toLowerCase().startsWith(channel_array[i])){
-            return true;
-		}
-	}
+        for (i = 0; i < channel_array.length; i++){
 
-        return (String(source).toLowerCase().startsWith(channel));
+            var current_chan = String(channel_array[i]).toLowerCase();
+
+            if(String(source).toLowerCase().startsWith(current_chan)){
+                return {
+                    name: channel_array[i],
+                    has: true
+                };
+            }
+        }
+
+        return {
+            name: channel,
+            has: String(source).toLowerCase().startsWith(channel)
+        };
     }
 
     function formatNumber(n) {
@@ -106,13 +115,13 @@
             $("#openBtn").on("click", function openSettings() {
                 $(".robin-chat--sidebar").hide();
                 $("#settingContainer").show();
-		          buildDropdown();
+                  buildDropdown();
             });
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
-		          buildDropdown();
+                  buildDropdown();
             });
 
             function setVote(vote) {
@@ -233,8 +242,8 @@
     CURRENT_CHANNEL = $("#chat-prepend-select").val();
 
     if(settings.channelPrepend){
- 	   $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
-	}
+       $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val() + " " :"");
+    }
     $(".text-counter-input").keyup(function(e) {
         if(settings.filterChannel && $(".text-counter-input").val().indexOf($("#chat-prepend-select").val()) != 0 && settings.channelPrepend) {
             $(".text-counter-input").val($("#chat-prepend-select").val()+" "+$(".text-counter-input").val());
@@ -248,12 +257,12 @@
             if(settings.filterChannel &&
                 String(settings.channel).length > 0) {
 
-		    if(settings.channelPrepend){
+            if(settings.channelPrepend){
 
-			    setTimeout(function() {
-				    $(".text-counter-input").val($("#chat-prepend-select").val()+" ");
-			    }, 10);
-			}
+                setTimeout(function() {
+                    $(".text-counter-input").val($("#chat-prepend-select").val()+" ");
+                }, 10);
+            }
                 }
         }
     });
@@ -526,9 +535,12 @@
 
 
                 // cool we have a message.
+                var $timestamp = $(jq[0] && jq[0].children[0]);
                 var thisUser = $(jq[0].children && jq[0].children[1]).text();
                 var $message = $(jq[0].children && jq[0].children[2]);
                 var messageText = $message.text();
+
+                var results_chan = hasChannel(messageText, settings.channel);
 
                 var remove_message =
                     (mutedList.indexOf(thisUser) >= 0) ||
@@ -536,7 +548,7 @@
                     (settings.filterChannel &&
                         !jq.hasClass('robin--user-class--system') &&
                         String(settings.channel).length > 0 &&
-                        !hasChannel(messageText, settings.channel));
+                        !results_chan.has);
 
 
                 if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
@@ -552,16 +564,19 @@
                     $(jq[0]).remove();
                 } else {
                     if(settings.filterChannel) {
-                        if(messageText.indexOf(settings.channel) == 0) {
-                            $message.text(messageText.substring(settings.channel.length).trim());
+                        if(messageText.indexOf(results_chan.name) == 0) {
+                            $message.text(messageText.substring(results_chan.name.length).trim());
                         }
+
+                        $("<span class='robin-message--from'><strong>" + results_chan.name + "</strong></span>")
+                            .insertAfter($timestamp);
                     }
                     if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
                         $message.parent().css("background","#FFA27F");
                         notifAudio.play();
                         console.log("got new mention");
                     }
-		    //still show mentions in highlight color.
+            //still show mentions in highlight color.
                     else if (messageText.toLowerCase().split(" ")[0] in colors_match) {
                         $message.parent().css("background",colors_match[messageText.toLowerCase().split(" ")[0]]);
                     }
