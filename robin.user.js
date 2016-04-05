@@ -343,9 +343,11 @@
 
     var isEndingSoon = false;
     var endTime = null;
+    var endTimeAttempts = 0;
 
     // Grab the timestamp from the time remaining message and then calc the ending time using the estimate it gives you
     function getEndTime() { // mostly from /u/Yantrio, modified by /u/voltaek
+    	endTimeAttempts++;
         var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
         if (remainingMessageContainer.length === 0) {
             // for cases where it says "soon" instead of a time on page load
@@ -381,11 +383,15 @@
                 $(".robin-chat--vote.robin--vote-class--increase:not('.robin--active')").click();
                 break;
         }
-        if (endTime === null && !isEndingSoon) {
-            $(".timeleft").hide();
+        if (endTime !== null || isEndingSoon) {
+            $(".timeleft").text(isEndingSoon ? "waiting to merge" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
         }
-        else {
-            $(".timeleft").text(isEndingSoon ? "Waiting to Merge" : formatNumber(howLongLeft(endTime)) + " minutes remaining");
+        else if (endTimeAttempts <= 3 && endTime === null) {
+            $("#robinVoteWidget .timeleft").parent().hide();
+            endTime = getEndTime();
+            if (endTime !== null || isEndingSoon) {
+            	$("#robinVoteWidget .timeleft").parent().show();
+            }
         }
 
         var users = 0;
