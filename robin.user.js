@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.34
+// @version      2.35
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -160,7 +160,7 @@
                 '</div>'
             );
 
-            $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><ul style="list-style-type: circle;"><li>Left click usernames to mute.</li><li>Right click usernames to copy to message.<li>Tab autocompletes usernames in the message box.</li><li>Report any bugs or issues <a href="https://github.com/5a1t/robin-grow/issues/new"><strong>HERE<strong></a></li><li>Created for soKukuneli chat (T16)</li></ul></div>');
+            $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><ul><li>Left click usernames to mute.</li><li>Right click usernames to copy to message.<li>Tab autocompletes usernames in the message box.</li><li>Report any bugs or issues <a href="https://github.com/5a1t/parrot/issues/new"><strong>HERE<strong></a></li><li>Created for soKukuneli chat (T16)</li></ul></div>');
 
             $("#robinDesktopNotifier").detach().appendTo("#settingContent");
 
@@ -234,7 +234,7 @@
         addInput: function addInputSetting(name, description, defaultSetting, callback) {
             defaultSetting = settings[name] || defaultSetting;
 
-            $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label><input type="text" name="setting-' + name + '"><br>' + description + '</label></div>');
+            $("#settingContent").append('<div id="robinDesktopNotifier" class="robin-chat--sidebar-widget robin-chat--notification-widget"><label>' + description + '</label><input type="text" name="setting-' + name + '"></div>');
             $("input[name='setting-" + name + "']").prop("defaultValue", defaultSetting)
                 .on("change", function() {
                 settings[name] = $(this).val();
@@ -247,16 +247,10 @@
             settings[name] = defaultSetting;
         },
 
-        addButton: function(id, description, callback, options) {
+        addButton: function(appendToID, newButtonID, description, callback, options) {
             options = options || {};
-            $("#settingContent").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + id + '">' + description + '</div></div>');
-            $('#' + id).on('click', function(e) { callback(e, options); });
-        },
-
-        addMainButton: function(id, description, callback, options) {
-            options = options || {};
-            $("#robinChatInput").append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + id + '">' + description + '</div></div>');
-            $('#' + id).on('click', function(e) { callback(e, options); });
+            $('#' + appendToID).append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="' + newButtonID + '">' + description + '</div></div>');
+            $('#' + newButtonID).on('click', function(e) { callback(e, options); });
         }
     };
 
@@ -283,24 +277,22 @@
     var settings = Settings.load();
 
     // Options begin
-    //Settings.addButton("clearChat", "Clear Chat", clearChat);
-    Settings.addMainButton("clear-chat-button", "Clear Chat",  clearChat);
-
-    Settings.addBool("hideVote", "Hide voting panel to prevent misclicks.", false, tryHide());
+    Settings.addButton("robinChatInput", "clear-chat-button", "Clear Chat",  clearChat);
+    Settings.addBool("hideVote", "Hide voting panel to prevent misclicks", false, tryHide());
     Settings.addBool("removeSpam", "Remove bot spam", true);
-    Settings.addBool("enableUnicode", "Allow unicode characters. Unicode is considered spam and thus are filtered out.", false);
+    Settings.addBool("enableUnicode", "Allow unicode characters. Unicode is considered spam and thus are filtered out", false);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("fontsize", "Chat font size", "12");
-    Settings.addInput("fontstyle", "Font Style (will default to Consolas if unavailable)", "");
-    Settings.addBool("alignment", "Username alignment (false = left; true = right)", true);
-    Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
-    Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive;spaces are NOT stripped)", "", buildDropdown);
-    Settings.addBool("filterChannel", "Filter by channels (check = on; uncheck = off)", true);
+    Settings.addInput("fontstyle", "Font Style (default Consolas)", "");
+    Settings.addBool("alignment", "Right align usernames", true);
+    Settings.addInput("username_bg", "Custom background color on usernames", "");
+    Settings.addInput("channel", "<label>Channel Filter<ul><li>Multi-room-listening with comma-separated rooms</li><li>Names are case-insensitive</li><li>Spaces are NOT stripped</li></ul></label>", "", buildDropdown);
+    Settings.addBool("filterChannel", "Filter by channels", true);
     Settings.addBool("tabChanColors", "Use color on regular channel messages in tabs", true);
-    Settings.addBool("twitchEmotes", "Twitch emotes. https://twitchemotes.com/filters/global", false);
-    Settings.addBool("timeoutEnabled", "Reload the page after inactivity timeout.", true);
-    Settings.addInput("spamFilters", "Custom spam filters, comma delimited, spaces are NOT stripped", "spam example 1, spam example 2");
+    Settings.addBool("twitchEmotes", "<a href='https://twitchemotes.com/filters/global' target='_blank'>Twitch emotes</a>", false);
+    Settings.addBool("timeoutEnabled", "Reload page after inactivity timeout", true);
+    Settings.addInput("spamFilters", "<label>Custom Spam Filters<ul><li>Comma-delimited</li><li>Spaces are NOT stripped</li></ul></label>", "spam example 1,John Madden");
     // Options end
 
     // Add version at the end (if available from script engine)
@@ -308,7 +300,7 @@
     if (typeof GM_info !== "undefined") {
         versionString = " - v" + GM_info.script.version;
     }
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/robin-grow">parrot - soKukunelits fork' + versionString + '</a></div>');
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/parrot">parrot - soKukunelits fork' + versionString + '</a></div>');
     // Settings end
 
     var timeStarted = new Date();
@@ -1041,6 +1033,27 @@ GM_addStyle(" \
             /* 130 is height of reddit header, chat header, and remaining footer */ \
             height: calc(100vh - 130px) \
         } \
+    } \
+ \
+    /* Settings Panel */ \
+    #settingContent .robin-chat--sidebar-widget { \
+        padding: 6px 0; \
+    } \
+    #settingContent .robin-chat--sidebar-widget ul { \
+        list-style-type: circle; \
+        font-size: 12px; \
+        padding-left: 40px; \
+    } \
+    #settingContent .robin-chat--sidebar-widget label { \
+        font-weight: bold; \
+    } \
+    #settingContent .robin-chat--sidebar-widget input[type='text'] { \
+        width: 100%; \
+        padding: 2px; \
+    } \
+    #settingContent .robin-chat--sidebar-widget input[type='checkbox'] { \
+        vertical-align: middle; \
+        margin-right: 0; \
     } \
  \
     /* RES Night Mode Support */ \
