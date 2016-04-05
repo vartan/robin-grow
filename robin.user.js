@@ -952,7 +952,7 @@
                 }
 
                 // DO NOT REMOVE THIS LINE
-                convertTextToSpecial(messageText, jq[0]);
+                // convertTextToSpecial(messageText, jq[0]);
 
                 // Move channel messages to channel tabs
                 if (results_chan.has)
@@ -974,6 +974,9 @@
                         .css("font-size", "12px")
                         .insertAfter($timestamp);
                 }
+
+                // DO NOT REMOVE THIS LINE
+                convertTextToSpecial(messageText, jq[0]);
 
                 findAndHideSpam();
                 doScroll();
