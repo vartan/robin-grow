@@ -20,11 +20,13 @@
 
     // Styles
     GM_addStyle('.robin--username {cursor: pointer} #robin-grow-tabbar {padding-left:10px;} .robin-grow-tab {cursor:pointer; display: inline-block !important;width: auto;padding: 7px;font-size: 16pt !important;text-transform:none !important;}');
+    GM_addStyle('.robin--username {cursor: pointer}');
+	GM_addStyle('#standingsTable table {width: 100%}');
+	GM_addStyle('#standingsTable table th {font-weight: bold}');
     var currentChannelTab = "";
     function getChannelPrefix() {
         var channels = settings.channel && settings.channel.split(",") || "";
         return currentChannelTab || settings.filterChannel && settings.channel && settings.channel[0] || "";
-
     }
     // Utils
     function hasChannel(source, channels) {
@@ -48,6 +50,45 @@
         var newDateObj = new Date(date.getTime() + mins * 60000);
         return newDateObj;
     }
+	
+	function grabStandings() {
+		var standings;
+		$.ajax({
+			url: 'https://www.reddit.com/r/robintracking/comments/4czzo2/robin_chatter_leader_board_official/.rss?limit=1',
+			data: {},
+			success: function( data ) {
+				var currentRoomName = $('.robin-chat--room-name').text();
+				var standingsPost = $(data).find("entry > content").first();
+				var decoded = $($('<div/>').html(standingsPost).text()).find('table').first();
+				decoded.find('tr').each(function(i) { var row = $(this).find('td,th');
+													var nameColumn = $(row.get(2));
+													nameColumn.find('a').prop('target','_blank');
+													if (currentRoomName.startsWith(nameColumn.text().substring(0,6))) {
+														row.css('background-color', '#22bb45');
+													}
+													row.each(function(j) {if (j == 3 || j == 4 || j > 5) {
+														$(this).remove();
+													}});
+				});
+				$("#standingsTable").html(decoded);
+			},
+			dataType: 'xml'
+		});
+	}
+	
+	var standingsInterval = 0;
+	function startStandings() {
+		stopStandings();
+		standingsInterval = setInterval(grabStandings, 120000);
+		grabStandings();
+	}
+	
+	function stopStandings() {
+		if (standingsInterval){
+			clearInterval(standingsInterval);
+			standingsInterval = 0;
+		}
+	}
 
     function howLongLeft(endTime) {
         if (endTime === null) {
@@ -123,6 +164,8 @@
             // Open Settings button
             $robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>');
             $(".robin-chat--main").prepend("<div id='robin-grow-tabbar'></div>")
+			$robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="standingsBtn">Show Standings</div></div>');
+
             // Setting container
             $(".robin-chat--sidebar").before(
                 '<div class="robin-chat--sidebar" style="display:none;" id="settingContainer">' +
@@ -131,6 +174,17 @@
                     '</div>' +
                 '</div>'
             );
+			
+			// Standing container
+			$("#settingContainer").before(
+			    '<div class="robin-chat--sidebar" style="display:none;" id="standingsContainer">' +
+                    '<div class="robin-chat--sidebar-widget robin-chat--vote-widget" id="standingsContent">' +
+					    '<div id="standingsTable"></div>' +
+						'<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;"><a href="https://www.reddit.com/r/robintracking/comments/4czzo2/robin_chatter_leader_board_official/" target="robinStandingsTab">Full Leaderboard</a></div>' +
+                        '<div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="closeStandingsBtn">Close Standings</div>' +
+                    '</div>' +
+                '</div>'
+			);
 
             $("#robinDesktopNotifier").detach().appendTo("#settingContent");
 
@@ -138,11 +192,25 @@
                 $(".robin-chat--sidebar").hide();
                 $("#settingContainer").show();
             });
+			
+			$("#standingsBtn").on("click", function openStandings() {
+				$(".robin-chat--sidebar").hide();
+				startStandings();
+				$("#standingsContainer").show();
+			});
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
+				$("#standingsContainer").hide();
             });
+			
+			$("#closeStandingsBtn").on("click", function closeStandings() {
+				$(".robin-chat--sidebar").show();
+				stopStandings();
+				$("#standingsContainer").hide();
+				$("#settingContainer").hide();
+			});
 
             function setVote(vote) {
                 return function() {
