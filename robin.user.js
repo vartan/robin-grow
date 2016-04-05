@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.28
+// @version      2.29
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
