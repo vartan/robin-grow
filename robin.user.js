@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.52
+// @version      2.53
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton, lost_penguin
 // @include      https://www.reddit.com/robin*
