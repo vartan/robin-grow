@@ -830,9 +830,6 @@
 
                 var remove_message = is_muted || is_spam;
 
-
-                // if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
-                // }
                 var nextIsRepeat = jq.hasClass('robin--user-class--system') && messageText.indexOf("try again") >= 0;
                 if(nextIsRepeat) {
                     $(".text-counter-input").val(jq.next().find(".robin-message--message").text());
