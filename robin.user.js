@@ -52,6 +52,7 @@
 													row.children().each(function(j) {if (j == 3 || j == 4 || j > 5) {
 														$(this).remove();
 													}});
+				});
 				$("#standingsTable").html(decoded);
 			},
 			dataType: 'xml'
