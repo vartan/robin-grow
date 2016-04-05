@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      2.0.5
+// @version      2.1.0
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -50,7 +50,7 @@
         var newDateObj = new Date(date.getTime() + mins * 60000);
         return newDateObj;
     }
-	
+
 	function grabStandings() {
 		var standings;
 		$.ajax({
@@ -75,14 +75,14 @@
 			dataType: 'xml'
 		});
 	}
-	
+
 	var standingsInterval = 0;
 	function startStandings() {
 		stopStandings();
 		standingsInterval = setInterval(grabStandings, 120000);
 		grabStandings();
 	}
-	
+
 	function stopStandings() {
 		if (standingsInterval){
 			clearInterval(standingsInterval);
@@ -174,7 +174,7 @@
                     '</div>' +
                 '</div>'
             );
-			
+
 			// Standing container
 			$("#settingContainer").before(
 			    '<div class="robin-chat--sidebar" style="display:none;" id="standingsContainer">' +
@@ -192,7 +192,7 @@
                 $(".robin-chat--sidebar").hide();
                 $("#settingContainer").show();
             });
-			
+
 			$("#standingsBtn").on("click", function openStandings() {
 				$(".robin-chat--sidebar").hide();
 				startStandings();
@@ -204,7 +204,7 @@
                 $("#settingContainer").hide();
 				$("#standingsContainer").hide();
             });
-			
+
 			$("#closeStandingsBtn").on("click", function closeStandings() {
 				$(".robin-chat--sidebar").show();
 				stopStandings();
