@@ -430,16 +430,25 @@
     var spamCounts = {};
 
     function findAndHideSpam() {
-        var $messages = $(".robin-message");
 
-        var maxprune = parseInt(settings.maxprune || "1000", 10);
-        if (maxprune < 10 || isNaN(maxprune)) {
-            maxprune = 1000;
+        // getChannelTab
+        var len = channelList.length;
+
+        while(len-- > -1) {
+
+            var $messages = getChannelTab(len).find(".robin-message");
+
+            var maxprune = parseInt(settings.maxprune || "1000", 10);
+            if (maxprune < 10 || isNaN(maxprune)) {
+                maxprune = 1000;
+            }
+
+            if ($messages.length > maxprune) {
+                $messages.slice(0, $messages.length - maxprune).remove();
+            }
         }
 
-        if ($messages.length > maxprune) {
-            $messages.slice(0, $messages.length - maxprune).remove();
-        }
+
 
         if (settings.findAndHideSpam) {
             // skips over ones that have been hidden during this run of the loop
