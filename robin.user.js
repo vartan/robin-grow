@@ -310,6 +310,7 @@
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("enableUnicode", "Allow unicode characters. Unicode is considered spam and thus are filtered out", false);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
+    Settings.addBool("force_scroll", "Force scroll to bottom", false);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("fontsize", "Chat font size", "12");
     Settings.addInput("fontstyle", "Font Style (default Consolas)", "");
@@ -807,7 +808,7 @@
     function doScroll()
     {
 
-        if(GOTO_BOTTOM) {
+        if(GOTO_BOTTOM || settings.force_scroll) {
             robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
         }
     }
