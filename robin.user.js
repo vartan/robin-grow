@@ -948,17 +948,6 @@
                     }
                 }
 
-                if(settings.filterChannel) {
-                    if(results_chan.has) {
-                        messageText = messageText.substring(results_chan.name.length).trim();
-                        $message.text(messageText);
-                    }
-
-                    $("<span class='robin-message--from'><strong>" + results_chan.name.lpad("&nbsp", 6) + "</strong></span>").css("font-family", '"Lucida Console", Monaco, monospace')
-                        .css("font-size", "12px")
-                        .insertAfter($timestamp);
-                }
-
                 // don't ask me why
                 if(settings.filterChannel) {
                     convertTextToSpecial(messageText, jq[0]);
@@ -978,6 +967,16 @@
                     moveChannelMessage(selectedChannel, jq[0]);
                 }
 
+                if(settings.filterChannel) {
+                    if(results_chan.has) {
+                        messageText = messageText.substring(results_chan.name.length).trim();
+                        $message.text(messageText);
+                    }
+
+                    $("<span class='robin-message--from'><strong>" + results_chan.name.lpad("&nbsp", 6) + "</strong></span>").css("font-family", '"Lucida Console", Monaco, monospace')
+                        .css("font-size", "12px")
+                        .insertAfter($timestamp);
+                }
 
                 findAndHideSpam();
                 doScroll();
