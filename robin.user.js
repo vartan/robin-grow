@@ -851,7 +851,7 @@
                 }
 
                 if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
-                    jq[0].css("background","#FFA27F");
+                    $message.parent().css("background","#FFA27F");
                     notifAudio.play();
                 } else {
 
@@ -860,7 +860,7 @@
                     var result = hasChannel(messageText, settings.channel);
 
                     if(result.has) {
-                        jq[0].css("background", colors_match[result.name]);
+                        $message.parent().css("background", colors_match[result.name]);
                     } else {
 
                     var is_not_in_channels = (settings.filterChannel &&
