@@ -977,13 +977,14 @@
         GOTO_BOTTOM = true;
     });
 
-    // shift + (left | right)
-    var down = [];
+    // ctrl + shift + (left | right)
     $(document).keydown(function(e) {
-        down[e.keyCode] = true;
-    }).keyup(function(e) {
 
-        if (down[16] && down[39]) {
+        if(!(e.metaKey && e.shiftKey)) {
+            return;
+        }
+
+        if (e.keyCode == 39) {
             // right channel
 
             var newChanIdx = selectedChannel + 1;
@@ -995,7 +996,7 @@
             selectChannel(newChanIdx);
         }
 
-        if (down[16] && down[37]) {
+        if (e.keyCode == 37) {
             // left channel
 
             var newChanIdx = selectedChannel - 1;
@@ -1006,7 +1007,6 @@
 
             selectChannel(newChanIdx);
         }
-        down[e.keyCode] = false;
     });
 
 GM_addStyle(" \
