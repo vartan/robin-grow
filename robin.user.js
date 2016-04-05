@@ -951,26 +951,16 @@
                     }
                 }
 
-                // don't ask me why
-                if(settings.filterChannel) {
-                    convertTextToSpecial(messageText, jq[0]);
-                }
-
                 // Move channel messages to channel tabs
-                if (results_chan.has) {
+                if (results_chan.has)
                     moveChannelMessage(results_chan.index, jq[0], userIsMentioned);
-                }
 
-                // don't ask me why
-                if(!settings.filterChannel) {
-                    convertTextToSpecial(messageText, jq[0]);
-                }
+                convertTextToSpecial(messageText, jq[0]);
 
-                if(selectedChannel >= 0 && thisUser.trim() == '[robin]') {
+                if (selectedChannel >= 0 && thisUser.trim() == '[robin]')
                     moveChannelMessage(selectedChannel, jq[0]);
-                }
 
-                if(settings.filterChannel) {
+                if (settings.filterChannel) {
                     if(results_chan.has) {
                         messageText = messageText.substring(results_chan.name.length).trim();
                         $message.text(messageText);
