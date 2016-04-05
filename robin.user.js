@@ -159,7 +159,7 @@
                 '</div>'
             );
 
-            $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><ul style="list-style-type: circle;"><li>Left click usernames to mute.</li><li>Right click usernames to copy to message.<li>Tab autocomplete usernames in the message box.</li><li>Report any bugs or issues <a href="https://github.com/5a1t/robin-grow/issues/new"><strong>HERE<strong></a></li><li>Created for soKukuneli chat (T16)</li></ul></div>');
+            $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><ul style="list-style-type: circle;"><li>Left click usernames to mute.</li><li>Right click usernames to copy to message.<li>Tab autocompletes usernames in the message box.</li><li>Report any bugs or issues <a href="https://github.com/5a1t/robin-grow/issues/new"><strong>HERE<strong></a></li><li>Created for soKukuneli chat (T16)</li></ul></div>');
 
             $("#robinDesktopNotifier").detach().appendTo("#settingContent");
 
@@ -305,9 +305,9 @@
     // Add version at the end (if available from script engine)
     var versionString = "";
     if (typeof GM_info !== "undefined") {
-        versionString = " v" + GM_info.script.version;
+        versionString = " - v" + GM_info.script.version;
     }
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/robin-grow">parrot - soKukunelits fork - ' + versionString + '</a></div>');
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/robin-grow">parrot - soKukunelits fork' + versionString + '</a></div>');
     // Settings end
 
     var timeStarted = new Date();
