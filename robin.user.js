@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.40
+// @version      2.42
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton
 // @include      https://www.reddit.com/robin*
@@ -701,6 +701,32 @@
         return $("#robinChatMessageList-ch" + index);
     }
 
+    function convertTextToSpecial(messageText, elem)
+    {
+                if(urlRegex.test(messageText)) {
+                    urlRegex.lastIndex = 0;
+                    var url = encodeURI(urlRegex.exec(messageText)[0]);
+                    var parsedUrl = url.replace(/^/, "<a target=\"_blank\" href=\"").replace(/$/, "\">"+url+"</a>");
+                    var oldHTML = $(elem).find('.robin-message--message').html();
+                    var newHTML = oldHTML.replace(url, parsedUrl);
+
+                    $(elem).find('.robin-message--message').html(newHTML);
+                }
+                if(settings.twitchEmotes){
+                    var split = messageText.split(' ');
+                    var changes = false;
+                    for (var i=0; i < split.length; i++) {
+                        if(emotes.hasOwnProperty(split[i])){
+                            split[i] = "<img src=\"https://static-cdn.jtvnw.net/emoticons/v1/"+emotes[split[i]].image_id+"/1.0\">";
+                            changes = true;
+                        }
+                    }
+                    if (changes) {
+                        $(elem).find('.robin-message--message').html(split.join(' '));
+                    }
+                }
+    }
+
     function moveChannelMessage(channelIndex, message, overrideBGColor)
     {
         var channel = getChannelMessageList(channelIndex);
@@ -721,6 +747,8 @@
                 messageElem.parent().css("background", "");
             }
         }
+
+    	convertTextToSpecial(messageText, messageClone);
 
         channel.append(messageClone);
 
@@ -861,28 +889,6 @@
                         .insertAfter($timestamp);
                 }
 
-                if(urlRegex.test(messageText)) {
-                    urlRegex.lastIndex = 0;
-                    var url = encodeURI(urlRegex.exec(messageText)[0]);
-                    var parsedUrl = url.replace(/^/, "<a target=\"_blank\" href=\"").replace(/$/, "\">"+url+"</a>");
-                    var oldHTML = $(jq[0]).find('.robin-message--message').html();
-                    var newHTML = oldHTML.replace(url, parsedUrl);
-                    $(jq[0]).find('.robin-message--message').html(newHTML);
-                }
-                if(settings.twitchEmotes){
-                    var split = messageText.split(' ');
-                    var changes = false;
-                    for (var i=0; i < split.length; i++) {
-                        if(emotes.hasOwnProperty(split[i])){
-                            split[i] = "<img src=\"https://static-cdn.jtvnw.net/emoticons/v1/"+emotes[split[i]].image_id+"/1.0\">";
-                            changes = true;
-                        }
-                    }
-                    if (changes) {
-                        $(jq[0]).find('.robin-message--message').html(split.join(' '));
-                    }
-                }
-                findAndHideSpam();
 
                 // Move channel messages to channel tabs
                 if (results_chan.has) {
@@ -893,6 +899,11 @@
                     moveChannelMessage(selectedChannel, jq[0]);
                 }
 
+
+    		convertTextToSpecial(messageText, jq[0]);
+
+
+                findAndHideSpam();
                 doScroll();
             }
         });
