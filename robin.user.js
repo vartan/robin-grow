@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.53
+// @version      2.54
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton, lost_penguin
 // @include      https://www.reddit.com/robin*
@@ -218,32 +218,32 @@
                 settings[name] = defaultSetting;
             }
         },
-        
+
         addRadio: function addRadioSetting(name, description, items, defaultSettings, callback) {
             //items JSON format:
             //    {"id":[{"value":<string>,
             //            "friendlyName":<string>}]};
-            
+
             defaultSettings = settings[name] || defaultSettings;
-            
+
             $("#settingContent").append('<div id="settingsContainer-' + name + '" class="robin-chat--sidebar-widget robin-chat--notification-widget"><span style="font-weight: 300; letter-spacing: 0.5px; line-height: 15px; font-size:' + settings.fontsize + 'px;">' + description + '</span><br><br>');
             for (i in items.id) {
                 $("#settingsContainer-" + name).append('<label><input type="radio" name="settingsContainer-' + name + '" value="' + items.id[i].value + '"> ' + items.id[i].friendlyName + '</input></label><br>');
             }
             $("#settingsContainer-" + name).append('</div>');
-            
+
             if (settings[name] != undefined) {
                 $("input:radio[name='setting-" + name + "'][value='" + settings[name] + "']").prop("checked", true);
             }
             else {
                 $("input:radio[name='setting-" + name + "'][value='" + defaultSettings + "']").prop("checked", true);
             }
-            
+
             $("input:radio[name='setting-" + name + "']").on("click", function () {
                 settings[name] = $("input:radio[name='setting-" + name + "']:checked").val();
                 Settings.save(settings);
             });
-            
+
             if (callback) {
                 callback();
             }
