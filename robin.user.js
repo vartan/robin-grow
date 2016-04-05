@@ -959,12 +959,19 @@
                         .insertAfter($timestamp);
                 }
 
-                // TODO: not a real fix
-                convertTextToSpecial(messageText, jq[0]);
+                // don't ask me why
+                if(settings.filterChannel) {
+                    convertTextToSpecial(messageText, jq[0]);
+                }
 
                 // Move channel messages to channel tabs
                 if (results_chan.has) {
                     moveChannelMessage(results_chan.index, jq[0], userIsMentioned);
+                }
+
+                // don't ask me why
+                if(!settings.filterChannel) {
+                    convertTextToSpecial(messageText, jq[0]);
                 }
 
                 if(selectedChannel >= 0 && thisUser.trim() == '[robin]') {
