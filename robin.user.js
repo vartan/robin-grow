@@ -916,8 +916,9 @@
                 findAndHideSpam();
 
                 // Move channel messages to channel tabs
-                if (results_chan.has)
+                if (results_chan.has || thisUser.trim() == '[robin]') {
                     moveChannelMessage(results_chan.index, jq[0]);
+                }
 
                 doScroll();
             }
