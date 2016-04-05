@@ -785,11 +785,16 @@
     {
         var chanName = selChanName();
         var source = $("#robinMessageTextAlt").val();
+        var dest = $("#robinMessageText");
 
-        if (!(source.toLowerCase().startsWith(chanName.toLowerCase() + " ")))
-            $("#robinMessageText").val(chanName + " " + source);
+        if (source.startsWith("/me "))
+            dest.val("/me " + chanName + " " + source.substring(4));
+        else if (source.startsWith("/"))
+            dest.val(source);
+        else
+            dest.val(chanName + " " + source);
     }
-	
+
 	function tabAutoComplete(e)
     {
         if ((e.keyCode || e.which) != 9) return;
