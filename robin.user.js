@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.45
+// @version      2.46
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton
 // @include      https://www.reddit.com/robin*
@@ -789,7 +789,7 @@
         if (!(source.toLowerCase().startsWith(chanName.toLowerCase() + " ")))
             $("#robinMessageText").val(chanName + " " + source);
     }
-	
+
 	function tabAutoComplete(e)
     {
         if ((e.keyCode || e.which) != 9) return;
