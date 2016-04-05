@@ -23,7 +23,7 @@ Public Suggestion / Bug List:
 http://piratepad.net/Zg3MJL40Qh
 
 ## Features
-1. Automatically votes "grow" in each round. Respects your current choice though. Hides vote buttons.
+1. Automatically votes "grow" in each round. Respects your current choice though. Hides vote buttons if you want.
 2. Spam blocking: Automatically blocks spammers and bots. Click on a username to block additional users (persistent).
 3. Shows a countdown of the time remaining in each round.
 4. Displays the total vote counts for each option.
@@ -32,6 +32,7 @@ http://piratepad.net/Zg3MJL40Qh
 7. Dropdown menu for different chat channels.
 8. Visuals rework, complete with font size, spacing, clearing, and padding.
 9. Option to enable unicode!
+10. Fancy easy update button!
 10. Global username mentions.
 11. Twitch.tv emotes!
 12. Tab-Based Chatting!
@@ -57,11 +58,11 @@ http://piratepad.net/Zg3MJL40Qh
     1.9: Dropdown menu for chat channels that auto-prepends (dashed). Also mute persistency (voltaek).
     2.0: The chat channel is before username w/ set tabbing and custom username background (dashed, Daegalus). 
      2.0.3: Adds a font size box. Global username mentions (dashed). Removed useless settings. 
-     2.0.4+: Chat clear button. Toggleable Unicode support. Twitch emotes (anadee).
+     2.0.4: Chat clear button. Toggleable Unicode support. Twitch emotes (anadee).
     2.1: Simplified settings box (dashed). Lots of cleaning up. Username alignment setting.
     2.2: Tabbed chat! Switched the name to parrot around this time. Even more code cleanup (voltaek).
     2.3: Moved settings button, new stats thingy when buttons are hidden (dashed).
-    2.4: Channel switching hotkeys (dashed).
+    2.4: Channel switching hotkeys, you can use slash commands in tabs (dashed, lost_penguin).
 
 ## Screenshots
 
