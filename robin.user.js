@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.45
 // @description  Recreate Slack on top of an 8 day Reddit project.
-// @author       dashed, voltaek, daegalus, vvvv, orangeredstilton
+// @author       dashed, voltaek, daegalus, vvvv, orangeredstilton, lost_penguin
 // @include      https://www.reddit.com/robin*
 // @updateURL    https://github.com/5a1t/parrot/raw/master/robin.user.js
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
