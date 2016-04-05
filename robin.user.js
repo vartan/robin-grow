@@ -76,6 +76,7 @@
             }
 
             CURRENT_CHANNEL = new_channel;
+            IDX_CURRENT_CHANNEL = $(this).prop('selectedIndex');
 
             $(".text-counter-input").val(new_channel + " " + source);
         });
@@ -329,7 +330,7 @@
 
     // hacky solution
     CURRENT_CHANNEL = $("#chat-prepend-select").val().trim();
-
+    IDX_CURRENT_CHANNEL = $("#chat-prepend-select").prop('selectedIndex');
 
     $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val().trim() + " " : "");
 
@@ -712,7 +713,14 @@
 
         // autoswitch prefix
         var $dropdown = $("#chat-prepend-select");
-        $dropdown.prop('selectedIndex', channelIndex);
+
+        if(channelIndex >= 0) {
+            // only switch when inside a specific filter
+            $dropdown.prop('selectedIndex', channelIndex);
+        } else {
+            $dropdown.prop('selectedIndex', IDX_CURRENT_CHANNEL);
+        }
+
         var new_channel = String($('option:selected', $dropdown).text()).toLowerCase().trim();
         var source = String($(".text-counter-input").val()).toLowerCase();
 
@@ -724,6 +732,7 @@
         }
 
         CURRENT_CHANNEL = new_channel;
+        IDX_CURRENT_CHANNEL = $dropdown.prop('selectedIndex');
 
         $(".text-counter-input").val(new_channel + " " + source);
 
