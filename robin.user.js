@@ -175,6 +175,7 @@
                 $("#settingContainer").hide();
                 buildDropdown();
         	tryHide();
+			update();
             });
 
             function setVote(vote) {
