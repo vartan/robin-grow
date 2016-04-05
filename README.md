@@ -4,7 +4,7 @@
 
 This is not the main branch! But it has some great additional features!
 
-Special thanks to OrangeredStilton, Voltaek, Dashed, lost_penguin, Daegalus, Wakafanykai123, Stormagnet and all our testers.
+Special thanks to OrangeredStilton, Voltaek, Dashed, lost_penguin, Daegalus, Wakafanykai123, Stormagnet, AviN456 and all our testers.
 
 ## Installation
 Install a userscript extension such as greasemonkey or tampermonkey:  
@@ -17,7 +17,7 @@ https://github.com/5a1t/parrot/raw/master/robin.user.js
 If you get a bunch of code instead of it installing, you can copy and paste the code as a new script in greasemonkey/tampermonkey.
 
 You can view the source code or contribute at:   
-https://github.com/5a1t/robin-grow
+https://github.com/5a1t/parrot
 
 Public Suggestion / Bug List:
 http://piratepad.net/Zg3MJL40Qh
