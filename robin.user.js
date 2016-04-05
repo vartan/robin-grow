@@ -207,6 +207,10 @@
             $("input[name='setting-" + name + "']").on("click", function() {
                 settings[name] = !settings[name];
                 Settings.save(settings);
+
+                if(callback) {
+                    callback();
+                }
             });
             if (settings[name] !== undefined) {
                 $("input[name='setting-" + name + "']").prop("checked", settings[name]);
@@ -214,9 +218,7 @@
                 settings[name] = defaultSetting;
             }
 
-            if(callback) {
-                callback();
-            }
+
         },
 
         addInput: function addInputSetting(name, description, defaultSetting, callback) {
@@ -273,7 +275,7 @@
     // Options begin
     Settings.addButton("settingContent", "update-script-button", "Update Parrot", function(){ window.open("https://github.com/5a1t/parrot/raw/master/robin.user.js?t=" + (+ new Date()), "_blank"); });
     Settings.addButton("robinChatInput", "clear-chat-button", "Clear Chat",  clearChat);
-    Settings.addBool("hideVote", "Hide voting panel to prevent misclicks", false, tryHide());
+    Settings.addBool("hideVote", "Hide voting panel to prevent misclicks", false, tryHide);
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("enableUnicode", "Allow unicode characters. Unicode is considered spam and thus are filtered out", false);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
