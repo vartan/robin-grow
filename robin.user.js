@@ -19,7 +19,7 @@
     }
 
     // Styles
-    GM_addStyle('.robin--username {cursor: pointer} #robin-grow-tabbar {padding-left:10px;} .robin-grow-tab {cursor:pointer; display: inline-block !important;width: auto;padding: 7px;font-size: 16pt !important;}');
+    GM_addStyle('.robin--username {cursor: pointer} #robin-grow-tabbar {padding-left:10px;} .robin-grow-tab {cursor:pointer; display: inline-block !important;width: auto;padding: 7px;font-size: 16pt !important;text-transform:none !important;}');
     var currentChannelTab = "";
     function getChannelPrefix() {
         var channels = settings.channel && settings.channel.split(",") || "";
