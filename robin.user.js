@@ -262,7 +262,7 @@
 
     var currentUsersName = $('div#header span.user a').html();
 
-    // Settings
+    // Settings begin
     var $robinVoteWidget = $("#robinVoteWidget");
 
     // IF the widget isn't there, we're probably on a reddit error page.
@@ -272,6 +272,12 @@
             window.location.reload();
         }, 300000);
         return;
+    }
+
+    // Get version string (if available from script engine)
+    var versionString = "";
+    if (typeof GM_info !== "undefined") {
+        versionString = " - v" + GM_info.script.version;
     }
 
     Settings.setupUI($robinVoteWidget);
@@ -294,14 +300,11 @@
     Settings.addBool("twitchEmotes", "<a href='https://twitchemotes.com/filters/global' target='_blank'>Twitch emotes</a>", false);
     Settings.addBool("timeoutEnabled", "Reload page after inactivity timeout", true);
     Settings.addInput("spamFilters", "<label>Custom Spam Filters<ul><li>Comma-delimited</li><li>Spaces are NOT stripped</li></ul></label>", "spam example 1,John Madden");
-    // Options end
-
-    // Add version at the end (if available from script engine)
-    var versionString = "";
-    if (typeof GM_info !== "undefined") {
-        versionString = " - v" + GM_info.script.version;
-    }
     $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/parrot">parrot - soKukunelits fork' + versionString + '</a></div>');
+    $("#settingContent").append("<span style='font-size:"+settings.fontsize+"px;text-align:center;'>Muted Users (click to unmute)</label>");
+    $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
+    Settings.addButton("settingContent", "update-script-button", "Update Parrot", function(){ window.open("https://github.com/5a1t/parrot/raw/master/robin.user.js", "_blank"); });
+    // Options end
     // Settings end
 
     var timeStarted = new Date();
@@ -573,9 +576,6 @@
         // Focus textarea and set the value of textarea
         $(".text-counter-input").focus().val("").val(source + " " + username + " ");
     });
-
-    $("#settingContent").append("<span style='font-size:"+settings.fontsize+"px;text-align:center;'>Muted Users (click to unmute)</label>");
-    $("#settingContent").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
 
     function listMutedUsers() {
         $("#blockedUserList").html("");
