@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.43
+// @version      2.45
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton
 // @include      https://www.reddit.com/robin*
@@ -149,7 +149,7 @@
                 '</div>'
             );
 
-            $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><ul><li>Left click usernames to mute.</li><li>Right click usernames to copy to message.<li>Tab autocompletes usernames in the message box.</li><li>Report any bugs or issues <a href="https://github.com/5a1t/parrot/issues/new"><strong>HERE<strong></a></li><li>Created for soKukuneli chat (T16)</li></ul></div>');
+            $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--notification-widget"><ul><li>Left click usernames to mute.</li><li>Right click usernames to copy to message.<li>Tab autocompletes usernames in the message box.</li><li>Ctrl+shift+left/right switches between channel tabs.</li><li>Report any bugs or issues <a href="https://github.com/5a1t/parrot/issues/new"><strong>HERE<strong></a></li><li>Created for soKukuneli chat (T16)</li></ul></div>');
 
             $("#robinDesktopNotifier").detach().appendTo("#settingContent");
 
@@ -789,6 +789,20 @@
         if (!(source.toLowerCase().startsWith(chanName.toLowerCase() + " ")))
             $("#robinMessageText").val(chanName + " " + source);
     }
+	
+	function tabAutoComplete(e)
+    {
+        if ((e.keyCode || e.which) != 9) return;
+
+        var source = $("#robinMessageText").val();
+        var sourceAlt = $("#robinMessageTextAlt").val();
+        var chanName = selChanName();
+
+        if (source.toLowerCase().startsWith(chanName.toLowerCase()))
+            source = source.substring(chanName.length).trim();
+
+        $("#robinMessageTextAlt").val(source);
+    }
 
     var myObserver = new MutationObserver(mutationHandler);
     //--- Add a target node to the observer. Can only add one node at a time.
@@ -961,6 +975,7 @@
     $("#robinMessageText").css("display", "none");
     // Alternate message input box (doesn't show the channel prefixes)
     $("#robinMessageTextAlt").on("input", function() { updateMessage(); });
+	$("#robinMessageTextAlt").on("keyup", function(e) { tabAutoComplete(e); });
 
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" id="sendBtn">Send Message</div>'); // Send message
