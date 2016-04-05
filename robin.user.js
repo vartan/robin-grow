@@ -91,7 +91,8 @@
         $("#robin-grow-tabbar").append("<div class='robin-chat--vote robin-grow-tab robin--active'>All</div>");
         var channels = settings.channel.split(",").map(function(filter) { return filter.trim().toLowerCase() });
         channels.forEach(function(channel) {
-            $("#robin-grow-tabbar").append("<div class='robin-chat--vote robin-grow-tab'>"+channel+"</div>");
+            if(channel.length > 0)
+                $("#robin-grow-tabbar").append("<div class='robin-chat--vote robin-grow-tab'>"+channel+"</div>");
         })
         var foundChannel = false;
         $(".robin-grow-tab").each(function(i, el) {
@@ -223,9 +224,10 @@
 
     Settings.setupUI($robinVoteWidget);
     var settings = Settings.load();
-    setupTabs();
 
     // Options begin
+    Settings.addButton("clearChat", "Clear Chat", clearChat);
+
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
@@ -236,7 +238,6 @@
     Settings.addInput("triviahosts", "Usernames to highlight, comma delimited.", "dthunder,nbagf");
     Settings.addBool("reportStats", "Contribute statistics to the <a href='https://monstrouspeace.com/robintracker/'>Automated Leaderboard</a>.", false);
     Settings.addInput("statReportingInterval", "Report Statistics Interval (seconds)", "60");
-    Settings.addButton("clearChat", "Clear Chat", clearChat);
     // Options end
 
     // Add version at the end (if available from script engine)
@@ -696,5 +697,6 @@ $("#robinSendMessage").submit(fixMessage);
     if ($("body").hasClass("res")) {
         $('<style>.res-nightmode .robin-message, .res-nightmode .robin--user-class--self .robin--username, .res-nightmode .robin-room-participant .robin--username, .res-nightmode :not([class*=flair]) > .robin--username, .res-nightmode .robin-chat .robin-chat--vote, .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { color: #DDD; } .res-nightmode .robin-chat .robin-chat--sidebar, .res-nightmode .robin-chat .robin-chat--vote { background-color: #262626; } .res-nightmode #robinChatInput { background-color: #262626 !important; } .res-nightmode .robin-chat .robin-chat--vote { box-shadow: 0px 0px 2px 1px #888; } .res-nightmode .robin-chat .robin-chat--vote.robin--active { background-color: #444444; box-shadow: 1px 1px 5px 1px black inset; } .res-nightmode .robin-chat .robin-chat--vote:focus { background-color: #848484; outline: 1px solid #9A9A9A; } .res-nightmode .robin--user-class--self { background-color: #424242; } .res-nightmode .robin-message[style="color: white; background: rgb(255, 162, 127);"] { background-color: #520000 !important; } .res-nightmode .robin-chat .robin-chat--user-list-widget { overflow-x: hidden; } .res-nightmode .robin-chat .robin-chat--sidebar-widget { border-bottom: none; }</style>').appendTo('body');
     }
+    setupTabs();
 
 })();
