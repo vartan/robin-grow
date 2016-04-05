@@ -46,7 +46,14 @@
         }
     }
 
-    function buildDropdown(){
+    // Channel selected in channel drop-down
+    function dropdownChannel()
+    {
+        return $("#chat-prepend-select").val().trim();
+    }
+
+    function buildDropdown()
+    {
         $("#chat-prepend-area").remove();
         //select dropdown chat.
         //generate dropdown html
@@ -58,25 +65,7 @@
         }
 
         $("#robinSendMessage").prepend('<div id= "chat-prepend-area"<span> Send chat to: </span> <select id="chat-prepend-select" name="chat-prepend-select">' + drop_html + '</select>');
-
-        $("#chat-prepend-select").change(function() {
-
-            var new_channel = String($('option:selected', this).text()).toLowerCase().trim();
-            var source = String($(".text-counter-input").val()).toLowerCase();
-
-            CURRENT_CHANNEL = String(CURRENT_CHANNEL).trim();
-
-            if(CURRENT_CHANNEL.length > 0 && source.startsWith(CURRENT_CHANNEL)) {
-                source = source.substring(CURRENT_CHANNEL.length);
-                source = source.startsWith(" ") ? source.substring(1) : source;
-            }
-
-            CURRENT_CHANNEL = new_channel;
-            IDX_CURRENT_CHANNEL = $(this).prop('selectedIndex');
-
-            $(".text-counter-input").val(new_channel + " " + source);
-        });
-
+        $("#chat-prepend-select").on("change", function() { updateMessage(); });
     }
 
     // Utils
@@ -314,36 +303,6 @@
 
     buildDropdown();
 
-    // hacky solution
-    CURRENT_CHANNEL = $("#chat-prepend-select").val().trim();
-    IDX_CURRENT_CHANNEL = $("#chat-prepend-select").prop('selectedIndex');
-
-    $(".text-counter-input").val(settings.filterChannel? $("#chat-prepend-select").val().trim() + " " : "");
-
-    $(".text-counter-input").keyup(function(e) {
-
-        var channel_needle = $("#chat-prepend-select").val().trim();
-        var source = String($(".text-counter-input").val());
-
-        if (selectedChannel >= 0 && !(source.toLowerCase().startsWith(channelList[selectedChannel].toLowerCase())))
-            $(".text-counter-input").val(channelList[selectedChannel] + " " + source);
-        else if (settings.filterChannel && !(source.toLowerCase().startsWith(channel_needle.toLowerCase()))) {
-            $(".text-counter-input").val(channel_needle + " " + source);
-        }
-    });
-
-    $(".text-counter-input").keydown(function(e) {
-        var text = $(".text-counter-input").val();
-        var code = e.keyCode || e.which;
-        if(code == 13) {
-            if(settings.filterChannel && String(settings.channel).length > 0) {
-                setTimeout(function() {
-                    $(".text-counter-input").val($("#chat-prepend-select").val().trim() +" ");
-                }, 10);
-            }
-        }
-    });
-
     var isEndingSoon = false;
     var endTime = null;
     var endTimeAttempts = 0;
@@ -571,9 +530,9 @@
         event.preventDefault();
         // Get clicked username and previuos input source
         var username = String($(this).text()).trim();
-        var source = String($(".text-counter-input").val());
+        var source = String($("#robinMessageTextAlt").val());
         // Focus textarea and set the value of textarea
-        $(".text-counter-input").focus().val("").val(source + " " + username + " ");
+        $("#robinMessageTextAlt").focus().val("").val(source + " " + username + " ");
     });
 
     function listMutedUsers() {
@@ -694,34 +653,17 @@
         // Remember selection
         selectedChannel = channelIndex;
 
-        // autoswitch prefix
-        var $dropdown = $("#chat-prepend-select");
-
-        if(channelIndex >= 0) {
-            // only switch when inside a specific filter
-            $dropdown.prop('selectedIndex', channelIndex);
-        } else {
-            $dropdown.prop('selectedIndex', IDX_CURRENT_CHANNEL);
-        }
-
-        var new_channel = String($('option:selected', $dropdown).text()).toLowerCase().trim();
-        var source = String($(".text-counter-input").val()).toLowerCase();
-
-        CURRENT_CHANNEL = String(CURRENT_CHANNEL).trim();
-
-        if(CURRENT_CHANNEL.length > 0 && source.startsWith(CURRENT_CHANNEL)) {
-            source = source.substring(CURRENT_CHANNEL.length);
-            source = source.startsWith(" ") ? source.substring(1) : source;
-        }
-
-        CURRENT_CHANNEL = new_channel;
-        IDX_CURRENT_CHANNEL = $dropdown.prop('selectedIndex');
-
-        $(".text-counter-input").val(new_channel + " " + source);
+        // Show/hide channel drop-down
+        if (channelIndex >= 0)
+            $("#chat-prepend-area").css("display", "none");
+        else
+            $("#chat-prepend-area").css("display", "");
 
         // Update tab selection
         for (i = -1; i < channelList.length; i++)
             setChannelSelected(getChannelTab(i), getChannelMessageList(i), channelIndex == i);
+
+        updateMessage();
     }
 
     function markChannelChanged(index)
@@ -792,6 +734,28 @@
             robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
     }
 
+    //
+    // Get selected destination channel for messages
+    //
+    function selChanName()
+    {
+        if (selectedChannel >= 0)
+            return channelList[selectedChannel];
+        return dropdownChannel();
+    }
+
+    //
+    // Update the message prepared for sending to server
+    //
+    function updateMessage()
+    {
+        var chanName = selChanName();
+        var source = $("#robinMessageTextAlt").val();
+
+        if (!(source.toLowerCase().startsWith(chanName.toLowerCase() + " ")))
+            $("#robinMessageText").val(chanName + " " + source);
+    }
+
     var myObserver = new MutationObserver(mutationHandler);
     //--- Add a target node to the observer. Can only add one node at a time.
     // XXX Shou: we should only need to watch childList, more can slow it down.
@@ -841,7 +805,13 @@
 
                 var nextIsRepeat = jq.hasClass('robin--user-class--system') && messageText.indexOf("try again") >= 0;
                 if(nextIsRepeat) {
-                    $(".text-counter-input").val(jq.next().find(".robin-message--message").text());
+                    var messageText = jq.next().find(".robin-message--message").text();
+                    var chanName = selChanName();
+                    if (messageText.toLowerCase().startsWith(chanName.toLowerCase()))
+                        messageText = messageText.substring(chanName.length).trim();
+
+                    $("#robinMessageTextAlt").val(messageText);
+                    updateMessage();
                 }
 
                 remove_message = remove_message && !jq.hasClass("robin--user-class--system");
@@ -968,8 +938,16 @@
     var currentUserColor = colorFromName(currentUsersName);
     $('<style>.robin--user-class--self .robin--username { color: ' + currentUserColor + ' !important; }</style>').appendTo('body');
 
+	// Message input box (hidden)
+    $(".text-counter-input").attr("id", "robinMessageText");
+	$("#robinSendMessage").append('<input type="text" id="robinMessageTextAlt" class="c-form-control text-counter-input" name="messageAlt" autocomplete="off" maxlength="140" required="">');
+    $("#robinMessageText").css("display", "none");
+    // Alternate message input box (doesn't show the channel prefixes)
+    $("#robinMessageTextAlt").on("input", function() { updateMessage(); });
+
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" id="sendBtn">Send Message</div>'); // Send message
+    $("#robinSendMessage").on("submit", function() { $("#robinMessageTextAlt").val(""); } );
 
     // Setup page for tabbed channels
     setupMultiChannel();
