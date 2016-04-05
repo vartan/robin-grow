@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.0.1
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -277,7 +277,7 @@ function fixMessage() {
     if(messageText.indexOf(currentChannelTab) != 0) {
         $(".text-counter-input").val(currentChannelTab+" "+messageText);
     }
-    if(messageText.indexOf(currentChannelTab+" "+"/me") == 0) {
+    if(messageText.indexOf("/me") == 0) {
         $(".text-counter-input").val("/me "+currentChannelTab+" " + messageText.substring(currentChannelTab.length+5));
     }
 }
