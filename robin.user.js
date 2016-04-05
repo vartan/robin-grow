@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.25
+// @version      2.26
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -305,7 +305,9 @@
     Settings.addInput("username_bg", "Background color of usernames (leave blank to disable)", "");
     Settings.addInput("channel", "Channel filter (separate rooms with commas for multi-listening; names are case-insensitive;spaces are NOT stripped)", "", buildDropdown);
     Settings.addBool("filterChannel", "Filter by channels (check = on; uncheck = off)", true);
+    Settings.addBool("tabChanColors", "Use color on regular channel messages in tabs", true);
     Settings.addBool("twitchEmotes", "Twitch emotes. https://twitchemotes.com/filters/global", false);
+    Settings.addBool("timeoutEnabled", "Reload the page after inactivity timeout.", true);
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited, spaces are NOT stripped", "spam example 1, spam example 2");
     // Options end
 
@@ -432,7 +434,8 @@
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
         var now = new Date();
         if (timeSinceLastChat !== undefined && (timeSinceLastChat > 60000 && now - timeStarted > 60000)) {
-            window.location.reload(); // reload if we haven't seen any activity in a minute.
+            if (settings.timeoutEnabled)
+                window.location.reload(); // reload if we haven't seen any activity in a minute.
         }
 
         // Try to join if not currently in a chat
@@ -744,8 +747,22 @@
     function moveChannelMessage(channelIndex, message)
     {
         var channel = getChannelMessageList(channelIndex);
-        //var message_copy = jQuery.extend(true, {}, message);
-	    channel.append(message.cloneNode(true));
+        var messageClone = message.cloneNode(true);
+        var messageElem = $(messageClone.children && messageClone.children[2]);
+        var messageText = messageElem.text();
+
+        // Remove channel name from channel messages
+        if (messageText.startsWith(channelList[channelIndex]))
+        {
+            messageText = messageText.substring(channelList[channelIndex].length).trim();
+            messageElem.text(messageText);
+        }
+
+        // Remove channel colour from channel messages
+        if (!settings.tabChanColors)
+            messageElem.parent().css("background", "");
+
+        channel.append(messageClone);
 
         markChannelChanged(channelIndex);
 
@@ -881,11 +898,9 @@
                     robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
                 }
 
-		// Move channel messages to channel tabs
+                // Move channel messages to channel tabs
                 if (results_chan.has)
-                {
                     moveChannelMessage(results_chan.index, jq[0]);
-                }
             }
         });
     }
