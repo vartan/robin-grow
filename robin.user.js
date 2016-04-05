@@ -12,6 +12,12 @@
 // @grant   GM_addStyle
 // ==/UserScript==
 (function() {
+    if (!window.GM_addStyle) {
+        window.GM_addStyle = function(styles) {
+            $("body").append($(document.createElement("style")).attr("type", "text/css").text(styles));
+        };
+    }
+
     // Styles
     GM_addStyle('.robin--username {cursor: pointer} #robin-grow-tabbar {padding-left:10px;} .robin-grow-tab {cursor:pointer; display: inline-block !important;width: auto;padding: 7px;font-size: 16pt !important;}');
     var currentChannelTab = "";
