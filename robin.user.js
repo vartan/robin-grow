@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      1.870
+// @version      2.0
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -13,8 +13,8 @@
 // ==/UserScript==
 (function() {
     // Styles
-    GM_addStyle('.robin--username {cursor: pointer}');
-
+    GM_addStyle('.robin--username {cursor: pointer} #robin-grow-tabbar {padding-left:10px;} .robin-grow-tab {cursor:pointer; display: inline-block !important;width: auto;padding: 7px;font-size: 16pt !important;}');
+    var currentChannelTab = "";
     // Utils
     function hasChannel(source, channel) {
         channel = String(channel).toLowerCase();
@@ -42,9 +42,57 @@
             return 0;
         }
     }
+    function filterChannelMessage(message) {
+        console.log(message);
+        var messageTextNode = (message && message.childNodes && message.childNodes[5]);
+        var messageText = messageTextNode.innerText || "";
+        if(messageText.indexOf(currentChannelTab) !== 0) {
+            $(message).hide();
+            console.log("Should filter "+messageText);
+        }
+    }
+    function configureTabs() {
 
+    }
+    function filterChannelAllMessages() {
+        $(".robin-message.robin--user-class--user").each(function(i, el) {
+            $(el).show();
+            filterChannelMessage(el);
+        });
+
+    }
     function clearChat() {
-        $("#robinChatMessageList").html("");
+        $("#robinChatMessageList").text("");
+    }
+    function setupTabs() {
+        $("#robin-grow-tabbar").html("<span style='font-size:16pt'>Channels: </span>");
+        $("#robin-grow-tabbar").append("<div class='robin-chat--vote robin-grow-tab robin--active'>All</div>");
+        var channels = settings.channel.split(",").map(function(filter) { return filter.trim().toLowerCase() });
+        channels.forEach(function(channel) {
+            $("#robin-grow-tabbar").append("<div class='robin-chat--vote robin-grow-tab'>"+channel+"</div>");
+        })
+        var foundChannel = false;
+        $(".robin-grow-tab").each(function(i, el) {
+            if(el.innerText == currentChannelTab) {
+                foundChannel = true;
+                el.click();
+            }
+        })
+        if(!foundChannel) {
+            currentChannelTab = "";
+        }
+
+        $(".robin-grow-tab").click(function(e) {
+            $(".robin-grow-tab").removeClass("robin--active");
+            $(e.target).addClass("robin--active");
+            if(e.target.innerText == "All") {
+                currentChannelTab = "";
+            } else {
+                currentChannelTab = e.target.innerText;
+            }
+            filterChannelAllMessages();
+        });
+
     }
 
 
@@ -54,6 +102,7 @@
             $robinVoteWidget.prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             // Open Settings button
             $robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer;" id="openBtn">Open Settings</div></div>');
+            $(".robin-chat--main").prepend("<div id='robin-grow-tabbar'></div>")
             // Setting container
             $(".robin-chat--sidebar").before(
                 '<div class="robin-chat--sidebar" style="display:none;" id="settingContainer">' +
@@ -133,6 +182,7 @@
                 .on("change", function() {
                     settings[name] = $(this).val();
                     Settings.save(settings);
+                    setupTabs();
                 });
             settings[name] = defaultSetting;
         },
@@ -160,6 +210,7 @@
 
     Settings.setupUI($robinVoteWidget);
     var settings = Settings.load();
+    setupTabs();
 
     // Options begin
     Settings.addBool("removeSpam", "Remove bot spam", true);
@@ -206,7 +257,10 @@
             }
 
             // Append our chat prefix to the outgoing message
-            if( !sendingMessage.startsWith(settings.channel) ) targetTextBox.val(settings.channel + sendingMessage);
+            if( sendingMessage.indexOf(currentChannelTab) != 0 ) {
+                console.log("adding channel to message");
+                targetTextBox.val(currentChannelTab + " " + sendingMessage);
+            }
         }
     });
 
@@ -217,20 +271,17 @@
             $(".text-counter-input").val(settings.channel+" "+$(".text-counter-input").val())
         }
     });
-
-    $(".text-counter-input").keydown(function(e) {
-        var text = $(".text-counter-input").val();
-        var code = e.keyCode || e.which;
-        if(code == 13) {
-            if(settings.filterChannel &&
-                String(settings.channel).length > 0) {
-
-                    setTimeout(function() {
-                        $(".text-counter-input").val(settings.channel+" ");
-                    }, 10);
-                }
-        }
-    });*/
+*/
+function fixMessage() {
+    var messageText = $(".text-counter-input").val();
+    if(messageText.indexOf(currentChannelTab) != 0) {
+        $(".text-counter-input").val(currentChannelTab+" "+messageText);
+    }
+    if(messageText.indexOf(currentChannelTab+" "+"/me") == 0) {
+        $(".text-counter-input").val("/me "+currentChannelTab+" " + messageText.substring(currentChannelTab.length+5));
+    }
+}
+$("#robinSendMessage").submit(fixMessage);
 
     var isEndingSoon = false;
     var endTime = null;
@@ -521,7 +572,8 @@
                 var thisUser = $(jq[0].children && jq[0].children[1]).text();
                 var $message = $(jq[0].children && jq[0].children[2]);
                 var messageText = $message.text();
-
+                if($message[0])
+                    filterChannelMessage(jq[0]);
                 var remove_message =
                     (mutedList.indexOf(thisUser) >= 0) ||
                     (settings.removeSpam && isBotSpam(messageText)) ||
@@ -538,7 +590,7 @@
                             remove_message = false;
                             return;
                         }
-                    });              
+                    });
                 }
 
                 if(nextIsRepeat && jq.hasClass('robin--user-class--system')) {
@@ -619,8 +671,11 @@
 
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" style="font-weight: bold; padding: 5px;cursor: pointer; margin-left:0;" id="sendBtn">Send Message</div>'); // Send message
+    $("#sendBtn").bind("mousedown touchstart", function(e) {
+        fixMessage();
+    });
     $('#robinChatInput').css('background', '#EFEFED');
-    
+
     // Full-screen-height chat
     $('<style>@media(min-width:769px){.content {border:none}.footer-parent{margin-top:0;font-size:inherit}.debuginfo{display:none}.bottommenu{padding:0 3px;display:inline-block}#robinChatInput{padding:2px}#sendBtn{margin-bottom:0}.robin-chat .robin-chat--body{height:calc(100vh - 130px)}}</style>').appendTo('body');
 
