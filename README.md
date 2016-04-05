@@ -31,15 +31,16 @@ http://piratepad.net/Zg3MJL40Qh
 6. Chat links are clickable.
 7. Dropdown menu for different chat channels.
 8. Visuals rework, complete with font size, spacing, clearing, and padding.
-9. Supports unicode!
-10. Global username mentions
+9. Option to enable unicode!
+10. Global username mentions.
 11. Twitch.tv emotes!
+12. Tab-Based Chatting!
 
-## Updates (times Pacific time)
+## Updates
 
     0.2: Using grow command instead of clicking stuff. Sends command when page is loaded, and also every minute just in case.
     0.3: Also informs the page about the script
-    0.4: 10:26AM, Is now smart enough to detect if you've already voted for grow and won't spam the vote.
+    0.4: Is now smart enough to detect if you've already voted for grow and won't spam the vote.
     0.5: Automatic reload on no activity
     0.7: Now shows useful information at the top of the page as well.
     0.8: fixed time bug, will rejoin on a failed chatroom
@@ -58,6 +59,8 @@ http://piratepad.net/Zg3MJL40Qh
      2.0.3: Adds a font size box. Global username mentions (dashed). Removed useless settings. 
      2.0.4+: Chat clear button. Toggleable Unicode support. Twitch emotes (anadee).
     2.1: Simplified settings box (dashed). Lots of cleaning up. Username alignment setting.
+    2.2: Tabbed chat! Switched the name to parrot around this time. Even more code cleanup (voltaek).
+    2.3: Moved settings button, channel switching hoykeys, new stats thingy when buttons are hidden (dashed). 
 
 ## Screenshots
 
