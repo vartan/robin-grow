@@ -637,6 +637,9 @@
     // Tabbed channel windows by /u/lost_penguin
     //
     var channelList = [];
+    // invariant:
+    // -1 := no choice
+    // selectedChannel >= 0
     var selectedChannel = -1;
 
     function setupMultiChannel()
@@ -659,7 +662,9 @@
 
         // Room tab events
         var tab = $("#robinChannelLink");
-        tab.on("click", function() { selectChannel(""); });
+        tab.on("click", function() {
+            selectChannel("");
+        });
 
         // Add rooms
         resetChannels();
@@ -705,9 +710,28 @@
         // Remember selection
         selectedChannel = channelIndex;
 
+        // autoswitch prefix
+        var $dropdown = $("#chat-prepend-select");
+        $dropdown.prop('selectedIndex', channelIndex);
+        var new_channel = String($('option:selected', $dropdown).text()).toLowerCase().trim();
+        var source = String($(".text-counter-input").val()).toLowerCase();
+
+        CURRENT_CHANNEL = String(CURRENT_CHANNEL).trim();
+
+        if(CURRENT_CHANNEL.length > 0 && source.startsWith(CURRENT_CHANNEL)) {
+            source = source.substring(CURRENT_CHANNEL.length);
+            source = source.startsWith(" ") ? source.substring(1) : source;
+        }
+
+        CURRENT_CHANNEL = new_channel;
+
+        $(".text-counter-input").val(new_channel + " " + source);
+
         // Update tab selection
-        for (i = -1; i < channelList.length; i++)
+        for (i = -1; i < channelList.length; i++) {
+
             setChannelSelected(getChannelTab(i), getChannelMessageList(i), channelIndex == i);
+        }
     }
 
     function markChannelChanged(index)
