@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
+// @version      2.0.2
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -16,9 +16,15 @@
     GM_addStyle('.robin--username {cursor: pointer} #robin-grow-tabbar {padding-left:10px;} .robin-grow-tab {cursor:pointer; display: inline-block !important;width: auto;padding: 7px;font-size: 16pt !important;}');
     var currentChannelTab = "";
     // Utils
-    function hasChannel(source, channel) {
-        channel = String(channel).toLowerCase();
-        return String(source).toLowerCase().startsWith(channel);
+    function hasChannel(source, channels) {
+        var channelParts = channels.split(",");
+        for(var ci in channelParts) {
+            var channel = channelParts[ci];
+            console.log("checking "+channel)
+            if(String(source).toLowerCase().startsWith(channel))
+                return true;
+        }
+        return false;
     }
 
     function formatNumber(n) {
@@ -64,6 +70,17 @@
     function clearChat() {
         $("#robinChatMessageList").text("");
     }
+    function chooseChannel(el) {
+        el = el.target || el;
+        $(".robin-grow-tab").removeClass("robin--active");
+        $(el).addClass("robin--active");
+        if(el.innerText == "All") {
+            currentChannelTab = "";
+        } else {
+            currentChannelTab = el.innerText;
+        }
+        filterChannelAllMessages();
+    }
     function setupTabs() {
         $("#robin-grow-tabbar").html("<span style='font-size:16pt'>Channels: </span>");
         $("#robin-grow-tabbar").append("<div class='robin-chat--vote robin-grow-tab robin--active'>All</div>");
@@ -75,23 +92,14 @@
         $(".robin-grow-tab").each(function(i, el) {
             if(el.innerText == currentChannelTab) {
                 foundChannel = true;
-                el.click();
+                chooseChannel(el);
             }
         })
         if(!foundChannel) {
             currentChannelTab = "";
         }
 
-        $(".robin-grow-tab").click(function(e) {
-            $(".robin-grow-tab").removeClass("robin--active");
-            $(e.target).addClass("robin--active");
-            if(e.target.innerText == "All") {
-                currentChannelTab = "";
-            } else {
-                currentChannelTab = e.target.innerText;
-            }
-            filterChannelAllMessages();
-        });
+        $(".robin-grow-tab").click(chooseChannel);
 
     }
 
