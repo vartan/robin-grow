@@ -436,7 +436,7 @@
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
         var now = new Date();
-        if (timeSinceLastChat !== undefined && (timeSinceLastChat > 60000 && now - timeStarted > 60000)) {
+        if (timeSinceLastChat !== undefined && (timeSinceLastChat > 600000 && now - timeStarted > 600000)) {
             if (settings.timeoutEnabled)
                 window.location.reload(); // reload if we haven't seen any activity in a minute.
         }
