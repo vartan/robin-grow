@@ -278,7 +278,7 @@ function fixMessage() {
         $(".text-counter-input").val(currentChannelTab+" "+messageText);
     }
     if(messageText.indexOf("/me") == 0) {
-        $(".text-counter-input").val("/me "+currentChannelTab+" " + messageText.substring(currentChannelTab.length+5));
+        $(".text-counter-input").val("/me "+currentChannelTab+" " + messageText.substring(currentChannelTab.length+3));
     }
 }
 $("#robinSendMessage").submit(fixMessage);
