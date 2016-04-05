@@ -722,6 +722,8 @@
         {
             tab.attr("class", "robin-chan-tab-selected");
             box.css("display", "");
+
+            doScroll();
         }
         else
         {
@@ -765,9 +767,12 @@
         channel.append(messageClone);
 
         markChannelChanged(channelIndex);
+    }
 
-        if(GOTO_BOTTOM)
-            channel.scrollTop(channel[0].scrollHeight);
+    function doScroll()
+    {
+        if(robinChatWindow.scrollTop() < robinChatWindow[0].scrollHeight - robinChatWindow.height())
+            robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
     }
 
     var myObserver = new MutationObserver(mutationHandler);
@@ -894,13 +899,11 @@
                 }
                 findAndHideSpam();
 
-                if(GOTO_BOTTOM) {
-                    robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
-                }
-
                 // Move channel messages to channel tabs
                 if (results_chan.has)
                     moveChannelMessage(results_chan.index, jq[0]);
+
+                doScroll();
             }
         });
     }
