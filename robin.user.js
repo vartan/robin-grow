@@ -271,7 +271,7 @@
     var settings = Settings.load();
 
     // Options begin
-    Settings.addButton("settingContent", "update-script-button", "Update Parrot", function(){ window.open("https://github.com/5a1t/parrot/raw/master/robin.user.js", "_blank"); });
+    Settings.addButton("settingContent", "update-script-button", "Update Parrot", function(){ window.open("https://github.com/5a1t/parrot/raw/master/robin.user.js?t=" + (+ new Date()), "_blank"); });
     Settings.addButton("robinChatInput", "clear-chat-button", "Clear Chat",  clearChat);
     Settings.addBool("hideVote", "Hide voting panel to prevent misclicks", false, tryHide());
     Settings.addBool("removeSpam", "Remove bot spam", true);
