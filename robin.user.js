@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.60
+// @version      2.61
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton, lost_penguin
 // @include      https://www.reddit.com/robin*
@@ -619,6 +619,10 @@
     $.getJSON("https://twitchemotes.com/api_cache/v2/global.json", function( data ) {
         emotes = data.emotes;
         console.log(emotes);
+
+        for(var prop in emotes){
+            emotes[prop.toLowerCase()] = emotes[prop];
+        }
     });
 
     // credit to wwwroth for idea (notification audio)
