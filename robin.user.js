@@ -161,7 +161,6 @@
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
-                buildDropdown();
                 tryHide();
                 update();
             });
