@@ -307,6 +307,7 @@
     Settings.addBool("filterChannel", "Filter by channels (check = on; uncheck = off)", true);
     Settings.addBool("tabChanColors", "Use color on regular channel messages in tabs", false);
     Settings.addBool("twitchEmotes", "Twitch emotes. https://twitchemotes.com/filters/global", false);
+    Settings.addBool("timeoutEnabled", "Reload the page after inactivity timeout.", true);
     Settings.addInput("spamFilters", "Custom spam filters, comma delimited, spaces are NOT stripped", "spam example 1, spam example 2");
     // Options end
 
@@ -433,7 +434,8 @@
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
         var now = new Date();
         if (timeSinceLastChat !== undefined && (timeSinceLastChat > 60000 && now - timeStarted > 60000)) {
-            window.location.reload(); // reload if we haven't seen any activity in a minute.
+            if (settings.timeoutEnabled)
+                window.location.reload(); // reload if we haven't seen any activity in a minute.
         }
 
         // Try to join if not currently in a chat
