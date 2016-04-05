@@ -846,6 +846,8 @@
     {
         if ((e.keyCode || e.which) != 9) return;
 
+        e.preventDefault();
+
         var source = $("#robinMessageText").val();
         var sourceAlt = $("#robinMessageTextAlt").val();
         var chanName = selChanName();
