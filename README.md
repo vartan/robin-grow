@@ -4,7 +4,7 @@
 
 This is not the main branch! But it has some great additional features!
 
-Special thanks to OrangeredStilton, Voltaek, and dashed.
+Special thanks to OrangeredStilton, Voltaek, Dashed, lost_penguin, Daegalus, Wakafanykai123, Stormagnet and all our testers.
 
 ## Installation
 Install a userscript extension such as greasemonkey or tampermonkey:  
