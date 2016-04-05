@@ -755,7 +755,7 @@
             }
         }
 
-    	convertTextToSpecial(messageText, messageClone);
+        convertTextToSpecial(messageText, messageClone);
 
         channel.append(messageClone);
 
@@ -797,7 +797,7 @@
             dest.val(chanName + " " + source);
     }
 
-	function tabAutoComplete(e)
+    function tabAutoComplete(e)
     {
         if ((e.keyCode || e.which) != 9) return;
 
@@ -917,6 +917,8 @@
                         .insertAfter($timestamp);
                 }
 
+                // TODO: not a real fix
+                convertTextToSpecial(messageText, jq[0]);
 
                 // Move channel messages to channel tabs
                 if (results_chan.has) {
@@ -926,9 +928,6 @@
                 if(selectedChannel >= 0 && thisUser.trim() == '[robin]') {
                     moveChannelMessage(selectedChannel, jq[0]);
                 }
-
-
-    		convertTextToSpecial(messageText, jq[0]);
 
 
                 findAndHideSpam();
@@ -976,13 +975,13 @@
     var currentUserColor = colorFromName(currentUsersName);
     $('<style>.robin--user-class--self .robin--username { color: ' + currentUserColor + ' !important; }</style>').appendTo('body');
 
-	// Message input box (hidden)
+    // Message input box (hidden)
     $(".text-counter-input").attr("id", "robinMessageText");
-	$("#robinSendMessage").append('<input type="text" id="robinMessageTextAlt" class="c-form-control text-counter-input" name="messageAlt" autocomplete="off" maxlength="140" required="">');
+    $("#robinSendMessage").append('<input type="text" id="robinMessageTextAlt" class="c-form-control text-counter-input" name="messageAlt" autocomplete="off" maxlength="140" required="">');
     $("#robinMessageText").css("display", "none");
     // Alternate message input box (doesn't show the channel prefixes)
     $("#robinMessageTextAlt").on("input", function() { updateMessage(); });
-	$("#robinMessageTextAlt").on("keyup", function(e) { tabAutoComplete(e); });
+    $("#robinMessageTextAlt").on("keyup", function(e) { tabAutoComplete(e); });
 
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" id="sendBtn">Send Message</div>'); // Send message
