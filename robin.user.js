@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.23
+// @version      2.25
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -653,7 +653,7 @@
         $("#robinChatWindow").before("<div id=\"robinChannelDiv\" class=\"robin-chat--message-list\"><ul id=\"robinChannelList\"></ul></div>");
 
         // Add tab for all other messages
-        $("#robinChannelList").append("<li id=\"robinChannelTab\"><a id=\"robinChannelLink\" href=\"#robinCh\" class>System</a></li>");
+        $("#robinChannelList").append("<li id=\"robinChannelTab\"><a id=\"robinChannelLink\" href=\"#robinCh\" style=\"width:10%;display:inline-block\">System</a></li>");
 
         // Room tab events
         var tab = $("#robinChannelLink");
@@ -681,7 +681,7 @@
             chatBox.append("<div id=\"robinChatMessageList-ch" + i + "\" class=\"robin-chat--message-list\">");
 
             // Room tab
-            tabBar.append("<li id=\"robinChannelTab-ch" + i + "\"><a id=\"robinChannelLink-ch" + i + "\" href=\"#robinCh" + i + "\" class>" + channelList[i] + "</a></li>");
+            tabBar.append("<li id=\"robinChannelTab-ch" + i + "\"><a id=\"robinChannelLink-ch" + i + "\" href=\"#robinCh" + i + "\" style=\"width:10%;display:inline-block\">" + channelList[i] + "</a></li>");
 
             // Room tab event
             var tab = $("#robinChannelLink-ch" + i);
