@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.35
-// @description  Try to take over the world!
+// @version      2.36
+// @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
 // @updateURL    https://github.com/5a1t/parrot/raw/master/robin.user.js
