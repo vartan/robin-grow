@@ -642,16 +642,19 @@
 
     function selectChannel(channelLinkId)
     {
-    $("#chat-prepend-select").val($("#robinChannelLink-ch" + channelLinkId.substr(channelLinkId.length - 1) ).html());
-    console.log(channelLinkId);
+
+        console.log(channelLinkId);
         // Get channel index
         var channelIndex = -1;
         if ((typeof channelLinkId) == 'string' && channelLinkId.length > 8) {
             channelIndex = channelLinkId.substring(8);
         }
-        if(typeof channelLinkId) == 'number') {
+        if((typeof channelLinkId) == 'number') {
             channelIndex = channelLinkId;
         }
+
+
+        $("#chat-prepend-select").val($("#robinChannelLink-ch" + (channelIndex >= 0 ? channelIndex : "") ).html());
 
         // Remember selection
         selectedChannel = channelIndex;
@@ -972,6 +975,38 @@
             return;
         }
         GOTO_BOTTOM = true;
+    });
+
+    // shift + (left | right)
+    var down = [];
+    $(document).keydown(function(e) {
+        down[e.keyCode] = true;
+    }).keyup(function(e) {
+
+        if (down[16] && down[39]) {
+            // right channel
+
+            var newChanIdx = selectedChannel + 1;
+
+            if(newChanIdx == channelList.length) {
+                newChanIdx = -1;
+            }
+
+            selectChannel(newChanIdx);
+        }
+
+        if (down[16] && down[37]) {
+            // left channel
+
+            var newChanIdx = selectedChannel - 1;
+
+            if(newChanIdx <= -2) {
+                newChanIdx = channelList.length - 1;
+            }
+
+            selectChannel(newChanIdx);
+        }
+        down[e.keyCode] = false;
     });
 
 GM_addStyle(" \
