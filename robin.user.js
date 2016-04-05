@@ -144,10 +144,12 @@
 
     var Settings = {
         setupUI: function() {
+            // Open Settings button
             $robinVoteWidget.prepend("<div class='addon'><div class='usercount robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             $robinVoteWidget.prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
-            // Open Settings button
-            $robinVoteWidget.append('<div class="addon"><div class="robin-chat--vote" id="openBtn">Open Settings</div></div>');
+            $robinVoteWidget.prepend('<div class="addon"><div class="robin-chat--vote" id="openBtn">Open Settings</div></div>');
+
+
             // Setting container
             $(".robin-chat--sidebar").before(
                 '<div class="robin-chat--sidebar" style="display:none;" id="settingContainer">' +
