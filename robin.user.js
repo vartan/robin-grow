@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.58
+// @version      2.59
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton, lost_penguin
 // @include      https://www.reddit.com/robin*
@@ -137,7 +137,7 @@
             $robinVoteWidget.prepend("<div class='addon'><div id='chatstats' class='robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             $robinVoteWidget.prepend("<div class='addon'><div class='usercount robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             $robinVoteWidget.prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
-            $robinVoteWidget.prepend('<div class="addon" id="openBtn_wrap"><div class="robin-chat--vote" id="openBtn">Open Settings</div></div>');
+            $robinVoteWidget.prepend('<div class="addon" id="openBtn_wrap"><div class="robin-chat--vote" id="openBtn" style="margin-left:0px;">Open Settings</div></div>');
             $("#openBtn_wrap").prepend('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/parrot">parrot - soKukunelits fork' + versionString + '</a></div>');
 
             // Setting container
