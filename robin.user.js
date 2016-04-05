@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.22
+// @version      2.23
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -692,6 +692,8 @@
 
     function selectChannel(channelLinkId)
     {
+	$("#chat-prepend-select").val($("#robinChannelLink-ch" + channelLinkId.substr(channelLinkId.length - 1) ).html());
+    console.log(channelLinkId);
         // Get channel index
         var channelIndex = -1;
         if (channelLinkId.length > 8)
