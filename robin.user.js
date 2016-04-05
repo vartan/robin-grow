@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      2.0.3
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -15,6 +15,11 @@
     // Styles
     GM_addStyle('.robin--username {cursor: pointer} #robin-grow-tabbar {padding-left:10px;} .robin-grow-tab {cursor:pointer; display: inline-block !important;width: auto;padding: 7px;font-size: 16pt !important;}');
     var currentChannelTab = "";
+    function getChannelPrefix() {
+        var channels = settings.channel && settings.channel.split(",") || "";
+        return currentChannelTab || settings.filterChannel && settings.channel && settings.channel[0] || "";
+
+    }
     // Utils
     function hasChannel(source, channels) {
         var channelParts = channels.split(",");
@@ -282,11 +287,11 @@
 */
 function fixMessage() {
     var messageText = $(".text-counter-input").val();
-    if(messageText.indexOf(currentChannelTab) != 0) {
-        $(".text-counter-input").val(currentChannelTab+" "+messageText);
+    if(messageText.indexOf(getChannelPrefix()) != 0) {
+        $(".text-counter-input").val(getChannelPrefix()+" "+messageText);
     }
     if(messageText.indexOf("/me") == 0) {
-        $(".text-counter-input").val("/me "+currentChannelTab+" " + messageText.substring(currentChannelTab.length+3));
+        $(".text-counter-input").val("/me "+getChannelPrefix()+" " + messageText.substring(currentChannelTab.length+3));
     }
 }
 $("#robinSendMessage").submit(fixMessage);
