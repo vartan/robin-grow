@@ -145,6 +145,7 @@
     var Settings = {
         setupUI: function() {
             // Open Settings button
+            $robinVoteWidget.prepend("<div class='addon'><div id='chatstats' class='robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             $robinVoteWidget.prepend("<div class='addon'><div class='usercount robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             $robinVoteWidget.prepend("<div class='addon'><div class='timeleft robin-chat--vote' style='font-weight:bold;pointer-events:none;'></div></div>");
             $robinVoteWidget.prepend('<div class="addon"><div class="robin-chat--vote" id="openBtn">Open Settings</div></div>');
@@ -411,12 +412,26 @@
                 CONTINUE: 0
             });
 
-            $robinVoteWidget.find('.robin--vote-class--increase .robin-chat--vote-label').html('grow<br>(' + formatNumber(counts.INCREASE) + ')');
-            $robinVoteWidget.find('.robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>(' + formatNumber(counts.ABANDON) + ')');
-            $robinVoteWidget.find('.robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>(' + formatNumber(counts.NOVOTE) + ')');
-            $robinVoteWidget.find('.robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + formatNumber(counts.CONTINUE) + ')');
+            var GROW_STR = formatNumber(counts.INCREASE);
+            var ABANDON_STR = formatNumber(counts.ABANDON);
+            var NOVOTE_STR = formatNumber(counts.NOVOTE);
+            var STAY_STR = formatNumber(counts.CONTINUE);
+
+            $robinVoteWidget.find('.robin--vote-class--increase .robin-chat--vote-label').html('grow<br>(' + GROW_STR + ')');
+            $robinVoteWidget.find('.robin--vote-class--abandon .robin-chat--vote-label').html('abandon<br>(' + ABANDON_STR + ')');
+            $robinVoteWidget.find('.robin--vote-class--novote .robin-chat--vote-label').html('no vote<br>(' + NOVOTE_STR + ')');
+            $robinVoteWidget.find('.robin--vote-class--continue .robin-chat--vote-label').html('stay<br>(' + STAY_STR + ')');
             users = list.length;
             $(".usercount").text(formatNumber(users) + " users in chat");
+
+            var $chatstats = $("#chatstats");
+
+            if(settings.hideVote){
+                $chatstats.text("GROW: " + GROW_STR + "  STAY: " + STAY_STR + " (" + (counts.INCREASE / counts.CONTINUE).toFixed(2) + "%)");
+                $chatstats.show();
+            } else {
+                $chatstats.hide();
+            }
         });
         var lastChatString = $(".robin-message--timestamp").last().attr("datetime");
         var timeSinceLastChat = new Date() - (new Date(lastChatString));
