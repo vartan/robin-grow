@@ -427,7 +427,7 @@
             var $chatstats = $("#chatstats");
 
             if(settings.hideVote){
-                $chatstats.text("GROW: " + GROW_STR + "  STAY: " + STAY_STR + " (" + (counts.INCREASE / counts.CONTINUE).toFixed(2) + "%)");
+                $chatstats.text("GROW: " + GROW_STR + "  STAY: " + STAY_STR + " (" + (counts.INCREASE / users * 100).toFixed(2) + "%)");
                 $chatstats.show();
             } else {
                 $chatstats.hide();
