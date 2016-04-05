@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Robin Grow
 // @namespace    http://tampermonkey.net/
-// @version      2.1.0
+// @version      2.1.1
 // @description  Try to take over the world!
 // @author       /u/mvartan
 // @include      https://www.reddit.com/robin*
@@ -103,7 +103,7 @@
     function filterChannelMessage(message) {
         console.log(message);
         var messageTextNode = (message && message.childNodes && message.childNodes[5]);
-        var messageText = messageTextNode.innerText || "";
+        var messageText = (messageTextNode && messageTextNode.innerText) || "";
         if(messageText.indexOf(currentChannelTab) !== 0) {
             $(message).hide();
             console.log("Should filter "+messageText);
