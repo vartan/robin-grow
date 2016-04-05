@@ -761,7 +761,7 @@
         return $("#robinChatMessageList-ch" + index);
     }
 
-    function moveChannelMessage(channelIndex, message)
+    function moveChannelMessage(channelIndex, message, overrideBGColor)
     {
         var channel = getChannelMessageList(channelIndex);
         var messageClone = message.cloneNode(true);
@@ -776,8 +776,11 @@
         }
 
         // Remove channel colour from channel messages
-        if (!settings.tabChanColors)
-            messageElem.parent().css("background", "");
+        if(!overrideBGColor) {
+            if (!settings.tabChanColors) {
+                messageElem.parent().css("background", "");
+            }
+        }
 
         channel.append(messageClone);
 
@@ -850,9 +853,11 @@
                     return;
                 }
 
+                var userIsMentioned = false;
                 if (messageText.toLowerCase().indexOf(currentUsersName.toLowerCase()) !== -1) {
                     $message.parent().css("background","#FFA27F");
                     notifAudio.play();
+                    userIsMentioned = true;
                 } else {
 
                     //still show mentions in highlight color.
@@ -913,7 +918,7 @@
 
                 // Move channel messages to channel tabs
                 if (results_chan.has) {
-                    moveChannelMessage(results_chan.index, jq[0]);
+                    moveChannelMessage(results_chan.index, jq[0], userIsMentioned);
                 }
 
                 if(selectedChannel >= 0 && thisUser.trim() == '[robin]') {
