@@ -66,7 +66,7 @@
 
     }
     function filterChannelAllMessages() {
-        $(".robin-message.robin--user-class--user .robin-message.robin--user-class--self").each(function(i, el) {
+        $(".robin-message.robin--user-class--user, .robin-message.robin--user-class--self").each(function(i, el) {
             $(el).show();
             filterChannelMessage(el);
         });
