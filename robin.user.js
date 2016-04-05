@@ -5,7 +5,7 @@
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
-// @updateURL    https://github.com/5a1t/robin-grow/raw/master/robin.user.js
+// @updateURL    https://github.com/5a1t/parrot/raw/master/robin.user.js
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant   GM_getValue
 // @grant   GM_setValue
