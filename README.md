@@ -61,7 +61,7 @@ http://piratepad.net/Zg3MJL40Qh
     2.1: Simplified settings box (dashed). Lots of cleaning up. Username alignment setting.
     2.2: Tabbed chat! Switched the name to parrot around this time. Even more code cleanup (voltaek).
     2.3: Moved settings button, new stats thingy when buttons are hidden (dashed).
-    2.4: Channel switching hotkeys (dashed).
+    2.4: Channel switching hotkeys, you can use slash commands in tabs (dashed, lost_penguin).
 
 ## Screenshots
 
