@@ -789,6 +789,20 @@
         if (!(source.toLowerCase().startsWith(chanName.toLowerCase() + " ")))
             $("#robinMessageText").val(chanName + " " + source);
     }
+	
+	function tabAutoComplete(e)
+    {
+        if ((e.keyCode || e.which) != 9) return;
+
+        var source = $("#robinMessageText").val();
+        var sourceAlt = $("#robinMessageTextAlt").val();
+        var chanName = selChanName();
+
+        if (source.toLowerCase().startsWith(chanName.toLowerCase()))
+            source = source.substring(chanName.length).trim();
+
+        $("#robinMessageTextAlt").val(source);
+    }
 
     var myObserver = new MutationObserver(mutationHandler);
     //--- Add a target node to the observer. Can only add one node at a time.
@@ -961,6 +975,7 @@
     $("#robinMessageText").css("display", "none");
     // Alternate message input box (doesn't show the channel prefixes)
     $("#robinMessageTextAlt").on("input", function() { updateMessage(); });
+	$("#robinMessageTextAlt").on("keyup", function(e) { tabAutoComplete(e); });
 
     // Send message button
     $("#robinSendMessage").append('<div onclick={$(".text-counter-input").submit();} class="robin-chat--vote" id="sendBtn">Send Message</div>'); // Send message
