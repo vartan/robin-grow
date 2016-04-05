@@ -49,7 +49,8 @@
 													if (currentRoomName.startsWith(nameColumn.text().substring(0,6))) {
 														row.css('background-color', '#22bb45');
 													}
-													row.slice(3).remove();});
+													row.slice(3, 3).remove();
+													row.slice(4).remove();});
 				$("#standingsTable").html(decoded);
 			},
 			dataType: 'xml'
