@@ -318,9 +318,11 @@
     Settings.addBool("twitchEmotes", "<a href='https://twitchemotes.com/filters/global' target='_blank'>Twitch emotes</a>", false);
     Settings.addBool("timeoutEnabled", "Reload page after inactivity timeout", true);
     Settings.addInput("spamFilters", "<label>Custom Spam Filters<ul><li>Comma-delimited</li><li>Spaces are NOT stripped</li></ul></label>", "spam example 1,John Madden");
+    
     $("#settingContent").append("<div class='robin-chat--sidebar-widget robin-chat--notification-widget'><label id='blockedUserContainer'>Muted Users (click to unmute)</label>");
     $("#blockedUserContainer").append("<div id='blockedUserList' class='robin-chat--sidebar-widget robin-chat--user-list-widget'></div>");
-    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/parrot">parrot - soKukunelits fork' + versionString + '</a></div>');
+    
+    $("#settingContent").append('<div class="robin-chat--sidebar-widget robin-chat--report" style="text-align:center;"><a target="_blank" href="https://github.com/5a1t/parrot">parrot' + versionString + '</a></div>');
     // Options end
     // Settings end
 
