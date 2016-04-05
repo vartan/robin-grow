@@ -995,7 +995,7 @@
     // ctrl + shift + (left | right)
     $(document).keydown(function(e) {
 
-        if(!(e.metaKey && e.shiftKey)) {
+        if(!((e.metaKey || e.ctrlKey) && e.shiftKey)) {
             return;
         }
 
