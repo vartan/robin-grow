@@ -959,17 +959,18 @@
                         .insertAfter($timestamp);
                 }
 
+                // TODO: not a real fix
+                convertTextToSpecial(messageText, jq[0]);
+
                 // Move channel messages to channel tabs
                 if (results_chan.has) {
                     moveChannelMessage(results_chan.index, jq[0], userIsMentioned);
                 }
 
-                // TODO: not a real fix
-                convertTextToSpecial(messageText, jq[0]);
-
                 if(selectedChannel >= 0 && thisUser.trim() == '[robin]') {
                     moveChannelMessage(selectedChannel, jq[0]);
                 }
+
 
                 findAndHideSpam();
                 doScroll();
