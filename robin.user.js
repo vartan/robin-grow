@@ -259,7 +259,7 @@
 
     function clearChat() {
         console.log("chat cleared!");
-        $("#robinChatMessageList").empty();
+        getChannelMessageList(selectedChannel).empty();
     }
 
     var currentUsersName = $('div#header span.user a').html();
