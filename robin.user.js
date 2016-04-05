@@ -646,8 +646,12 @@
     console.log(channelLinkId);
         // Get channel index
         var channelIndex = -1;
-        if (channelLinkId.length > 8)
+        if ((typeof channelLinkId) == 'string' && channelLinkId.length > 8) {
             channelIndex = channelLinkId.substring(8);
+        }
+        if(typeof channelLinkId) == 'number') {
+            channelIndex = channelLinkId;
+        }
 
         // Remember selection
         selectedChannel = channelIndex;
