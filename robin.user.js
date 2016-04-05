@@ -217,8 +217,36 @@
             } else {
                 settings[name] = defaultSetting;
             }
-
-
+        },
+        
+        addRadio: function addRadioSetting(name, description, items, defaultSettings, callback) {
+            //items JSON format:
+            //    {"id":[{"value":<string>,
+            //            "friendlyName":<string>}]};
+            
+            defaultSettings = settings[name] || defaultSettings;
+            
+            $("#settingContent").append('<div id="settingsContainer-' + name + '" class="robin-chat--sidebar-widget robin-chat--notification-widget"><span style="font-weight: 300; letter-spacing: 0.5px; line-height: 15px; font-size:' + settings.fontsize + 'px;">' + description + '</span><br><br>');
+            for (i in items.id) {
+                $("#settingsContainer-" + name).append('<label><input type="radio" name="settingsContainer-' + name + '" value="' + items.id[i].value + '"> ' + items.id[i].friendlyName + '</input></label><br>');
+            }
+            $("#settingsContainer-" + name).append('</div>');
+            
+            if (settings[name] != undefined) {
+                $("input:radio[name='setting-" + name + "'][value='" + settings[name] + "']").prop("checked", true);
+            }
+            else {
+                $("input:radio[name='setting-" + name + "'][value='" + defaultSettings + "']").prop("checked", true);
+            }
+            
+            $("input:radio[name='setting-" + name + "']").on("click", function () {
+                settings[name] = $("input:radio[name='setting-" + name + "']:checked").val();
+                Settings.save(settings);
+            });
+            
+            if (callback) {
+                callback();
+            }
         },
 
         addInput: function addInputSetting(name, description, defaultSetting, callback) {
@@ -928,18 +956,17 @@
                         .insertAfter($timestamp);
                 }
 
-                // TODO: not a real fix
-                convertTextToSpecial(messageText, jq[0]);
-
                 // Move channel messages to channel tabs
                 if (results_chan.has) {
                     moveChannelMessage(results_chan.index, jq[0], userIsMentioned);
                 }
 
+                // TODO: not a real fix
+                convertTextToSpecial(messageText, jq[0]);
+
                 if(selectedChannel >= 0 && thisUser.trim() == '[robin]') {
                     moveChannelMessage(selectedChannel, jq[0]);
                 }
-
 
                 findAndHideSpam();
                 doScroll();
