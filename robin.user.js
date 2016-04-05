@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.32
+// @version      2.33
 // @description  Try to take over the world!
 // @author       /u/_vvvv_
 // @include      https://www.reddit.com/robin*
@@ -104,7 +104,7 @@
         {
             var current_chan = channel_array[idx];
 
-            if(source.startsWith(current_chan)) {
+            if(source.startsWith(current_chan.toLowerCase())) {
                 return {
                     name: current_chan,
                     has: true,
@@ -275,7 +275,7 @@
         // Don't overload reddit, wait a bit before reloading.
         setTimeout(function() {
             window.location.reload();
-        }, 15000);
+        }, 300000);
         return;
     }
 
