@@ -310,7 +310,7 @@
     Settings.addBool("removeSpam", "Remove bot spam", true);
     Settings.addInput("spamFilters", "<label>Custom Spam Filters<ul><li><b>Checkbox 'Remove bot spam' (above)</b></li><li>Comma-delimited</li><li>Spaces are NOT stripped</li></ul></label>", "spam example 1,John Madden");
     Settings.addBool("enableUnicode", "Allow unicode characters. Unicode is considered spam and thus are filtered out", false);
-    Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", true);
+    // Settings.addBool("findAndHideSpam", "Remove messages that have been sent more than 3 times", false);
     Settings.addBool("force_scroll", "Force scroll to bottom", false);
     Settings.addInput("maxprune", "Max messages before pruning", "500");
     Settings.addInput("fontsize", "Chat font size", "12");
@@ -486,7 +486,7 @@
 
 
 
-        if (settings.findAndHideSpam) {
+        if (false && settings.findAndHideSpam) {
             // skips over ones that have been hidden during this run of the loop
             $('.robin--user-class--user .robin-message--message:not(.addon--hide)').each(function() {
                 var $this = $(this);
