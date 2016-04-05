@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.48
+// @version      2.49
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton, lost_penguin
 // @include      https://www.reddit.com/robin*
@@ -764,8 +764,10 @@
 
     function doScroll()
     {
-        if(robinChatWindow.scrollTop() < robinChatWindow[0].scrollHeight - robinChatWindow.height())
+
+        if(GOTO_BOTTOM) {
             robinChatWindow.scrollTop(robinChatWindow[0].scrollHeight);
+        }
     }
 
     //
