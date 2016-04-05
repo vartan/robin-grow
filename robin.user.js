@@ -599,12 +599,12 @@
     {
         // Style for tab bar
         $('<style>' +
-          ' ul#robinChannelList { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }' +
-          ' ul#robinChannelList li { display: inline; }' +
-          ' ul#robinChannelList li a { color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-bottom: none; padding: 0.3em; text-decoration: none; }' +
-          ' ul#robinChannelList li a:hover { background-color: #f1f0ee; }' +
-          ' ul#robinChannelList li a.robin-chan-tab-changed { color: red; font-weight: bold; }' +
-          ' ul#robinChannelList li a.robin-chan-tab-selected { color: blue; background-color: #f1f0ee; font-weight: bold; padding: 0.7em 0.3em 0.38em 0.3em; }' +
+            ' ul#robinChannelList { list-style-type: none; margin: 0px; padding:0.3em 0;position:absolute;top:95px;width:85%; }' +
+            ' ul#robinChannelList li { display: inline; }' +
+            ' ul#robinChannelList li a { color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-bottom: none; padding: 0.3em; text-decoration: none; font-size: initial; }' +
+            ' ul#robinChannelList li a:hover { background-color: #f1f0ee; }' +
+            ' ul#robinChannelList li a.robin-chan-tab-changed { color: red; font-weight: bold; }' +
+            ' ul#robinChannelList li a.robin-chan-tab-selected { color: blue; background-color: white; font-weight: bold; padding: 0.7em 0.3em 0.38em 0.3em; }' +
           '</style>').appendTo('body');
 
         // Add div to hold tabs
