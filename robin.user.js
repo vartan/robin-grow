@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         parrot (color multichat for robin!)
 // @namespace    http://tampermonkey.net/
-// @version      2.38
+// @version      2.39
 // @description  Recreate Slack on top of an 8 day Reddit project.
 // @author       dashed, voltaek, daegalus, vvvv, orangeredstilton
 // @include      https://www.reddit.com/robin*
@@ -167,15 +167,14 @@
             $("#openBtn").on("click", function openSettings() {
                 $(".robin-chat--sidebar").hide();
                 $("#settingContainer").show();
-                buildDropdown();
             });
 
             $("#closeBtn").on("click", function closeSettings() {
                 $(".robin-chat--sidebar").show();
                 $("#settingContainer").hide();
                 buildDropdown();
-        	tryHide();
-			update();
+                tryHide();
+                update();
             });
 
             function setVote(vote) {
@@ -351,7 +350,7 @@
 
     // Grab the timestamp from the time remaining message and then calc the ending time using the estimate it gives you
     function getEndTime() { // mostly from /u/Yantrio, modified by /u/voltaek
-    	endTimeAttempts++;
+        endTimeAttempts++;
         var remainingMessageContainer = $(".robin--user-class--system:contains('approx')");
         if (remainingMessageContainer.length === 0) {
             // for cases where it says "soon" instead of a time on page load
@@ -394,7 +393,7 @@
             $("#robinVoteWidget .timeleft").parent().hide();
             endTime = getEndTime();
             if (endTime !== null || isEndingSoon) {
-            	$("#robinVoteWidget .timeleft").parent().show();
+                $("#robinVoteWidget .timeleft").parent().show();
             }
         }
 
@@ -623,7 +622,7 @@
     // i think this method is better
     var notifAudio = new Audio("https://slack.global.ssl.fastly.net/dfc0/sounds/push/knock_brush.mp3");
 
-	//
+    //
     // Tabbed channel windows by /u/lost_penguin
     //
     var channelList = [];
@@ -685,7 +684,7 @@
 
     function selectChannel(channelLinkId)
     {
-	$("#chat-prepend-select").val($("#robinChannelLink-ch" + channelLinkId.substr(channelLinkId.length - 1) ).html());
+    $("#chat-prepend-select").val($("#robinChannelLink-ch" + channelLinkId.substr(channelLinkId.length - 1) ).html());
     console.log(channelLinkId);
         // Get channel index
         var channelIndex = -1;
@@ -825,11 +824,11 @@
                 var alignedUser = settings['alignment'] ? $user.html().lpad('&nbsp;', 20) : $user.html().rpad('&nbsp;', 20);
 
                 $user.html(alignedUser);
-		var stylecalc = "";
-		if(settings.fontstyle !== ""){
-			stylecalc = '"'+settings.fontstyle.trim()+'"' + ",";
-		}
-		stylecalc = stylecalc +  'Consolas, "Lucida Console", Monaco, monospace';
+        var stylecalc = "";
+        if(settings.fontstyle !== ""){
+            stylecalc = '"'+settings.fontstyle.trim()+'"' + ",";
+        }
+        stylecalc = stylecalc +  'Consolas, "Lucida Console", Monaco, monospace';
                 $user.css("font-family", stylecalc).css("font-size", settings.fontsize+"px");
                 $message.css("font-family", stylecalc).css("font-size", settings.fontsize+"px");
 
@@ -985,35 +984,35 @@
 
 GM_addStyle(" \
     .robin--username { \
-    	cursor: pointer \
+        cursor: pointer \
     } \
     #settingContent { \
-    	overflow-y: scroll; \
+        overflow-y: scroll; \
     } \
     #openBtn, \
     #closeBtn, \
     #sendBtn { \
-    	font-weight: bold; \
-    	padding: 5px; \
-    	cursor: pointer; \
+        font-weight: bold; \
+        padding: 5px; \
+        cursor: pointer; \
     } \
     #sendBtn { \
-    	margin-left: 0; \
+        margin-left: 0; \
     } \
     .robin--user-class--self { \
-    	background: #F5F5F5; \
-    	font-weight: bold; \
+        background: #F5F5F5; \
+        font-weight: bold; \
     } \
     .robin--user-class--self .robin--username { \
-    	font-weight: bold; \
+        font-weight: bold; \
     } \
     #robinChatInput { \
-    	background: #EFEFED; \
+        background: #EFEFED; \
     } \
  \
     /* Change font to fixed-width */ \
     #robinChatWindow { \
-    	font-family: Consolas, 'Lucida Console', Monaco, monospace; \
+        font-family: Consolas, 'Lucida Console', Monaco, monospace; \
     } \
  \
     /* Full Height Chat */ \
