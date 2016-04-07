@@ -1,4 +1,7 @@
 # Robin Grow
+
+### [Robin has ended.](https://redd.it/4dtl1v)
+
 #### For [reddit's 2016 April Fools Day prank](https://www.reddit.com/robin/)
 
 ## Installation
