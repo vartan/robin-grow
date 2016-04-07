@@ -22,14 +22,14 @@ https://github.com/vartan/robin-grow
 5. Your username color is visible in chat
 
 
-## Updates (times Pacific time)
+## Updates
 
     0.2: Using grow command instead of clicking stuff. Sends command when page is loaded, and also every minute just in case.
     0.3: Also informs the page about the script
-    0.4: 10:26AM, Is now smart enough to detect if you've already voted for grow and won't spam the vote.
+    0.4: Detects if you've already voted for grow and won't spam the vote.
     0.5: Automatic reload on no activity
     0.7: Now shows useful information at the top of the page as well.
-    0.8: fixed time bug, will rejoin on a failed chatroom
+    0.8: Fixed time bug, will rejoin on a failed chatroom
     0.9: Will now only send the message one time, won't resend the message on refresh!
     1.0: Better UI
     1.1: Gets actual counts from reddit backend
@@ -39,7 +39,9 @@ https://github.com/vartan/robin-grow
     1.5: Plays a sound when you are mentioned in chat
     1.6: Adds a send message button for mobile
     1.7: Refreshes the page if reddit is down. Also highlights your messages in the chat
-    1.8: Links in chat are clickable
+    1.8: Links in the chat are clickable. Saves the blocked users list upon refresh. Highlights the trivia bot in comments
+    2.0: Adds support for channel tabs
+    2.1: Adds standings info for the largest rooms
 
 ## Screenshots
 
